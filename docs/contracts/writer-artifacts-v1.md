@@ -214,6 +214,13 @@ El consumidor debe ignorar el paquete y usar su propio mecanismo cuando:
 
 El fallback nunca debe fallar por culpa de writer.
 
+## Impact
+
+`ancleto-writer impact <archivo...>` lee un paquete fresco (o reconstruye con `--build`) y
+devuelve dependientes directos y transitivos, ciclos afectados, capas y archivos de test.
+Acepta `--depth N` (default sin límite) y `--json`. Devuelve `3` si el paquete está stale,
+`4` si es incompatible y `1` si un archivo no existe en el grafo.
+
 ## Lint
 
 `ancleto-writer lint` reconstruye el análisis en memoria, no escribe artefactos y evalúa

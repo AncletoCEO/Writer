@@ -8,6 +8,7 @@ import { checkPackage } from '../contract/check.js'
 import { runDoctor } from './commands/doctor.js'
 import { runInit } from './commands/init.js'
 import { formatFinding, runLint } from './commands/lint.js'
+import { formatImpact, parseImpactArgs, runImpact } from './commands/impact.js'
 import { CliError } from './errors.js'
 import { assertNodeVersion } from './version-check.js'
 
@@ -32,6 +33,8 @@ function usage() {
   console.log('  build [--root <dir>] [--out <dir>]    Escanea y publica .ancleto/writer/')
   console.log('         [--json] [--quiet]')
   console.log('  check [--root <dir>] [--json]         Verifica frescura y compatibilidad')
+  console.log('  impact <archivo...> [--root <dir>]    Dependientes directos y transitivos')
+  console.log('         [--depth N] [--build] [--json]')
   console.log('  lint [--root <dir>] [--json]          Evalúa reglas de arquitectura')
   console.log('  doctor [--root <dir>] [--json]        Diagnostica el entorno')
   console.log('')
@@ -131,6 +134,25 @@ function main() {
         console.log(`ancleto-writer: ${CONFIG_FILE} ya existe (usá --force para reemplazarlo)`)
       }
       process.exit(0)
+    }
+
+    if (command === 'impact') {
+      const flags = parseImpactArgs(rest)
+      const config = loadConfig({ cwd: process.cwd(), cli: { root: flags.root } })
+      const result = runImpact({
+        rootAbs: config.rootAbs,
+        config,
+        files: flags.files,
+        depth: flags.depth,
+        build: flags.build
+      })
+
+      if (flags.json) {
+        console.log(JSON.stringify(result))
+      } else {
+        console.log(formatImpact(result))
+      }
+      process.exit(result.exitCode)
     }
 
     if (command === 'lint') {

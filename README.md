@@ -71,6 +71,9 @@ ancleto-writer init
 ancleto-writer build
 ancleto-writer check
 
+# impacto de un cambio
+ancleto-writer impact src/core/engine.js
+
 # diagnóstico del entorno
 ancleto-writer doctor
 ```
@@ -83,6 +86,7 @@ ancleto-writer doctor
 | `ancleto-writer build [--root <dir>] [--out <dir>] [--json] [--quiet]` | Escanea, analiza y publica `.ancleto/writer/` |
 | `ancleto-writer check [--root <dir>] [--json]` | Verifica frescura y compatibilidad sin escribir |
 | `ancleto-writer lint [--root <dir>] [--json]` | Evalúa reglas de arquitectura: ciclos, capas, imports no resueltos y blast radius |
+| `ancleto-writer impact <archivo...> [--root <dir>] [--depth N] [--build] [--json]` | Dependientes directos y transitivos de uno o más archivos |
 | `ancleto-writer doctor [--root <dir>] [--json]` | Diagnostica Node, git, permisos, memoria y configuración |
 | `ancleto-writer --help` | Uso y aviso legal |
 | `ancleto-writer --version` | Versión, copyright y licencia |
