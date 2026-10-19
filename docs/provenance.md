@@ -29,9 +29,9 @@ cabecera SPDX; `propio` = implementación original sin código copiado.
 
 | Módulo ReadMenator | Destino en @ancleto/writer | Estado |
 |---|---|---|
-| `readmenator/_scanner.py` | `src/scan/scanner.js` | pendiente |
-| `readmenator/parsers/_base.py` | `src/parsers/lexer.js` | pendiente |
-| `readmenator/parsers/_javascript.py` | `src/parsers/javascript.js` | pendiente |
+| `readmenator/_scanner.py` | `src/scan/scanner.js` | portado |
+| `readmenator/parsers/_base.py` | `src/parsers/lexer.js` | portado |
+| `readmenator/parsers/_javascript.py` | `src/parsers/javascript.js` | portado |
 | `readmenator/_resolver.py` | `src/resolve/imports.js` | pendiente |
 | `readmenator/_models.py` | `src/graph/build.js` (modelo de nodos/aristas) | pendiente |
 | `readmenator/_analyzer.py` (solo métricas deterministas) | `src/metrics/cycles.js`, `src/metrics/pagerank.js` | pendiente |
@@ -42,8 +42,8 @@ cabecera SPDX; `propio` = implementación original sin código copiado.
 | `readmenator/_mermaid.py` | `src/render/mermaid.js` | pendiente |
 | `readmenator/_documentation.py` (solo Markdown de arquitectura) | `src/render/markdown.js` | pendiente |
 | `readmenator/_exporter.py` (solo JSON) | `src/facts/build.js`, `src/contract/*` | pendiente |
-| `readmenator/_gitmeta.py` | `src/scan/git.js` | pendiente |
-| `readmenator/_exclusions.py` | `src/config/load.js`, `src/config/glob.js` | pendiente |
+| `readmenator/_gitmeta.py` | `src/scan/git.js` | portado |
+| `readmenator/_exclusions.py` | `src/config/load.js`, `src/config/glob.js` | portado |
 
 ### Referencia conceptual, sin copia de código
 
@@ -110,5 +110,6 @@ Se ejecuta con:
 node scripts/check-provenance.js
 ```
 
-Al 2026-10-19 no hay archivos derivados: la Fase 0 solo prepara la licencia, la atribución y
-el contrato de procedencia. La lista `DERIVED_FILES` se completa en la Fase 3 y siguientes.
+La lista `DERIVED_FILES` de `scripts/check-provenance.js` se mantiene en sincronía con los
+archivos portados. Al 2026-10-19 están portados el scanner, la configuración, el acceso
+read-only a git y el lexer/parser de JavaScript/TypeScript (Fases 2 y 3).

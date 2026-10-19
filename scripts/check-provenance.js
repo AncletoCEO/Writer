@@ -15,7 +15,14 @@ const UPSTREAM = 'ReadMenator'
 const UPSTREAM_COMMIT = 'dac48f868722620f0d01dac0d33102c5a514c03c'
 
 // Completar a medida que se portan archivos (Fase 3+).
-const DERIVED_FILES = []
+const DERIVED_FILES = [
+  'src/config/glob.js',
+  'src/config/load.js',
+  'src/scan/scanner.js',
+  'src/scan/git.js',
+  'src/parsers/lexer.js',
+  'src/parsers/javascript.js'
+]
 
 // Superficies del upstream que no deben portarse.
 const FORBIDDEN_DIRS = [

@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+// Derived from ReadMenator readmenator/_exclusions.py, readmenator/_config.py (commit dac48f868722620f0d01dac0d33102c5a514c03c),
+// modified 2026-10-19 by AncletoCEO.
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve } from 'node:path'

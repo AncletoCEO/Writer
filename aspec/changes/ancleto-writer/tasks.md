@@ -43,13 +43,13 @@
 
 ## Fase 3 — Lexer y parser JavaScript/TypeScript
 
-- [ ] Implementar `src/parsers/lexer.js` para JS/TS/JSX/TSX: comentarios, strings, templates, regex vs división, posiciones.
-- [ ] Extraer imports estáticos, side-effect, `export ... from`, `import()` con literal y `require()` con literal.
-- [ ] Marcar imports dinámicos no literales como `unresolved` con `reason: non-literal`.
-- [ ] Extraer símbolos: funciones, clases, métodos, const-arrow, interfaces, types y enums, con `line`, `endLine`, `exported` y `signature`.
-- [ ] Extraer llamadas intra-archivo resueltas a símbolos locales, con `confidence: inferred`.
-- [ ] Extraer herencia local e importada (`extends`, `implements`), con `confidence` según resolución.
-- [ ] Tests con fixtures por construcción: imports, exports, JSX, genéricos, decoradores, regex, templates anidados.
+- [x] Implementar `src/parsers/lexer.js` para JS/TS/JSX/TSX: comentarios, strings, templates, regex vs división, posiciones.
+- [x] Extraer imports estáticos, side-effect, `export ... from`, `import()` con literal y `require()` con literal.
+- [x] Marcar imports dinámicos no literales como `unresolved` con `reason: non-literal`.
+- [x] Extraer símbolos: funciones, clases, métodos, const-arrow, interfaces, types y enums, con `line`, `endLine`, `exported` y `signature`.
+- [x] Extraer llamadas intra-archivo resueltas a símbolos locales, con `confidence: inferred`.
+- [x] Extraer herencia local e importada (`extends`, `implements`), con `confidence` según resolución.
+- [x] Tests con fixtures por construcción: imports, exports, JSX, genéricos, decoradores, regex, templates anidados.
 
 ## Fase 4 — Resolución de imports
 
