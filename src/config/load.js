@@ -55,6 +55,9 @@ const DEFAULTS = {
     enabled: true,
     minCoverage: 0.5
   },
+  apiDocs: {
+    enabled: true
+  },
   lint: {
     cycles: true,
     layerViolations: true,
@@ -221,6 +224,12 @@ function validate(config) {
     config.docs.minCoverage > 1
   ) {
     throw new ConfigError('docs.minCoverage debe ser un número entre 0 y 1')
+  }
+  if (!isPlainObject(config.apiDocs)) {
+    throw new ConfigError('apiDocs debe ser un objeto')
+  }
+  if (typeof config.apiDocs.enabled !== 'boolean') {
+    throw new ConfigError('apiDocs.enabled debe ser boolean')
   }
   if (!isPlainObject(config.lint)) {
     throw new ConfigError('lint debe ser un objeto')

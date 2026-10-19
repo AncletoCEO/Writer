@@ -42,6 +42,7 @@ Writer produce un paquete versionado en `.ancleto/writer/` con:
 - reporte de archivos de lenguajes no soportados, sin analizarlos;
 - candidatos a archivos huérfanos con exclusiones y confianza;
 - summaries de símbolos y cobertura de documentación;
+- `API.md` liviano con la API pública exportada;
 - diagrama UML Mermaid de clases e interfaces;
 - un `manifest.json` con commit, fingerprint y hashes para verificar frescura.
 
@@ -123,6 +124,7 @@ ancleto-writer: publicado .ancleto/writer (25 archivos, 458 aristas, 109 ms)
 │   └── skipped.json
 └── agent/
     ├── INDEX.md
+    ├── API.md
     ├── SYMBOLS.md
     ├── GOTCHAS.md
     └── ARCHITECTURE.md

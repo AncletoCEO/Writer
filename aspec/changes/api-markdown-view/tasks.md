@@ -4,20 +4,20 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar `symbols.json`, exportados y paginación existente.
-- [ ] Definir `apiDocs.enabled` y el formato de línea.
+- [x] Confirmar `symbols.json`, exportados y paginación existente.
+- [x] Definir `apiDocs.enabled` y el formato de línea.
 
 ## Fase 1 — Implementación
 
-- [ ] Implementar `src/render/api.js`.
-- [ ] Integrar `agent/API.md` en `renderDocuments`.
-- [ ] Agregar `apiDocs.enabled` a config y validación.
-- [ ] Actualizar contrato y README.
+- [x] Implementar `src/render/api.js`.
+- [x] Integrar `agent/API.md` en `renderDocuments`.
+- [x] Agregar `apiDocs.enabled` a config y validación.
+- [x] Actualizar contrato y README.
 
 ## Fase 2 — Tests
 
-- [ ] Solo exportados.
-- [ ] Summary presente/ausente.
-- [ ] Paginación.
-- [ ] Sin exportados.
-- [ ] `npm test`, `npm run lint`, `npm run build`.
+- [x] Solo exportados.
+- [x] Summary presente/ausente.
+- [x] Paginación.
+- [x] Sin exportados.
+- [x] `npm test`, `npm run lint`, `npm run build`.

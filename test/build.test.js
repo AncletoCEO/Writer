@@ -93,6 +93,7 @@ test('build completo publica el contrato y queda fresco', (t) => {
     'facts/skipped.json',
     'facts/unsupported.json',
     'agent/INDEX.md',
+    'agent/API.md',
     'agent/SYMBOLS.md',
     'agent/GOTCHAS.md',
     'agent/ARCHITECTURE.md'

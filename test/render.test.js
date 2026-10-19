@@ -240,6 +240,8 @@ test('documentos incluyen summaries y cobertura', () => {
     config: { docs: { enabled: true, minCoverage: 0.5 } }
   })
 
+  assert.ok(documents['agent/API.md'])
+  assert.match(documents['agent/API.md'], /Runs the app\./)
   assert.match(documents['agent/SYMBOLS.md'], /Runs the app\./)
   assert.match(documents['agent/INDEX.md'], /Runs the app\./)
   assert.match(documents['agent/GOTCHAS.md'], /Cobertura de documentación/)
