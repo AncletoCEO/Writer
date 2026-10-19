@@ -31,6 +31,8 @@ test('config por defecto', (t) => {
   assert.equal(config.godNodes.limit, 20)
   assert.equal(config.bridges.limit, 20)
   assert.equal(config.uml.maxClasses, 40)
+  assert.equal(config.docs.enabled, true)
+  assert.equal(config.docs.minCoverage, 0.5)
   assert.equal(config.orphans.enabled, true)
   assert.deepEqual(config.orphans.entrypoints, [])
   assert.deepEqual(config.orphans.exclude, [])

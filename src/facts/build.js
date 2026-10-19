@@ -3,6 +3,7 @@
 // modified 2026-10-19 by AncletoCEO.
 
 import { buildDeadCodeFact } from './dead-code.js'
+import { buildDocCoverageFact } from './doc-coverage.js'
 import { buildExternalsFact } from './externals.js'
 import { buildSkippedFact } from './skipped.js'
 import { buildUnsupportedFact } from './unsupported.js'
@@ -51,6 +52,7 @@ export function buildFacts({
   unresolved,
   unsupportedFact = null,
   orphans = null,
+  docCoverage = null,
   config = {}
 }) {
   const unsupported =
@@ -58,6 +60,7 @@ export function buildFacts({
     buildUnsupportedFact(scanResult.unsupported ?? [], {
       maxFilesPerLanguage: config?.unsupported?.maxFilesPerLanguage
     })
+  const coverage = docCoverage ?? buildDocCoverageFact(graph)
 
   return {
     'facts/cycles.json': json({
@@ -83,6 +86,7 @@ export function buildFacts({
       bridges: metrics.bridges ?? []
     }),
     'facts/dead-code.json': json(buildDeadCodeFact(orphans)),
+    'facts/doc-coverage.json': json(coverage),
     'facts/hotspots.json': json({
       schemaVersion: 1,
       hotspots: metrics.hotspots

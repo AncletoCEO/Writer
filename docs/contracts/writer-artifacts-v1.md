@@ -152,6 +152,7 @@ timestamps ni del orden del filesystem.
           "name": "run",
           "kind": "function",
           "exported": true,
+          "summary": "Runs the input.",
           "line": 3,
           "endLine": 5,
           "signature": "run(input)"
@@ -170,6 +171,7 @@ Todos declaran `schemaVersion: 1`:
 |---|---|
 | `cycles.json` | `{ cycles: [{ size, files }], selfLoops: [id] }` |
 | `dead-code.json` | `{ orphanFiles: [{ path, reason, confidence }], excluded: [{ path, reason }], dynamicImports }` |
+| `doc-coverage.json` | `{ files: [{ path, documented, total, ratio }], totals }` |
 | `bridges.json` | `{ bridges: [{ from, to, fromCommunity, toCommunity, score, line }] }` |
 | `communities.json` | `{ communities: [{ id, size, cohesion, files }] }` |
 | `god-nodes.json` | `{ godNodes: [{ path, score, pageRank, fanIn, fanOut, symbols, exportedSymbols }] }` |
@@ -189,6 +191,10 @@ generan nodos ni aristas; existen solo para que el consumidor vea la cobertura f
 `dead-code.json` reporta candidatos a archivos huérfanos (sin imports entrantes) con
 exclusiones de entrypoints, tests, config y scripts. No elimina código ni detecta símbolos
 huérfanos.
+
+`doc-coverage.json` mide símbolos con `summary` sobre el total, por archivo y agregado.
+`summary` es opcional en `symbols.json` y `graph.json`; se extrae del comentario inmediatamente
+anterior a la declaración.
 
 `communities.json` agrupa archivos por modularidad sobre el grafo de imports. `cohesion` es la
 cantidad de aristas internas dividida por las aristas incidentes a la comunidad (0 a 1). Los

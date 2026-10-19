@@ -6,6 +6,7 @@ import { readProjectRules } from '../memory/read-only.js'
 import { renderDocuments } from '../render/markdown.js'
 import { buildFacts } from '../facts/build.js'
 import { buildSymbolsJson } from '../facts/symbols.js'
+import { buildDocCoverageFact } from '../facts/doc-coverage.js'
 import { buildUnsupportedFact } from '../facts/unsupported.js'
 import { buildManifest, computeFingerprint, outputEntry } from '../contract/manifest.js'
 import { publishPackage } from '../contract/writer.js'
@@ -26,6 +27,7 @@ export function runBuild({ rootAbs, config, now = () => new Date().toISOString()
   const unsupportedFact = buildUnsupportedFact(scanResult.unsupported ?? [], {
     maxFilesPerLanguage: config.unsupported?.maxFilesPerLanguage
   })
+  const docCoverage = buildDocCoverageFact(graph)
 
   const facts = buildFacts({
     graph,
@@ -35,6 +37,7 @@ export function runBuild({ rootAbs, config, now = () => new Date().toISOString()
     unresolved,
     unsupportedFact,
     orphans,
+    docCoverage,
     config
   })
   const documents = renderDocuments({
@@ -44,6 +47,7 @@ export function runBuild({ rootAbs, config, now = () => new Date().toISOString()
     unresolved,
     unsupported: unsupportedFact,
     orphans,
+    docCoverage,
     config
   })
 

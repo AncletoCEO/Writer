@@ -41,6 +41,7 @@ Writer produce un paquete versionado en `.ancleto/writer/` con:
 - documentación accionable para agentes (`INDEX`, `SYMBOLS`, `GOTCHAS`, `ARCHITECTURE`);
 - reporte de archivos de lenguajes no soportados, sin analizarlos;
 - candidatos a archivos huérfanos con exclusiones y confianza;
+- summaries de símbolos y cobertura de documentación;
 - diagrama UML Mermaid de clases e interfaces;
 - un `manifest.json` con commit, fingerprint y hashes para verificar frescura.
 

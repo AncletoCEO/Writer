@@ -51,6 +51,10 @@ const DEFAULTS = {
     entrypoints: [],
     exclude: []
   },
+  docs: {
+    enabled: true,
+    minCoverage: 0.5
+  },
   lint: {
     cycles: true,
     layerViolations: true,
@@ -204,6 +208,19 @@ function validate(config) {
     if (!Array.isArray(config.orphans[key]) || config.orphans[key].some((item) => typeof item !== 'string')) {
       throw new ConfigError(`orphans.${key} debe ser un array de strings`)
     }
+  }
+  if (!isPlainObject(config.docs)) {
+    throw new ConfigError('docs debe ser un objeto')
+  }
+  if (typeof config.docs.enabled !== 'boolean') {
+    throw new ConfigError('docs.enabled debe ser boolean')
+  }
+  if (
+    typeof config.docs.minCoverage !== 'number' ||
+    config.docs.minCoverage < 0 ||
+    config.docs.minCoverage > 1
+  ) {
+    throw new ConfigError('docs.minCoverage debe ser un número entre 0 y 1')
   }
   if (!isPlainObject(config.lint)) {
     throw new ConfigError('lint debe ser un objeto')

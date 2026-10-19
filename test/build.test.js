@@ -82,6 +82,7 @@ test('build completo publica el contrato y queda fresco', (t) => {
     'facts/bridges.json',
     'facts/communities.json',
     'facts/dead-code.json',
+    'facts/doc-coverage.json',
     'facts/god-nodes.json',
     'facts/layers.json',
     'facts/hotspots.json',

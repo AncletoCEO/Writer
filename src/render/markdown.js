@@ -83,9 +83,22 @@ export function renderIndex(graph, godNodes = []) {
     body.push('')
   }
 
+  const symbolsByFile = new Map()
+  for (const symbol of graph.nodes) {
+    if (symbol.kind !== 'symbol') continue
+    if (!symbolsByFile.has(symbol.path)) symbolsByFile.set(symbol.path, [])
+    symbolsByFile.get(symbol.path).push(symbol)
+  }
+
   for (const file of graph.nodes.filter((node) => node.kind === 'file')) {
+    const symbols = symbolsByFile.get(file.path) ?? []
+    const purpose = (
+      symbols.find((symbol) => symbol.exported && symbol.summary) ??
+      symbols.find((symbol) => symbol.summary)
+    )?.summary
     body.push(
-      `- \`${file.path}\` — ${file.layer} · ${file.symbolCount} símbolos · used by ${file.fanIn}`
+      `- \`${file.path}\` — ${file.layer} · ${file.symbolCount} símbolos · used by ${file.fanIn}` +
+        (purpose ? ` — ${purpose}` : '')
     )
   }
 
@@ -106,8 +119,9 @@ export function renderSymbols(graph) {
     body.push(`## ${path}`, '')
     for (const symbol of symbols.sort((a, b) => Number(b.exported) - Number(a.exported) || a.line - b.line)) {
       const exported = symbol.exported ? ' · export' : ''
+      const summary = symbol.summary ? ` — ${symbol.summary}` : ''
       body.push(
-        `- \`${symbol.name}\` (${symbol.symbolKind}, línea ${symbol.line})${exported} — ${symbol.signature ?? ''}`
+        `- \`${symbol.name}\` (${symbol.symbolKind}, línea ${symbol.line})${exported} — ${symbol.signature ?? ''}${summary}`
       )
     }
     body.push('')
@@ -121,7 +135,9 @@ export function renderGotchas({
   projectRules = null,
   unresolved = [],
   unsupported = null,
-  orphans = null
+  orphans = null,
+  docCoverage = null,
+  config = {}
 }) {
   const body = []
 
@@ -218,6 +234,23 @@ export function renderGotchas({
     }
   }
   body.push('')
+
+  if (config?.docs?.enabled !== false) {
+    body.push('## Cobertura de documentación', '')
+    if (!docCoverage || docCoverage.totals.total === 0) {
+      body.push('- Sin símbolos para medir cobertura.')
+    } else {
+      const threshold = config?.docs?.minCoverage ?? 0.5
+      body.push(
+        `- Total: ${docCoverage.totals.documented}/${docCoverage.totals.total} ` +
+          `(${(docCoverage.totals.ratio * 100).toFixed(1)}%)`
+      )
+      for (const file of docCoverage.files.filter((entry) => entry.ratio < threshold).slice(0, 10)) {
+        body.push(`- \`${file.path}\`: ${file.documented}/${file.total}`)
+      }
+    }
+    body.push('')
+  }
 
   body.push('## Lenguajes no soportados', '')
   const unsupportedEntries = unsupported?.unsupported ?? []
@@ -321,12 +354,13 @@ export function renderDocuments({
   unresolved = [],
   unsupported = null,
   orphans = null,
+  docCoverage = null,
   config = {}
 }) {
   const documents = {
     ...renderIndex(graph, metrics.godNodes ?? []),
     ...renderSymbols(graph),
-    ...renderGotchas({ metrics, projectRules, unresolved, unsupported, orphans }),
+    ...renderGotchas({ metrics, projectRules, unresolved, unsupported, orphans, docCoverage, config }),
     ...renderArchitecture({ graph, metrics, config })
   }
 

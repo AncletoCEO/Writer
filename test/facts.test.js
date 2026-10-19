@@ -61,6 +61,7 @@ test('symbols.json agrupa por archivo', () => {
         name: 'run',
         kind: 'function',
         exported: true,
+        summary: null,
         line: 1,
         endLine: 2,
         signature: 'run(x)'
@@ -87,6 +88,7 @@ test('facts JSON e inventory', () => {
     'facts/communities.json',
     'facts/cycles.json',
     'facts/dead-code.json',
+    'facts/doc-coverage.json',
     'facts/externals.json',
     'facts/god-nodes.json',
     'facts/hotspots.json',
@@ -102,6 +104,7 @@ test('facts JSON e inventory', () => {
   assert.equal(JSON.parse(facts['facts/god-nodes.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/bridges.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/dead-code.json']).schemaVersion, 1)
+  assert.equal(JSON.parse(facts['facts/doc-coverage.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/unsupported.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/unsupported.json']).totals.files, 1)
   assert.equal(JSON.parse(facts['facts/externals.json']).externals[0].specifier, 'lodash')
