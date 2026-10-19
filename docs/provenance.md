@@ -41,7 +41,7 @@ cabecera SPDX; `propio` = implementación original sin código copiado.
 | `readmenator/_rank.py` (solo PageRank) | `src/metrics/pagerank.js` | portado |
 | `readmenator/_mermaid.py` | `src/render/mermaid.js` | portado |
 | `readmenator/_documentation.py` (solo Markdown de arquitectura) | `src/render/markdown.js` | portado |
-| `readmenator/_exporter.py` (solo JSON) | `src/facts/build.js`, `src/facts/symbols.js`, `src/contract/*` | portado |
+| `readmenator/_exporter.py` (solo JSON) | `src/facts/build.js`, `src/facts/symbols.js` | portado |
 | `readmenator/_gitmeta.py` | `src/scan/git.js` | portado |
 | `readmenator/_exclusions.py` | `src/config/load.js`, `src/config/glob.js` | portado |
 
@@ -111,5 +111,5 @@ node scripts/check-provenance.js
 ```
 
 La lista `DERIVED_FILES` de `scripts/check-provenance.js` se mantiene en sincronía con los
-archivos portados. Al 2026-10-19 están portados el scanner, la configuración, el acceso
-read-only a git y el lexer/parser de JavaScript/TypeScript (Fases 2 y 3).
+archivos portados. Al 2026-10-19 hay 17 archivos derivados: configuración, scanner, git,
+lexer/parser, resolver, grafo, métricas, render y facts JSON (Fases 2-7).

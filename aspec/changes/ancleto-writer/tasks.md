@@ -118,12 +118,12 @@
 
 ## Fase 11 — Verificación final
 
-- [ ] Ejecutar `ancleto-writer init && ancleto-writer build` sobre un repo real y revisar los documentos generados.
-- [ ] Ejecutar `ancleto-writer check` sobre el mismo repo: exit `0`.
-- [ ] Modificar un archivo y confirmar exit `3`; restaurar y confirmar `0`.
-- [ ] Confirmar que un consumidor sin writer y otro con writer stale producen el mismo fallback.
-- [ ] Revisar que no existan `dependencies` en `package.json` y que el build funcione sin red.
-- [ ] Cerrar el change con `ancleto-verify` y registrar la decisión de licencia en la memoria del repo.
+- [x] Ejecutar `ancleto-writer init && ancleto-writer build` sobre un repo real y revisar los documentos generados.
+- [x] Ejecutar `ancleto-writer check` sobre el mismo repo: exit `0`.
+- [x] Modificar un archivo y confirmar exit `3`; restaurar y confirmar `0`.
+- [x] Confirmar que un consumidor sin writer y otro con writer stale producen el mismo fallback.
+- [x] Revisar que no existan `dependencies` en `package.json` y que el build funcione sin red (auditoría estática; `unshare -n` no permitido en este entorno).
+- [ ] Cerrar el change con `ancleto-verify` y registrar la decisión de licencia en la memoria del repo (decisión registrada; archivado bloqueado por Fase 12 y el ruleset diferido).
 
 ## Fase 12 — Publicación en npm
 

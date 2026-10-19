@@ -144,6 +144,12 @@ contrato, determinismo, frontera, consumo y un smoke de 2.000 archivos.
 - Procedencia del port: [`docs/provenance.md`](docs/provenance.md)
 - Cambio activo: `aspec/changes/ancleto-writer/`
 
+## Contribución
+
+Las contribuciones se aceptan bajo `AGPL-3.0-only`. No hay CLA: al enviar un cambio aceptás
+que se distribuya bajo esa licencia. Un relicenciamiento futuro del paquete requeriría
+reescribir el núcleo derivado de ReadMenator y obtener permiso del upstream.
+
 ## Licencia y atribución
 
 Este programa es software libre: podés redistribuirlo y/o modificarlo bajo los términos de
