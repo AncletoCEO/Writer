@@ -42,6 +42,7 @@ function metrics() {
     cycles: { cycles: [], selfLoops: [] },
     layers: { layers: { 'src/a.js': 'domain' }, violations: [] },
     communities: [],
+    godNodes: [],
     hotspots: [{ path: 'src/a.js', score: 0 }],
     blastRadius: [{ path: 'src/a.js', reason: 'fan-in', direct: 0, transitive: 0, dependents: [] }]
   }
@@ -81,6 +82,7 @@ test('facts JSON e inventory', () => {
     'facts/communities.json',
     'facts/cycles.json',
     'facts/externals.json',
+    'facts/god-nodes.json',
     'facts/hotspots.json',
     'facts/inventory.md',
     'facts/layers.json',
@@ -90,6 +92,7 @@ test('facts JSON e inventory', () => {
 
   assert.equal(JSON.parse(facts['facts/cycles.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/communities.json']).schemaVersion, 1)
+  assert.equal(JSON.parse(facts['facts/god-nodes.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/externals.json']).externals[0].specifier, 'lodash')
   assert.equal(JSON.parse(facts['facts/skipped.json']).skipped[0].reason, 'too-large')
   assert.match(facts['facts/inventory.md'], /src\/a\.js/)

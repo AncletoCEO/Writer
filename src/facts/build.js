@@ -50,6 +50,10 @@ export function buildFacts({ graph, metrics, scanResult, externals, unresolved }
       schemaVersion: 1,
       communities: metrics.communities ?? []
     }),
+    'facts/god-nodes.json': json({
+      schemaVersion: 1,
+      godNodes: metrics.godNodes ?? []
+    }),
     'facts/hotspots.json': json({
       schemaVersion: 1,
       hotspots: metrics.hotspots

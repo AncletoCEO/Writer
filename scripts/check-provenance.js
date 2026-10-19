@@ -33,6 +33,7 @@ const DERIVED_FILES = [
   'src/render/mermaid.js',
   'src/render/markdown.js',
   'src/facts/build.js',
+  'src/facts/god-nodes.js',
   'src/facts/symbols.js'
 ]
 

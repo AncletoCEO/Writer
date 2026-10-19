@@ -118,5 +118,6 @@ test('applyMetrics anota nodos y stats', () => {
   assert.ok(graph.nodes[0].pageRank > 0)
   assert.equal(typeof graph.nodes[0].layer, 'string')
   assert.equal(metrics.communities.length, 1)
+  assert.equal(metrics.godNodes.length, 2)
   assert.equal(metrics.blastRadius.length, 2)
 })

@@ -33,6 +33,9 @@ const DEFAULTS = {
     enabled: true,
     maxIterations: 50
   },
+  godNodes: {
+    limit: 20
+  },
   impactSeeds: [],
   memory: {
     enabled: true,
@@ -138,6 +141,12 @@ function validate(config) {
   }
   if (!Number.isInteger(config.communities.maxIterations) || config.communities.maxIterations <= 0) {
     throw new ConfigError('communities.maxIterations debe ser un entero positivo')
+  }
+  if (!isPlainObject(config.godNodes)) {
+    throw new ConfigError('godNodes debe ser un objeto')
+  }
+  if (!Number.isInteger(config.godNodes.limit) || config.godNodes.limit <= 0) {
+    throw new ConfigError('godNodes.limit debe ser un entero positivo')
   }
   if (!isPlainObject(config.memory)) {
     throw new ConfigError('memory debe ser un objeto')

@@ -68,11 +68,19 @@ function layerCounts(layers) {
   return [...counts.entries()].sort((a, b) => a[0].localeCompare(b[0]))
 }
 
-export function renderIndex(graph) {
+export function renderIndex(graph, godNodes = []) {
   const body = [
     `Total: ${graph.stats.files} archivos, ${graph.stats.symbols} símbolos, ${graph.stats.edges} aristas.`,
     ''
   ]
+
+  if (godNodes.length > 0) {
+    body.push('## God nodes', '')
+    for (const node of godNodes.slice(0, 10)) {
+      body.push(`- \`${node.path}\` — score ${node.score.toFixed(4)}`)
+    }
+    body.push('')
+  }
 
   for (const file of graph.nodes.filter((node) => node.kind === 'file')) {
     body.push(
@@ -149,6 +157,17 @@ export function renderGotchas({ metrics, projectRules = null, unresolved = [] })
   body.push('## Hotspots', '')
   for (const hotspot of metrics.hotspots.slice(0, 10)) {
     body.push(`- \`${hotspot.path}\` — score ${hotspot.score.toFixed(4)}`)
+  }
+  body.push('')
+
+  body.push('## God nodes', '')
+  const godNodes = metrics.godNodes ?? []
+  if (godNodes.length === 0) body.push('- Sin god nodes.')
+  for (const node of godNodes.slice(0, 10)) {
+    body.push(
+      `- \`${node.path}\` — score ${node.score.toFixed(4)} ` +
+        `(fan-in ${node.fanIn}, ${node.exportedSymbols} símbolos exportados)`
+    )
   }
   body.push('')
 
@@ -240,7 +259,7 @@ export function renderArchitecture({ graph, metrics }) {
 
 export function renderDocuments({ graph, metrics, projectRules = null, unresolved = [] }) {
   const documents = {
-    ...renderIndex(graph),
+    ...renderIndex(graph, metrics.godNodes ?? []),
     ...renderSymbols(graph),
     ...renderGotchas({ metrics, projectRules, unresolved }),
     ...renderArchitecture({ graph, metrics })

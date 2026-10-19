@@ -16,6 +16,7 @@ El productor escribe todo dentro de `outputDir` (default `.ancleto/writer/`):
 ├── facts/
 │   ├── cycles.json
 │   ├── communities.json
+│   ├── god-nodes.json
 │   ├── layers.json
 │   ├── hotspots.json
 │   ├── blast-radius.json
@@ -100,6 +101,7 @@ timestamps ni del orden del filesystem.
       "pageRank": 0.5,
       "layer": "application",
       "community": "c1",
+      "exportedSymbols": 1,
       "hotspot": 0.2
     },
     {
@@ -164,6 +166,7 @@ Todos declaran `schemaVersion: 1`:
 |---|---|
 | `cycles.json` | `{ cycles: [{ size, files }], selfLoops: [id] }` |
 | `communities.json` | `{ communities: [{ id, size, cohesion, files }] }` |
+| `god-nodes.json` | `{ godNodes: [{ path, score, pageRank, fanIn, fanOut, symbols, exportedSymbols }] }` |
 | `layers.json` | `{ layers: { path: layer }, violations: [{ from, to, fromLayer, toLayer, line }] }` |
 | `hotspots.json` | `{ hotspots: [{ path, score, fanIn, fanOut, symbols, cycle }] }` |
 | `blast-radius.json` | `{ seeds: [{ path, reason, direct, transitive, dependents }] }` |
@@ -176,6 +179,9 @@ Todos declaran `schemaVersion: 1`:
 `communities.json` agrupa archivos por modularidad sobre el grafo de imports. `cohesion` es la
 cantidad de aristas internas dividida por las aristas incidentes a la comunidad (0 a 1). Los
 nodos de archivo en `graph.json` incluyen el campo `community` con el id de la comunidad.
+
+`god-nodes.json` ordena archivos por `score = 0.5*pageRankNorm + 0.3*fanInNorm +
+0.2*exportedSymbolsNorm`, con desempate por path ascendente y un límite configurable.
 
 ## Frescura
 

@@ -2,6 +2,7 @@
 
 import { computeBlastRadius, defaultSeeds } from './blast-radius.js'
 import { detectCommunities } from './communities.js'
+import { buildGodNodes } from '../facts/god-nodes.js'
 import { findCycles } from './cycles.js'
 import { computeHotspots } from './hotspots.js'
 import { classifyLayers } from './layers.js'
@@ -55,6 +56,7 @@ export function applyMetrics(graph, { config = {}, gitInfo = null } = {}) {
 
   const hotspots = computeHotspots(fileNodes, cycleFiles)
   const hotspotScores = new Map(hotspots.map((entry) => [entry.path, entry.score]))
+  const godNodes = buildGodNodes(fileNodes, { limit: config?.godNodes?.limit ?? 20 })
   for (const node of fileNodes) {
     node.hotspot = Number((hotspotScores.get(node.path) ?? 0).toFixed(6))
   }
@@ -72,6 +74,7 @@ export function applyMetrics(graph, { config = {}, gitInfo = null } = {}) {
     cycles,
     layers: layerResult,
     communities: communityResult.communities,
+    godNodes,
     hotspots,
     blastRadius,
     seeds

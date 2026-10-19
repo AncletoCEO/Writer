@@ -35,6 +35,7 @@ function metrics() {
     cycles: { cycles: [], selfLoops: [] },
     layers: { layers: { 'src/a.js': 'domain' }, violations: [] },
     communities: [],
+    godNodes: [],
     hotspots: [],
     blastRadius: []
   }
@@ -114,4 +115,28 @@ test('arquitectura y gotchas incluyen comunidades', () => {
   assert.match(documents['agent/ARCHITECTURE.md'], /## Comunidades/)
   assert.match(documents['agent/ARCHITECTURE.md'], /subgraph c1/)
   assert.match(documents['agent/GOTCHAS.md'], /## Comunidades/)
+})
+
+test('index y gotchas incluyen god nodes', () => {
+  const path = 'src/a.js'
+  const graph = {
+    stats: { files: 1, symbols: 1, edges: 0 },
+    nodes: [fileNode(path), ...symbolNodes(path, 1)],
+    edges: []
+  }
+  const documentMetrics = {
+    ...metrics(),
+    godNodes: [
+      { path, score: 1, pageRank: 0.5, fanIn: 3, fanOut: 1, symbols: 1, exportedSymbols: 1 }
+    ]
+  }
+  const documents = renderDocuments({
+    graph,
+    metrics: documentMetrics,
+    projectRules: { available: false, rules: [] },
+    unresolved: []
+  })
+
+  assert.match(documents['agent/INDEX.md'], /## God nodes/)
+  assert.match(documents['agent/GOTCHAS.md'], /## God nodes/)
 })
