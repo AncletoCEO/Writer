@@ -37,12 +37,28 @@ function stripQuery(specifier) {
   return specifier.split(/[?#]/)[0]
 }
 
+const TS_EQUIVALENTS = {
+  '.js': ['.ts', '.tsx'],
+  '.jsx': ['.tsx'],
+  '.mjs': ['.mts'],
+  '.cjs': ['.cts']
+}
+
 function candidatesFor(baseAbs, extensions) {
   const candidates = []
 
   if (isFile(baseAbs)) {
     candidates.push(baseAbs)
     return candidates
+  }
+
+  const explicitExtension = baseAbs.slice(baseAbs.lastIndexOf('.'))
+  if (TS_EQUIVALENTS[explicitExtension]) {
+    const stem = baseAbs.slice(0, -explicitExtension.length)
+    for (const alternative of TS_EQUIVALENTS[explicitExtension]) {
+      const candidate = `${stem}${alternative}`
+      if (isFile(candidate)) candidates.push(candidate)
+    }
   }
 
   for (const extension of extensions) {

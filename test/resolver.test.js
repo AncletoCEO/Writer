@@ -45,6 +45,15 @@ test('resuelve relativos con y sin extensión, e index', (t) => {
   assert.equal(resolve('./b.ts', join(dir, FROM)).target, 'src/b.ts')
 })
 
+test('resuelve .js de ESM/TS hacia .ts', (t) => {
+  const dir = tempDir(t)
+  write(dir, 'src/a.ts', '')
+  write(dir, 'src/b.ts', '')
+  const { resolve } = resolverFor(dir)
+
+  assert.equal(resolve('./b.js', join(dir, 'src/a.ts')).target, 'src/b.ts')
+})
+
 test('paths y baseUrl de tsconfig', (t) => {
   const dir = tempDir(t)
   write(dir, 'src/a.js', '')

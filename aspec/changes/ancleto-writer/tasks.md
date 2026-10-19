@@ -101,17 +101,17 @@
 
 ## Fase 9 — Suite de validación
 
-- [ ] Crear fixtures: repo vacío, repo JS/TS mixto, monorepo con alias, repo con ciclos, repo con archivos omitidos.
-- [ ] Tests de contrato: validar `graph.json`, `symbols.json`, `manifest.json` y `facts/*` contra `docs/contracts/writer-artifacts-v1.md`.
-- [ ] Tests de determinismo: dos builds byte-idénticos salvo timestamps declarados.
-- [ ] Tests de frontera: ninguna escritura fuera de `outputDir`; sin red; sin ejecución de código del repo.
-- [ ] Harness de consumo en `test/consumers/`: lee el contrato como spec para los casos fresco, stale, ausente y esquema incompatible.
-- [ ] Smoke de rendimiento con 2.000 archivos sintéticos (< 5 s) y registro del resultado.
-- [ ] Ejecutar `npm test` y `npm run lint` en verde.
+- [x] Crear fixtures: repo vacío, repo JS/TS mixto, monorepo con alias, repo con ciclos, repo con archivos omitidos.
+- [x] Tests de contrato: validar `graph.json`, `symbols.json`, `manifest.json` y `facts/*` contra `docs/contracts/writer-artifacts-v1.md`.
+- [x] Tests de determinismo: dos builds byte-idénticos salvo timestamps declarados.
+- [x] Tests de frontera: ninguna escritura fuera de `outputDir`; sin red; sin ejecución de código del repo.
+- [x] Harness de consumo en `test/consumers/`: lee el contrato como spec para los casos fresco, stale, ausente y esquema incompatible.
+- [x] Smoke de rendimiento con 2.000 archivos sintéticos (< 5 s) y registro del resultado.
+- [x] Ejecutar `npm test` y `npm run lint` en verde.
 
 ## Fase 10 — Documentación y distribución
 
-- [ ] Escribir `docs/contracts/writer-artifacts-v1.md` con layout, esquema, frescura, fallback y ejemplo de consumo.
+- [x] Escribir `docs/contracts/writer-artifacts-v1.md` con layout, esquema, frescura, fallback y ejemplo de consumo.
 - [ ] Documentar en `README.md` instalación, comandos, contrato, límites, licencia y atribución.
 - [ ] Verificar `npm pack --dry-run`: incluye `src/`, `LICENSE`, `NOTICE`, `docs/` y `README.md`; no incluye tests ni fixtures.
 - [ ] Revisar checklist AGPL: licencia, avisos, fuente en tarball, aviso en CLI, sin restricciones adicionales.
