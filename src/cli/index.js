@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import { readFileSync } from 'node:fs'
-import { CONFIG_FILE } from '../config/load.js'
+import { CONFIG_FILE, loadConfig } from '../config/load.js'
+import { checkPackage } from '../contract/check.js'
 import { runInit } from './commands/init.js'
 
 const pkg = JSON.parse(
@@ -25,10 +26,15 @@ function usage() {
   console.log('Comandos:')
   console.log('  init [--force]   Crea .ancleto-writer.json')
   console.log('  build            Escanea y publica .ancleto/writer/ (planificado)')
-  console.log('  check            Verifica frescura (planificado)')
+  console.log('  check            Verifica frescura y compatibilidad')
   console.log('  doctor           Diagnostica el entorno (planificado)')
   console.log('')
-  console.log('Opciones: --help, --version')
+  console.log('Opciones: --root <dir>, --json, --help, --version')
+}
+
+function flagValue(args, flag) {
+  const index = args.indexOf(flag)
+  return index >= 0 && args[index + 1] ? args[index + 1] : null
 }
 
 if (args.includes('--version') || args.includes('-v')) {
@@ -59,7 +65,26 @@ if (command === 'init') {
   process.exit(0)
 }
 
-if (command === 'build' || command === 'check' || command === 'doctor') {
+if (command === 'check') {
+  const root = flagValue(rest, '--root')
+  const json = rest.includes('--json')
+
+  try {
+    const config = loadConfig({ cwd: process.cwd(), cli: { root } })
+    const result = checkPackage({ rootAbs: config.rootAbs, config })
+    if (json) {
+      console.log(JSON.stringify({ status: result.status, exitCode: result.exitCode }))
+    } else {
+      console.log(`ancleto-writer: ${result.status}`)
+    }
+    process.exit(result.exitCode)
+  } catch (error) {
+    console.error(`ancleto-writer: ${error.message}`)
+    process.exit(1)
+  }
+}
+
+if (command === 'build' || command === 'doctor') {
   console.error(`ancleto-writer: "${command}" se implementa en una fase posterior.`)
   process.exit(1)
 }

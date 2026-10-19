@@ -72,12 +72,12 @@
 
 ## Fase 6 — Contrato y publicación atómica
 
-- [ ] Implementar `src/contract/manifest.js`: `schemaVersion`, versión, git, fingerprint, stats y hashes de salidas.
-- [ ] Implementar `src/contract/validate.js`: validación de esquema e integridad de salidas.
-- [ ] Implementar publicación atómica en `src/contract/writer.js` (temp → backup → swap → cleanup) con restauración ante fallo.
-- [ ] Escribir `manifest.json` al final del directorio temporal.
-- [ ] Implementar `check`: fresco (`0`), stale (`3`), esquema incompatible (`4`), sin escribir nada.
-- [ ] Tests: dos builds idénticos salvo `generatedAt`/`durationMs`; fallo simulado deja el paquete anterior intacto.
+- [x] Implementar `src/contract/manifest.js`: `schemaVersion`, versión, git, fingerprint, stats y hashes de salidas.
+- [x] Implementar `src/contract/validate.js`: validación de esquema e integridad de salidas.
+- [x] Implementar publicación atómica en `src/contract/writer.js` (temp → backup → swap → cleanup) con restauración ante fallo.
+- [x] Escribir `manifest.json` al final del directorio temporal.
+- [x] Implementar `check`: fresco (`0`), stale (`3`), esquema incompatible (`4`), sin escribir nada.
+- [x] Tests: dos builds idénticos salvo `generatedAt`/`durationMs`; fallo simulado deja el paquete anterior intacto.
 
 ## Fase 7 — Hechos, documentos y memoria read-only
 
