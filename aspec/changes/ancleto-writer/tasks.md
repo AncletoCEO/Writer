@@ -91,13 +91,13 @@
 
 ## Fase 8 — CLI
 
-- [ ] Implementar dispatch en `src/cli/index.js` con `init`, `build`, `check`, `doctor`, `--help`, `--version`.
-- [ ] Implementar `--root`, `--out`, `--json`, `--quiet` y validación de flags desconocidos.
-- [ ] Implementar exit codes `0` OK, `1` uso/config, `2` error de análisis, `3` stale, `4` esquema incompatible.
-- [ ] Implementar `doctor`: Node, git, permisos de escritura, DB de memoria, config efectiva y último manifest.
-- [ ] Mostrar aviso legal AGPL en `--version` y `--help`.
-- [ ] Rechazar Node < 24 con mensaje claro y exit `1`.
-- [ ] Tests de CLI: cada comando, cada exit code, config por flags y `--json`.
+- [x] Implementar dispatch en `src/cli/index.js` con `init`, `build`, `check`, `doctor`, `--help`, `--version`.
+- [x] Implementar `--root`, `--out`, `--json`, `--quiet` y validación de flags desconocidos.
+- [x] Implementar exit codes `0` OK, `1` uso/config, `2` error de análisis, `3` stale, `4` esquema incompatible.
+- [x] Implementar `doctor`: Node, git, permisos de escritura, DB de memoria, config efectiva y último manifest.
+- [x] Mostrar aviso legal AGPL en `--version` y `--help`.
+- [x] Rechazar Node < 24 con mensaje claro y exit `1`.
+- [x] Tests de CLI: cada comando, cada exit code, config por flags y `--json`.
 
 ## Fase 9 — Suite de validación
 
