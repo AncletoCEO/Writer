@@ -1,0 +1,104 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write   # crear el GitHub Release
+  id-token: write   # Trusted Publishing (OIDC) hacia npm — sin NPM_TOKEN
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Resolve tag
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF_NAME}"
+          else
+            TAG="v${VERSION}"
+          fi
+          echo "PKG_VERSION=${VERSION}" >> "$GITHUB_ENV"
+          echo "TAG=${TAG}" >> "$GITHUB_ENV"
+          echo "tag a publicar: ${TAG} (version ${VERSION})"
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Verify zero runtime dependencies
+        run: |
+          node -e "const p=require('./package.json'); const n=p.dependencies?Object.keys(p.dependencies).length:0; if(n){console.error('::error::'+n+' dependencies de runtime');process.exit(1)}; console.log('sin dependencies de runtime')"
+
+      # Trusted Publishing: autentica por OIDC (id-token: write), sin NPM_TOKEN.
+      # Requisito: configurar el Trusted Publisher del paquete en npmjs.com →
+      #   Provider: GitHub Actions · Repository: AncletoCEO/Writer · Workflow: publish.yml
+      # El paquete debe existir en npm antes de configurar el trusted publisher.
+      - name: Publish to npm via Trusted Publishing (skipped if the version already exists)
+        run: |
+          if npm view "@ancleto/writer@${PKG_VERSION}" version >/dev/null 2>&1; then
+            echo "ya publicado: ${PKG_VERSION} — se omite npm publish"
+          else
+            npm publish --access public --provenance
+          fi
+
+      - name: Create GitHub Release (skipped if it already exists)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "el Release ${TAG} ya existe — se omite"
+            exit 0
+          fi
+          git fetch --force origin "refs/tags/${TAG}:refs/tags/${TAG}" >/dev/null 2>&1 || true
+          TYPE=$(git cat-file -t "refs/tags/${TAG}" 2>/dev/null || echo none)
+          NOTES=""
+          if [ "$TYPE" = "tag" ]; then
+            NOTES=$(git for-each-ref "refs/tags/${TAG}" --format='%(contents)')
+          fi
+          if [ -z "$NOTES" ]; then
+            echo "sin mensaje de tag anotado: se usan notas generadas"
+            gh release create "$TAG" --title "$TAG" --generate-notes
+          else
+            gh release create "$TAG" --title "$TAG" --notes "$NOTES"
+          fi
+
+      # Canary corto y NO bloqueante.
+      - name: Canary - npm tarball disponible (no bloqueante)
+        continue-on-error: true
+        run: |
+          URL="https://registry.npmjs.org/@ancleto/writer/-/writer-${PKG_VERSION}.tgz"
+          for attempt in 1 2 3; do
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" -L "$URL")
+            if [ "$CODE" = "200" ]; then
+              echo "tarball OK: $URL"
+              exit 0
+            fi
+            echo "intento ${attempt}/3: HTTP ${CODE}"
+            if [ "$attempt" -lt 3 ]; then sleep 10; fi
+          done
+          echo "::warning::npm todavía no sirve el tarball de ${PKG_VERSION} (propagación lenta, es normal)."

@@ -1,0 +1,50 @@
+{
+  "name": "@ancleto/writer",
+  "version": "0.1.0",
+  "description": "Motor de conocimiento estático determinista para @ancleto/spec",
+  "type": "module",
+  "bin": {
+    "ancleto-writer": "src/cli/index.js"
+  },
+  "files": [
+    "src",
+    "docs",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "license": "AGPL-3.0-only",
+  "author": "AncletoCEO",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AncletoCEO/Writer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AncletoCEO/Writer/issues"
+  },
+  "homepage": "https://github.com/AncletoCEO/Writer#readme",
+  "keywords": [
+    "static-analysis",
+    "code-graph",
+    "knowledge-graph",
+    "sdd",
+    "ancleto",
+    "writer"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node scripts/check-syntax.js",
+    "lint": "eslint .",
+    "test": "node --test \"test/*.test.js\"",
+    "prepublishOnly": "npm run build && npm test && npm run lint"
+  },
+  "devDependencies": {
+    "eslint": "^10.11.0",
+    "globals": "^17.13.0"
+  }
+}

@@ -1,5 +1,16 @@
 # Branching y protección de `main`
 
+## Estado actual (2026-10-19)
+
+El enforcement server-side está **diferido al final del proyecto**. Mientras tanto:
+
+- El equipo integra directamente en `develop` (rama de trabajo).
+- `main` recibe únicamente PRs de release desde `develop`, por convención.
+- El workflow `pr-source-guard` ya está en `main`, pero no bloquea merges hasta que se
+  aplique el ruleset.
+- `scripts/setup-branch-protection.sh` queda listo para ejecutarse cuando haya una cuenta
+  admin disponible.
+
 ## Modelo de ramas
 
 | Rama | Rol | Protección |
@@ -54,7 +65,7 @@ git config --local branch.main.pushRemote no_push
 
 No es enforcement real: se puede omitir. La garantía está en GitHub.
 
-## Configuración inicial
+## Configuración inicial (cuando se active el enforcement)
 
 Requiere una cuenta con permiso **admin** sobre el repositorio:
 

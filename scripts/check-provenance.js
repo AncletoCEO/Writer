@@ -1,20 +1,39 @@
 #!/usr/bin/env node
-'use strict'
 
 // Audit de procedencia de @ancleto/writer.
 // Falla si un archivo derivado de ReadMenator no declara la cabecera SPDX completa,
 // si aparece una superficie excluida, o si un archivo menciona una derivación
 // sin estar registrado en DERIVED_FILES.
 
-const { existsSync, readFileSync, readdirSync } = require('node:fs')
-const { join, relative, sep } = require('node:path')
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { dirname, join, relative, sep } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
+const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
 const UPSTREAM = 'ReadMenator'
 const UPSTREAM_COMMIT = 'dac48f868722620f0d01dac0d33102c5a514c03c'
 
 // Completar a medida que se portan archivos (Fase 3+).
-const DERIVED_FILES = []
+const DERIVED_FILES = [
+  'src/config/glob.js',
+  'src/config/load.js',
+  'src/scan/scanner.js',
+  'src/scan/git.js',
+  'src/parsers/lexer.js',
+  'src/parsers/javascript.js',
+  'src/resolve/imports.js',
+  'src/graph/build.js',
+  'src/metrics/cycles.js',
+  'src/metrics/pagerank.js',
+  'src/metrics/layers.js',
+  'src/metrics/hotspots.js',
+  'src/metrics/blast-radius.js',
+  'src/render/mermaid.js',
+  'src/render/markdown.js',
+  'src/facts/build.js',
+  'src/facts/symbols.js'
+]
 
 // Superficies del upstream que no deben portarse.
 const FORBIDDEN_DIRS = [
