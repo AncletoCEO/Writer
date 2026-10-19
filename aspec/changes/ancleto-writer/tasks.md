@@ -123,12 +123,12 @@
 - [x] Modificar un archivo y confirmar exit `3`; restaurar y confirmar `0`.
 - [x] Confirmar que un consumidor sin writer y otro con writer stale producen el mismo fallback.
 - [x] Revisar que no existan `dependencies` en `package.json` y que el build funcione sin red (auditoría estática; `unshare -n` no permitido en este entorno).
-- [ ] Cerrar el change con `ancleto-verify` y registrar la decisión de licencia en la memoria del repo (decisión registrada; archivado bloqueado por Fase 12 y el ruleset diferido).
+- [x] Cerrar el change con `ancleto-verify` y registrar la decisión de licencia en la memoria del repo (verify ejecutado; decisión `writer-license` registrada). El ruleset de ramas queda como follow-up diferido y no bloqueante.
 
 ## Fase 12 — Publicación en npm
 
 - [x] Reservar el nombre `@ancleto/writer` en npm y confirmar el acceso al scope `@ancleto` (publicado `0.1.0`).
-- [ ] Configurar el Trusted Publisher en npmjs.com (GitHub Actions, repo `AncletoCEO/Writer`, workflow `publish.yml`); requiere que el paquete exista por la primera publicación manual.
+- [x] Configurar el Trusted Publisher en npmjs.com (GitHub Actions, repo `AncletoCEO/Writer`, workflow `publish.yml`); requiere que el paquete exista por la primera publicación manual.
 - [x] Crear `.github/workflows/publish.yml` disparado por tags `v*` con Trusted Publishing (OIDC, sin `NPM_TOKEN`): `npm ci`, build, tests, lint, verificación de cero deps, publish con provenance y GitHub Release.
 - [x] Ejecutar `npm publish --dry-run` y revisar el tarball final (fuente, `LICENSE`, `NOTICE`, `README.md`, `docs/`).
 - [x] Publicar la primera versión `0.1.0` manualmente, crear el tag `v0.1.0` y el GitHub Release.
@@ -136,4 +136,4 @@
 - [x] Smoke post-publicación: `npx @ancleto/writer@0.1.0 --version` y `npm view @ancleto/writer`.
 - [x] Documentar el proceso de release y rollback (`npm deprecate`) en `docs/releasing.md`.
 - [x] Confirmar que el workflow no publica si faltan tests, lint o el build.
-- [ ] Eliminar la versión placeholder `0.0.0-stage` creada por el flujo de autenticación (`npm unpublish @ancleto/writer@0.0.0-stage --force`, requiere OTP).
+- [x] Eliminar la versión placeholder `0.0.0-stage` creada por el flujo de autenticación (`npm unpublish @ancleto/writer@0.0.0-stage --force`, requiere OTP).
