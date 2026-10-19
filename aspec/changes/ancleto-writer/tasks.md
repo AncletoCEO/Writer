@@ -128,10 +128,10 @@
 ## Fase 12 — Publicación en npm
 
 - [ ] Reservar el nombre `@ancleto/writer` en npm (hoy disponible: 404) y confirmar el acceso al scope `@ancleto`; la reserva efectiva ocurre con la primera publicación.
-- [ ] Configurar `NPM_TOKEN` como secret de GitHub Actions con permiso de publicación y 2FA/automation token (npm local sin autenticar: E401).
-- [x] Crear `.github/workflows/publish.yml` disparado por tags `v*`: `npm ci`, `npm test`, `npm run lint`, `npm run build`, `npm publish --access public --provenance`.
+- [ ] Configurar el Trusted Publisher en npmjs.com (GitHub Actions, repo `AncletoCEO/Writer`, workflow `publish.yml`); requiere que el paquete exista por la primera publicación manual.
+- [x] Crear `.github/workflows/publish.yml` disparado por tags `v*` con Trusted Publishing (OIDC, sin `NPM_TOKEN`): `npm ci`, build, tests, lint, verificación de cero deps, publish con provenance y GitHub Release.
 - [x] Ejecutar `npm publish --dry-run` y revisar el tarball final (fuente, `LICENSE`, `NOTICE`, `README.md`, `docs/`).
-- [ ] Publicar la primera versión `0.1.0` y crear el tag `v0.1.0` + GitHub Release.
+- [ ] Publicar la primera versión `0.1.0` manualmente (requisito de npm para crear el paquete), crear el tag `v0.1.0` y configurar el Trusted Publisher para las siguientes releases.
 - [ ] Verificar la ficha de npm: nombre, versión, licencia AGPL-3.0-only, README, repositorio y procedencia.
 - [ ] Smoke post-publicación: `npx @ancleto/writer@0.1.0 --version` y `npm view @ancleto/writer`.
 - [x] Documentar el proceso de release y rollback (`npm deprecate`) en `docs/releasing.md`.
