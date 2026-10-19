@@ -5,9 +5,8 @@ Motor de conocimiento estático, determinista y offline para complementar
 JavaScript/TypeScript, construye un grafo de código y publica hechos que spec puede consumir
 como contexto, sin LLM y sin gastar tokens.
 
-> **Estado:** Fase 1 — scaffold del paquete. El paquete todavía no se publica y los comandos
-> `init`, `build`, `check` y `doctor` se implementan en las fases 2-11. Hoy funcionan
-> `--version` y `--help`.
+> **Estado:** MVP implementado (fases 1-10). Falta la verificación final y la publicación en
+> npm. Hasta entonces se usa localmente con `npm link` o `node src/cli/index.js`.
 
 ## Qué hace
 
@@ -31,25 +30,42 @@ actuales.
 ## Instalación
 
 ```bash
+# cuando esté publicado
 npm install -g @ancleto/writer
-# o
 npx @ancleto/writer --help
+
+# desarrollo local
+npm install
+npm link
+ancleto-writer --help
 ```
 
 El nombre y el binario son `@ancleto/writer` y `ancleto-writer`.
 
-## Comandos
+## Uso rápido
 
-| Comando | Estado | Descripción |
-|---|---|---|
-| `ancleto-writer init` | planificado | Crea `.ancleto-writer.json` sin sobrescribir salvo `--force` |
-| `ancleto-writer build` | planificado | Escanea, analiza y publica `.ancleto/writer/` |
-| `ancleto-writer check` | planificado | Verifica frescura y compatibilidad sin escribir |
-| `ancleto-writer doctor` | planificado | Diagnostica Node, git, permisos, memoria y configuración |
-| `ancleto-writer --help` | disponible | Uso y aviso legal |
-| `ancleto-writer --version` | disponible | Versión, copyright y licencia |
+```bash
+# en la raíz del repositorio a analizar
+ancleto-writer init
+ancleto-writer build
+ancleto-writer check
 
-Códigos de salida previstos: `0` OK, `1` uso/config, `2` análisis/publicación, `3` stale,
+# diagnóstico del entorno
+ancleto-writer doctor
+```
+
+### Comandos
+
+| Comando | Descripción |
+|---|---|
+| `ancleto-writer init [--force]` | Crea `.ancleto-writer.json` sin sobrescribir salvo `--force` |
+| `ancleto-writer build [--root <dir>] [--out <dir>] [--json] [--quiet]` | Escanea, analiza y publica `.ancleto/writer/` |
+| `ancleto-writer check [--root <dir>] [--json]` | Verifica frescura y compatibilidad sin escribir |
+| `ancleto-writer doctor [--root <dir>] [--json]` | Diagnostica Node, git, permisos, memoria y configuración |
+| `ancleto-writer --help` | Uso y aviso legal |
+| `ancleto-writer --version` | Versión, copyright y licencia |
+
+Códigos de salida: `0` OK, `1` uso/config, `2` análisis/publicación, `3` stale,
 `4` esquema incompatible.
 
 ## Contrato de artefactos
@@ -79,6 +95,9 @@ Códigos de salida previstos: `0` OK, `1` uso/config, `2` análisis/publicación
 contenido, estadísticas y hashes de las salidas. La publicación es atómica: se escribe en un
 directorio temporal, se hace swap y el manifest se escribe al final. Nunca queda un estado
 mixto.
+
+El contrato completo —layout, esquemas, frescura, fallback y ejemplo de consumo— está en
+[`docs/contracts/writer-artifacts-v1.md`](docs/contracts/writer-artifacts-v1.md).
 
 ## Integración con `@ancleto/spec`
 
@@ -112,14 +131,18 @@ inyección de README, escritura en la memoria del proyecto y stubs multi-lenguaj
 
 ```bash
 npm install
-npm test
+npm run build     # valida sintaxis de todos los .js
+npm test          # suite de tests
 npm run lint
-npm run build
 ```
 
-- El flujo de ramas está en [`docs/branching.md`](docs/branching.md).
-- La procedencia del port está en [`docs/provenance.md`](docs/provenance.md).
-- El cambio activo está en `aspec/changes/ancleto-writer/`.
+La suite cubre fixtures vacío, mixto, monorepo con alias, ciclos y archivos omitidos;
+contrato, determinismo, frontera, consumo y un smoke de 2.000 archivos.
+
+- Contrato: [`docs/contracts/writer-artifacts-v1.md`](docs/contracts/writer-artifacts-v1.md)
+- Flujo de ramas: [`docs/branching.md`](docs/branching.md)
+- Procedencia del port: [`docs/provenance.md`](docs/provenance.md)
+- Cambio activo: `aspec/changes/ancleto-writer/`
 
 ## Licencia y atribución
 
@@ -128,5 +151,6 @@ la GNU Affero General Public License, versión 3. Se distribuye con la esperanza
 útil, pero **sin ninguna garantía**. Ver [`LICENSE`](LICENSE).
 
 El proyecto está basado en [ReadMenator](https://github.com/grisuno/ReadMenator), de Gris
-Iscomeback, también bajo AGPL-3.0. La atribución completa, el commit upstream y las
-superficies que no se portan están en [`NOTICE`](NOTICE).
+Iscomeback, también bajo AGPL-3.0. La atribución completa, el commit upstream, los archivos
+derivados y las superficies que no se portan están en [`NOTICE`](NOTICE) y
+[`docs/provenance.md`](docs/provenance.md).

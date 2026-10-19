@@ -112,9 +112,9 @@
 ## Fase 10 — Documentación y distribución
 
 - [x] Escribir `docs/contracts/writer-artifacts-v1.md` con layout, esquema, frescura, fallback y ejemplo de consumo.
-- [ ] Documentar en `README.md` instalación, comandos, contrato, límites, licencia y atribución.
-- [ ] Verificar `npm pack --dry-run`: incluye `src/`, `LICENSE`, `NOTICE`, `docs/` y `README.md`; no incluye tests ni fixtures.
-- [ ] Revisar checklist AGPL: licencia, avisos, fuente en tarball, aviso en CLI, sin restricciones adicionales.
+- [x] Documentar en `README.md` instalación, comandos, contrato, límites, licencia y atribución.
+- [x] Verificar `npm pack --dry-run`: incluye `src/`, `LICENSE`, `NOTICE`, `docs/` y `README.md`; no incluye tests ni fixtures.
+- [x] Revisar checklist AGPL: licencia, avisos, fuente en tarball, aviso en CLI, sin restricciones adicionales.
 
 ## Fase 11 — Verificación final
 

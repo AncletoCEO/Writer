@@ -28,10 +28,11 @@ This project is a derivative work based on ReadMenator:
   Version at commit: 1.6.0 (pyproject.toml; version.json reports 1.5.0)
 
 Port preparation date: 2026-10-19
-Derived files created at the time of this notice: none.
+Derived files: 17, listed in docs/provenance.md. The port covers the static
+analysis core: config, scanner, git metadata, JS/TS lexer and parser, import
+resolver, graph, metrics, Mermaid/Markdown rendering and JSON facts.
 
-The port has not copied any source file yet. When a file is created from an
-upstream module, it must carry this header in its first lines:
+Every derived file carries this header in its first lines:
 
   // SPDX-License-Identifier: AGPL-3.0-only
   // Derived from ReadMenator <module> (commit dac48f868722620f0d01dac0d33102c5a514c03c),
