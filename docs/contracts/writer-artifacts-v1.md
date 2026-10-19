@@ -169,6 +169,7 @@ Todos declaran `schemaVersion: 1`:
 | Archivo | Contenido |
 |---|---|
 | `cycles.json` | `{ cycles: [{ size, files }], selfLoops: [id] }` |
+| `dead-code.json` | `{ orphanFiles: [{ path, reason, confidence }], excluded: [{ path, reason }], dynamicImports }` |
 | `bridges.json` | `{ bridges: [{ from, to, fromCommunity, toCommunity, score, line }] }` |
 | `communities.json` | `{ communities: [{ id, size, cohesion, files }] }` |
 | `god-nodes.json` | `{ godNodes: [{ path, score, pageRank, fanIn, fanOut, symbols, exportedSymbols }] }` |
@@ -184,6 +185,10 @@ Todos declaran `schemaVersion: 1`:
 
 `unsupported.json` reporta archivos de lenguajes conocidos que Writer todavía no analiza. No
 generan nodos ni aristas; existen solo para que el consumidor vea la cobertura faltante.
+
+`dead-code.json` reporta candidatos a archivos huérfanos (sin imports entrantes) con
+exclusiones de entrypoints, tests, config y scripts. No elimina código ni detecta símbolos
+huérfanos.
 
 `communities.json` agrupa archivos por modularidad sobre el grafo de imports. `cohesion` es la
 cantidad de aristas internas dividida por las aristas incidentes a la comunidad (0 a 1). Los

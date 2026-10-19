@@ -52,6 +52,17 @@ export function runLint({ rootAbs, config }) {
     }
   }
 
+  if (rules.orphanFiles === true) {
+    for (const orphan of analysis.orphans?.orphanFiles ?? []) {
+      findings.push({
+        rule: 'orphan-files',
+        message: `Archivo huérfano (${orphan.confidence})`,
+        path: orphan.path,
+        confidence: orphan.confidence
+      })
+    }
+  }
+
   if (rules.unresolved !== false) {
     for (const entry of analysis.unresolved) {
       findings.push({

@@ -46,11 +46,17 @@ const DEFAULTS = {
   uml: {
     maxClasses: 40
   },
+  orphans: {
+    enabled: true,
+    entrypoints: [],
+    exclude: []
+  },
   lint: {
     cycles: true,
     layerViolations: true,
     unresolved: true,
-    maxBlastRadius: null
+    maxBlastRadius: null,
+    orphanFiles: false
   },
   impactSeeds: [],
   memory: {
@@ -188,10 +194,21 @@ function validate(config) {
   if (!Number.isInteger(config.uml.maxClasses) || config.uml.maxClasses <= 0) {
     throw new ConfigError('uml.maxClasses debe ser un entero positivo')
   }
+  if (!isPlainObject(config.orphans)) {
+    throw new ConfigError('orphans debe ser un objeto')
+  }
+  if (typeof config.orphans.enabled !== 'boolean') {
+    throw new ConfigError('orphans.enabled debe ser boolean')
+  }
+  for (const key of ['entrypoints', 'exclude']) {
+    if (!Array.isArray(config.orphans[key]) || config.orphans[key].some((item) => typeof item !== 'string')) {
+      throw new ConfigError(`orphans.${key} debe ser un array de strings`)
+    }
+  }
   if (!isPlainObject(config.lint)) {
     throw new ConfigError('lint debe ser un objeto')
   }
-  for (const key of ['cycles', 'layerViolations', 'unresolved']) {
+  for (const key of ['cycles', 'layerViolations', 'unresolved', 'orphanFiles']) {
     if (typeof config.lint[key] !== 'boolean') {
       throw new ConfigError(`lint.${key} debe ser boolean`)
     }

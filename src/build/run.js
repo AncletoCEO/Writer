@@ -19,10 +19,8 @@ function json(value) {
 export function runBuild({ rootAbs, config, now = () => new Date().toISOString() }) {
   const startedAt = Date.now()
 
-  const { scanResult, gitInfo, graph, externals, unresolved, metrics } = analyzeRepository({
-    rootAbs,
-    config
-  })
+  const { scanResult, gitInfo, graph, externals, unresolved, metrics, orphans } =
+    analyzeRepository({ rootAbs, config })
 
   const projectRules = readProjectRules(rootAbs, config.memory)
   const unsupportedFact = buildUnsupportedFact(scanResult.unsupported ?? [], {
@@ -36,6 +34,7 @@ export function runBuild({ rootAbs, config, now = () => new Date().toISOString()
     externals,
     unresolved,
     unsupportedFact,
+    orphans,
     config
   })
   const documents = renderDocuments({
@@ -44,6 +43,7 @@ export function runBuild({ rootAbs, config, now = () => new Date().toISOString()
     projectRules,
     unresolved,
     unsupported: unsupportedFact,
+    orphans,
     config
   })
 
@@ -58,7 +58,8 @@ export function runBuild({ rootAbs, config, now = () => new Date().toISOString()
     ...graph.stats,
     unresolved: unresolved.length,
     skipped: scanResult.skipped.length,
-    unsupported: scanResult.unsupported.length
+    unsupported: scanResult.unsupported.length,
+    orphanFiles: orphans.orphanFiles.length
   }
 
   const manifest = buildManifest({

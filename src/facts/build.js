@@ -2,6 +2,7 @@
 // Derived from ReadMenator readmenator/_exporter.py (commit dac48f868722620f0d01dac0d33102c5a514c03c),
 // modified 2026-10-19 by AncletoCEO.
 
+import { buildDeadCodeFact } from './dead-code.js'
 import { buildExternalsFact } from './externals.js'
 import { buildSkippedFact } from './skipped.js'
 import { buildUnsupportedFact } from './unsupported.js'
@@ -49,6 +50,7 @@ export function buildFacts({
   externals,
   unresolved,
   unsupportedFact = null,
+  orphans = null,
   config = {}
 }) {
   const unsupported =
@@ -80,6 +82,7 @@ export function buildFacts({
       schemaVersion: 1,
       bridges: metrics.bridges ?? []
     }),
+    'facts/dead-code.json': json(buildDeadCodeFact(orphans)),
     'facts/hotspots.json': json({
       schemaVersion: 1,
       hotspots: metrics.hotspots

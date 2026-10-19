@@ -40,6 +40,7 @@ Writer produce un paquete versionado en `.ancleto/writer/` con:
 - fan-in/fan-out, ciclos, PageRank, capas, comunidades, god nodes, conexiones inesperadas, hotspots y blast radius;
 - documentación accionable para agentes (`INDEX`, `SYMBOLS`, `GOTCHAS`, `ARCHITECTURE`);
 - reporte de archivos de lenguajes no soportados, sin analizarlos;
+- candidatos a archivos huérfanos con exclusiones y confianza;
 - diagrama UML Mermaid de clases e interfaces;
 - un `manifest.json` con commit, fingerprint y hashes para verificar frescura.
 
@@ -254,7 +255,8 @@ El algoritmo de fingerprint y los casos de fallback están en el contrato.
     "cycles": true,
     "layerViolations": true,
     "unresolved": true,
-    "maxBlastRadius": null
+    "maxBlastRadius": null,
+    "orphanFiles": false
   },
   "memory": {
     "enabled": true,

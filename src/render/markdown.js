@@ -116,7 +116,13 @@ export function renderSymbols(graph) {
   return paginate('SYMBOLS', 'Symbols', body)
 }
 
-export function renderGotchas({ metrics, projectRules = null, unresolved = [], unsupported = null }) {
+export function renderGotchas({
+  metrics,
+  projectRules = null,
+  unresolved = [],
+  unsupported = null,
+  orphans = null
+}) {
   const body = []
 
   body.push('## Blast radius', '')
@@ -199,6 +205,17 @@ export function renderGotchas({ metrics, projectRules = null, unresolved = [], u
     body.push(
       `- \`${entry.path}\`${entry.specifier ? ` → \`${entry.specifier}\`` : ''} — ${entry.reason}`
     )
+  }
+  body.push('')
+
+  body.push('## Archivos huérfanos', '')
+  const orphanFiles = orphans?.orphanFiles ?? []
+  if (orphanFiles.length === 0) {
+    body.push('- Sin archivos huérfanos.')
+  } else {
+    for (const orphan of orphanFiles.slice(0, 20)) {
+      body.push(`- \`${orphan.path}\` — ${orphan.confidence}`)
+    }
   }
   body.push('')
 
@@ -303,12 +320,13 @@ export function renderDocuments({
   projectRules = null,
   unresolved = [],
   unsupported = null,
+  orphans = null,
   config = {}
 }) {
   const documents = {
     ...renderIndex(graph, metrics.godNodes ?? []),
     ...renderSymbols(graph),
-    ...renderGotchas({ metrics, projectRules, unresolved, unsupported }),
+    ...renderGotchas({ metrics, projectRules, unresolved, unsupported, orphans }),
     ...renderArchitecture({ graph, metrics, config })
   }
 

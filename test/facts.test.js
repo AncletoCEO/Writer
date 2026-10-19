@@ -86,6 +86,7 @@ test('facts JSON e inventory', () => {
     'facts/bridges.json',
     'facts/communities.json',
     'facts/cycles.json',
+    'facts/dead-code.json',
     'facts/externals.json',
     'facts/god-nodes.json',
     'facts/hotspots.json',
@@ -100,6 +101,7 @@ test('facts JSON e inventory', () => {
   assert.equal(JSON.parse(facts['facts/communities.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/god-nodes.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/bridges.json']).schemaVersion, 1)
+  assert.equal(JSON.parse(facts['facts/dead-code.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/unsupported.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/unsupported.json']).totals.files, 1)
   assert.equal(JSON.parse(facts['facts/externals.json']).externals[0].specifier, 'lodash')
