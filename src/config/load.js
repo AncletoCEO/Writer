@@ -29,6 +29,25 @@ const DEFAULTS = {
     enabled: true,
     overrides: {}
   },
+  communities: {
+    enabled: true,
+    maxIterations: 50
+  },
+  godNodes: {
+    limit: 20
+  },
+  bridges: {
+    limit: 20
+  },
+  uml: {
+    maxClasses: 40
+  },
+  lint: {
+    cycles: true,
+    layerViolations: true,
+    unresolved: true,
+    maxBlastRadius: null
+  },
   impactSeeds: [],
   memory: {
     enabled: true,
@@ -125,6 +144,47 @@ function validate(config) {
   }
   if (config.followSymlinks !== false) {
     throw new ConfigError('followSymlinks no está soportado: debe ser false')
+  }
+  if (!isPlainObject(config.communities)) {
+    throw new ConfigError('communities debe ser un objeto')
+  }
+  if (typeof config.communities.enabled !== 'boolean') {
+    throw new ConfigError('communities.enabled debe ser boolean')
+  }
+  if (!Number.isInteger(config.communities.maxIterations) || config.communities.maxIterations <= 0) {
+    throw new ConfigError('communities.maxIterations debe ser un entero positivo')
+  }
+  if (!isPlainObject(config.godNodes)) {
+    throw new ConfigError('godNodes debe ser un objeto')
+  }
+  if (!Number.isInteger(config.godNodes.limit) || config.godNodes.limit <= 0) {
+    throw new ConfigError('godNodes.limit debe ser un entero positivo')
+  }
+  if (!isPlainObject(config.bridges)) {
+    throw new ConfigError('bridges debe ser un objeto')
+  }
+  if (!Number.isInteger(config.bridges.limit) || config.bridges.limit <= 0) {
+    throw new ConfigError('bridges.limit debe ser un entero positivo')
+  }
+  if (!isPlainObject(config.uml)) {
+    throw new ConfigError('uml debe ser un objeto')
+  }
+  if (!Number.isInteger(config.uml.maxClasses) || config.uml.maxClasses <= 0) {
+    throw new ConfigError('uml.maxClasses debe ser un entero positivo')
+  }
+  if (!isPlainObject(config.lint)) {
+    throw new ConfigError('lint debe ser un objeto')
+  }
+  for (const key of ['cycles', 'layerViolations', 'unresolved']) {
+    if (typeof config.lint[key] !== 'boolean') {
+      throw new ConfigError(`lint.${key} debe ser boolean`)
+    }
+  }
+  if (
+    config.lint.maxBlastRadius !== null &&
+    (!Number.isInteger(config.lint.maxBlastRadius) || config.lint.maxBlastRadius < 0)
+  ) {
+    throw new ConfigError('lint.maxBlastRadius debe ser null o un entero no negativo')
   }
   if (!isPlainObject(config.memory)) {
     throw new ConfigError('memory debe ser un objeto')

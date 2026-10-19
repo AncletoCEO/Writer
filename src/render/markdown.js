@@ -2,7 +2,13 @@
 // Derived from ReadMenator readmenator/_documentation.py (commit dac48f868722620f0d01dac0d33102c5a514c03c),
 // modified 2026-10-19 by AncletoCEO.
 
-import { renderCycleGraph, renderImportGraph, renderLayerGraph } from './mermaid.js'
+import {
+  renderCommunityGraph,
+  renderCycleGraph,
+  renderImportGraph,
+  renderLayerGraph
+} from './mermaid.js'
+import { renderUml } from './uml.js'
 
 const PAGE_LIMIT = 500
 
@@ -63,11 +69,19 @@ function layerCounts(layers) {
   return [...counts.entries()].sort((a, b) => a[0].localeCompare(b[0]))
 }
 
-export function renderIndex(graph) {
+export function renderIndex(graph, godNodes = []) {
   const body = [
     `Total: ${graph.stats.files} archivos, ${graph.stats.symbols} símbolos, ${graph.stats.edges} aristas.`,
     ''
   ]
+
+  if (godNodes.length > 0) {
+    body.push('## God nodes', '')
+    for (const node of godNodes.slice(0, 10)) {
+      body.push(`- \`${node.path}\` — score ${node.score.toFixed(4)}`)
+    }
+    body.push('')
+  }
 
   for (const file of graph.nodes.filter((node) => node.kind === 'file')) {
     body.push(
@@ -114,6 +128,25 @@ export function renderGotchas({ metrics, projectRules = null, unresolved = [] })
   if (metrics.blastRadius.length === 0) body.push('- Sin semillas de impacto.')
   body.push('')
 
+  const communities = metrics.communities ?? []
+  const multiFileCommunities = communities.filter((community) => community.size > 1)
+  body.push('## Comunidades', '')
+  if (multiFileCommunities.length === 0) {
+    body.push('- Sin comunidades de más de un archivo.')
+  } else {
+    for (const community of multiFileCommunities.slice(0, 10)) {
+      const flags = [
+        community.size >= 5 ? 'grande' : null,
+        community.cohesion < 0.3 ? 'baja cohesión' : null
+      ].filter(Boolean)
+      body.push(
+        `- ${community.id}: ${community.size} archivos, cohesión ${community.cohesion.toFixed(2)}` +
+          (flags.length > 0 ? ` (${flags.join(', ')})` : '')
+      )
+    }
+  }
+  body.push('')
+
   body.push('## Ciclos', '')
   if (metrics.cycles.cycles.length === 0) body.push('- Sin ciclos de imports.')
   for (const cycle of metrics.cycles.cycles) {
@@ -125,6 +158,29 @@ export function renderGotchas({ metrics, projectRules = null, unresolved = [] })
   body.push('## Hotspots', '')
   for (const hotspot of metrics.hotspots.slice(0, 10)) {
     body.push(`- \`${hotspot.path}\` — score ${hotspot.score.toFixed(4)}`)
+  }
+  body.push('')
+
+  body.push('## God nodes', '')
+  const godNodes = metrics.godNodes ?? []
+  if (godNodes.length === 0) body.push('- Sin god nodes.')
+  for (const node of godNodes.slice(0, 10)) {
+    body.push(
+      `- \`${node.path}\` — score ${node.score.toFixed(4)} ` +
+        `(fan-in ${node.fanIn}, ${node.exportedSymbols} símbolos exportados)`
+    )
+  }
+  body.push('')
+
+  body.push('## Conexiones inesperadas', '')
+  const bridges = metrics.bridges ?? []
+  if (bridges.length === 0) body.push('- Sin conexiones entre comunidades.')
+  for (const bridge of bridges.slice(0, 10)) {
+    body.push(
+      `- \`${bridge.from}\` (${bridge.fromCommunity}) → \`${bridge.to}\` (${bridge.toCommunity}) — ` +
+        `score ${bridge.score.toFixed(4)}` +
+        (bridge.line === null ? '' : ` (línea ${bridge.line})`)
+    )
   }
   body.push('')
 
@@ -158,7 +214,7 @@ export function renderGotchas({ metrics, projectRules = null, unresolved = [] })
   return paginate('GOTCHAS', 'Gotchas', body)
 }
 
-export function renderArchitecture({ graph, metrics }) {
+export function renderArchitecture({ graph, metrics, config = {} }) {
   const body = []
 
   body.push('## Capas', '')
@@ -166,6 +222,44 @@ export function renderArchitecture({ graph, metrics }) {
     body.push(`- ${layer}: ${count}`)
   }
   body.push('')
+
+  const communities = metrics.communities ?? []
+  const multiFileCommunities = communities.filter((community) => community.size > 1)
+
+  body.push('## Comunidades', '')
+  if (multiFileCommunities.length === 0) {
+    body.push('- Sin comunidades de más de un archivo.', '')
+  } else {
+    for (const community of multiFileCommunities.slice(0, 10)) {
+      body.push(
+        `- ${community.id} (${community.size} archivos, cohesión ${community.cohesion.toFixed(2)}): ` +
+          `${community.files.slice(0, 8).map(stripFile).join(', ')}` +
+          (community.files.length > 8 ? ', …' : '')
+      )
+    }
+    body.push('')
+    const communityGraph = renderCommunityGraph(graph, communities)
+    if (communityGraph) {
+      body.push('```mermaid')
+      body.push(communityGraph.trimEnd())
+      body.push('```', '')
+    }
+  }
+
+  body.push('## UML', '')
+  const umlDiagrams = renderUml(graph, { maxClasses: config?.uml?.maxClasses ?? 40 })
+  if (umlDiagrams.length === 0) {
+    body.push('- Sin clases o interfaces declaradas.', '')
+  } else {
+    if (umlDiagrams.length > 1) {
+      body.push(`Diagramas: ${umlDiagrams.length} bloques.`, '')
+    }
+    for (const diagram of umlDiagrams) {
+      body.push('```mermaid')
+      body.push(diagram.trimEnd())
+      body.push('```', '')
+    }
+  }
 
   body.push('## Grafo de imports', '')
   body.push('```mermaid')
@@ -191,12 +285,18 @@ export function renderArchitecture({ graph, metrics }) {
   return paginate('ARCHITECTURE', 'Architecture', body)
 }
 
-export function renderDocuments({ graph, metrics, projectRules = null, unresolved = [] }) {
+export function renderDocuments({
+  graph,
+  metrics,
+  projectRules = null,
+  unresolved = [],
+  config = {}
+}) {
   const documents = {
-    ...renderIndex(graph),
+    ...renderIndex(graph, metrics.godNodes ?? []),
     ...renderSymbols(graph),
     ...renderGotchas({ metrics, projectRules, unresolved }),
-    ...renderArchitecture({ graph, metrics })
+    ...renderArchitecture({ graph, metrics, config })
   }
 
   return Object.fromEntries(

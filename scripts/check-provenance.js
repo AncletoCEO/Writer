@@ -25,6 +25,8 @@ const DERIVED_FILES = [
   'src/resolve/imports.js',
   'src/graph/build.js',
   'src/metrics/cycles.js',
+  'src/metrics/communities.js',
+  'src/metrics/bridges.js',
   'src/metrics/pagerank.js',
   'src/metrics/layers.js',
   'src/metrics/hotspots.js',
@@ -32,6 +34,7 @@ const DERIVED_FILES = [
   'src/render/mermaid.js',
   'src/render/markdown.js',
   'src/facts/build.js',
+  'src/facts/god-nodes.js',
   'src/facts/symbols.js'
 ]
 

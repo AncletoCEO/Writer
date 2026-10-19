@@ -34,6 +34,9 @@ function metrics() {
   return {
     cycles: { cycles: [], selfLoops: [] },
     layers: { layers: { 'src/a.js': 'domain' }, violations: [] },
+    communities: [],
+    godNodes: [],
+    bridges: [],
     hotspots: [],
     blastRadius: []
   }
@@ -89,4 +92,116 @@ test('documentos pequeños no paginan', () => {
   assert.ok(documents['agent/SYMBOLS.md'])
   assert.equal(documents['agent/SYMBOLS_p2.md'], undefined)
   assert.match(documents['agent/GOTCHAS.md'], /memoria no disponible/)
+})
+
+test('arquitectura y gotchas incluyen comunidades', () => {
+  const first = 'src/a.js'
+  const second = 'src/b.js'
+  const graph = {
+    stats: { files: 2, symbols: 0, edges: 1 },
+    nodes: [fileNode(first), fileNode(second)],
+    edges: [{ from: `file:${first}`, to: `file:${second}`, kind: 'import', line: 1 }]
+  }
+  const documentMetrics = {
+    ...metrics(),
+    communities: [{ id: 'c1', size: 2, cohesion: 0.5, files: [first, second] }]
+  }
+  const documents = renderDocuments({
+    graph,
+    metrics: documentMetrics,
+    projectRules: { available: false, rules: [] },
+    unresolved: []
+  })
+
+  assert.match(documents['agent/ARCHITECTURE.md'], /## Comunidades/)
+  assert.match(documents['agent/ARCHITECTURE.md'], /subgraph c1/)
+  assert.match(documents['agent/GOTCHAS.md'], /## Comunidades/)
+})
+
+test('index y gotchas incluyen god nodes', () => {
+  const path = 'src/a.js'
+  const graph = {
+    stats: { files: 1, symbols: 1, edges: 0 },
+    nodes: [fileNode(path), ...symbolNodes(path, 1)],
+    edges: []
+  }
+  const documentMetrics = {
+    ...metrics(),
+    godNodes: [
+      { path, score: 1, pageRank: 0.5, fanIn: 3, fanOut: 1, symbols: 1, exportedSymbols: 1 }
+    ]
+  }
+  const documents = renderDocuments({
+    graph,
+    metrics: documentMetrics,
+    projectRules: { available: false, rules: [] },
+    unresolved: []
+  })
+
+  assert.match(documents['agent/INDEX.md'], /## God nodes/)
+  assert.match(documents['agent/GOTCHAS.md'], /## God nodes/)
+})
+
+test('gotchas incluye conexiones inesperadas', () => {
+  const path = 'src/a.js'
+  const graph = {
+    stats: { files: 1, symbols: 1, edges: 0 },
+    nodes: [fileNode(path), ...symbolNodes(path, 1)],
+    edges: []
+  }
+  const documents = renderDocuments({
+    graph,
+    metrics: {
+      ...metrics(),
+      bridges: [
+        {
+          from: 'src/a.js',
+          to: 'src/b.js',
+          fromCommunity: 'c1',
+          toCommunity: 'c2',
+          fromLayer: 'domain',
+          toLayer: 'presentation',
+          score: 0.5,
+          line: 3
+        }
+      ]
+    },
+    projectRules: { available: false, rules: [] },
+    unresolved: []
+  })
+
+  assert.match(documents['agent/GOTCHAS.md'], /## Conexiones inesperadas/)
+  assert.match(documents['agent/GOTCHAS.md'], /src\/a\.js/)
+})
+
+test('architectura incluye UML', () => {
+  const path = 'src/a.ts'
+  const graph = {
+    stats: { files: 1, symbols: 1, edges: 0 },
+    nodes: [
+      fileNode(path),
+      {
+        id: `sym:${path}#A@1`,
+        kind: 'symbol',
+        path,
+        name: 'A',
+        symbolKind: 'class',
+        exported: true,
+        line: 1,
+        endLine: 2,
+        signature: 'class A',
+        owner: null
+      }
+    ],
+    edges: []
+  }
+  const documents = renderDocuments({
+    graph,
+    metrics: metrics(),
+    projectRules: { available: false, rules: [] },
+    unresolved: [],
+    config: { uml: { maxClasses: 10 } }
+  })
+
+  assert.match(documents['agent/ARCHITECTURE.md'], /classDiagram/)
 })

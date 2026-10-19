@@ -12,7 +12,7 @@ Motor de conocimiento estático, determinista y offline para complementar
 JavaScript/TypeScript, construye un grafo de código y publica hechos que spec puede consumir
 como contexto, sin LLM y sin gastar tokens.
 
-> **Estado:** `0.1.1` publicado en npm. Licencia AGPL-3.0-only, Node ≥ 24 y cero
+> **Estado:** `0.2.0` publicado en npm. Licencia AGPL-3.0-only, Node ≥ 24 y cero
 > dependencias de runtime.
 
 ## Contenido
@@ -37,8 +37,9 @@ como contexto, sin LLM y sin gastar tokens.
 Writer produce un paquete versionado en `.ancleto/writer/` con:
 
 - imports, símbolos, llamadas intra-archivo y herencia;
-- fan-in/fan-out, ciclos, PageRank, capas, hotspots y blast radius;
+- fan-in/fan-out, ciclos, PageRank, capas, comunidades, god nodes, conexiones inesperadas, hotspots y blast radius;
 - documentación accionable para agentes (`INDEX`, `SYMBOLS`, `GOTCHAS`, `ARCHITECTURE`);
+- diagrama UML Mermaid de clases e interfaces;
 - un `manifest.json` con commit, fingerprint y hashes para verificar frescura.
 
 `@ancleto/spec` lo consume de forma **opcional**: si writer no está instalado, está viejo o
@@ -70,6 +71,9 @@ ancleto-writer init
 ancleto-writer build
 ancleto-writer check
 
+# impacto de un cambio
+ancleto-writer impact src/core/engine.js
+
 # diagnóstico del entorno
 ancleto-writer doctor
 ```
@@ -81,12 +85,14 @@ ancleto-writer doctor
 | `ancleto-writer init [--force]` | Crea `.ancleto-writer.json` sin sobrescribir salvo `--force` |
 | `ancleto-writer build [--root <dir>] [--out <dir>] [--json] [--quiet]` | Escanea, analiza y publica `.ancleto/writer/` |
 | `ancleto-writer check [--root <dir>] [--json]` | Verifica frescura y compatibilidad sin escribir |
+| `ancleto-writer lint [--root <dir>] [--json]` | Evalúa reglas de arquitectura: ciclos, capas, imports no resueltos y blast radius |
+| `ancleto-writer impact <archivo...> [--root <dir>] [--depth N] [--build] [--json]` | Dependientes directos y transitivos de uno o más archivos |
 | `ancleto-writer doctor [--root <dir>] [--json]` | Diagnostica Node, git, permisos, memoria y configuración |
 | `ancleto-writer --help` | Uso y aviso legal |
 | `ancleto-writer --version` | Versión, copyright y licencia |
 
 Códigos de salida: `0` OK, `1` uso/config, `2` análisis/publicación, `3` stale,
-`4` esquema incompatible.
+`4` esquema incompatible, `5` violaciones de `lint`.
 
 ## Ejemplo de salida
 
@@ -102,6 +108,9 @@ ancleto-writer: publicado .ancleto/writer (25 archivos, 458 aristas, 109 ms)
 ├── symbols.json
 ├── facts/
 │   ├── cycles.json
+│   ├── bridges.json
+│   ├── communities.json
+│   ├── god-nodes.json
 │   ├── layers.json
 │   ├── hotspots.json
 │   ├── blast-radius.json
@@ -121,7 +130,7 @@ ancleto-writer: publicado .ancleto/writer (25 archivos, 458 aristas, 109 ms)
 ```json
 {
   "schemaVersion": 1,
-  "writerVersion": "0.1.1",
+  "writerVersion": "0.2.0",
   "gitCommit": "abc123",
   "gitDirty": false,
   "fingerprint": "sha256:...",
@@ -227,6 +236,25 @@ El algoritmo de fingerprint y los casos de fallback están en el contrato.
       "domain": ["src/core/memory/database.js"]
     }
   },
+  "communities": {
+    "enabled": true,
+    "maxIterations": 50
+  },
+  "godNodes": {
+    "limit": 20
+  },
+  "bridges": {
+    "limit": 20
+  },
+  "uml": {
+    "maxClasses": 40
+  },
+  "lint": {
+    "cycles": true,
+    "layerViolations": true,
+    "unresolved": true,
+    "maxBlastRadius": null
+  },
   "memory": {
     "enabled": true,
     "path": ".ancleto/memory.db",
@@ -251,9 +279,9 @@ scan → parse → resolve → graph → metrics → facts → render → atomic
 - **parse:** lexer/parser para JS, TS, JSX y TSX.
 - **resolve:** relativos, extensiones, `index.*`, alias de `tsconfig` y detección de externos.
 - **graph:** nodos de archivo/símbolo y aristas `import`, `call` e `inherits`.
-- **metrics:** ciclos, PageRank, capas, hotspots y blast radius.
+- **metrics:** ciclos, PageRank, capas, comunidades, god nodes, conexiones inesperadas, hotspots y blast radius.
 - **facts:** JSON estable para agentes y consumidores.
-- **render:** Markdown y Mermaid, con paginación de 500 líneas.
+- **render:** Markdown, Mermaid, UML y paginación de 500 líneas.
 - **publish:** swap atómico con `manifest.json` al final.
 
 ## Seguridad y límites
@@ -307,7 +335,8 @@ contrato, determinismo, frontera, consumo y un smoke de 2.000 archivos.
 ### Uso en CI
 
 ```yaml
-- run: npx @ancleto/writer@0.1.1 build --json
+- run: npx @ancleto/writer@0.2.0 build --json
+- run: npx @ancleto/writer@0.2.0 lint --json
 - uses: actions/upload-artifact@v4
   with:
     name: writer-context
@@ -328,7 +357,8 @@ contrato, determinismo, frontera, consumo y un smoke de 2.000 archivos.
 - Publish (`.github/workflows/publish.yml`): tags `v*`, Trusted Publishing por OIDC, sin
   `NPM_TOKEN`, con provenance y GitHub Release.
 - `0.1.0` fue la primera publicación manual. `0.1.1` fue la primera release por OIDC con
-  provenance; las siguientes salen por el workflow.
+  provenance. `0.2.0` agrega comunidades, god nodes, conexiones inesperadas, UML, lint e
+  impact; las siguientes salen por el workflow.
 - La ficha de npm muestra el README del tarball publicado: los cambios de este README se
   verán en npm al publicar la próxima versión.
 

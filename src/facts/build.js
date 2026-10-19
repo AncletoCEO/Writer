@@ -46,6 +46,18 @@ export function buildFacts({ graph, metrics, scanResult, externals, unresolved }
       layers: metrics.layers.layers,
       violations: metrics.layers.violations
     }),
+    'facts/communities.json': json({
+      schemaVersion: 1,
+      communities: metrics.communities ?? []
+    }),
+    'facts/god-nodes.json': json({
+      schemaVersion: 1,
+      godNodes: metrics.godNodes ?? []
+    }),
+    'facts/bridges.json': json({
+      schemaVersion: 1,
+      bridges: metrics.bridges ?? []
+    }),
     'facts/hotspots.json': json({
       schemaVersion: 1,
       hotspots: metrics.hotspots

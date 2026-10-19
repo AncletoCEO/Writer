@@ -32,7 +32,7 @@ function assertContract(config, result) {
   assert.equal(symbols.schemaVersion, 1)
   assert.ok(Array.isArray(symbols.files))
 
-  for (const name of ['cycles', 'layers', 'hotspots', 'blast-radius', 'unresolved', 'externals', 'skipped']) {
+  for (const name of ['cycles', 'communities', 'god-nodes', 'bridges', 'layers', 'hotspots', 'blast-radius', 'unresolved', 'externals', 'skipped']) {
     const fact = readJson(join(config.outputDirAbs, 'facts', `${name}.json`))
     assert.equal(fact.schemaVersion, 1, name)
   }

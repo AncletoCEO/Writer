@@ -15,6 +15,9 @@ El productor escribe todo dentro de `outputDir` (default `.ancleto/writer/`):
 ├── symbols.json
 ├── facts/
 │   ├── cycles.json
+│   ├── bridges.json
+│   ├── communities.json
+│   ├── god-nodes.json
 │   ├── layers.json
 │   ├── hotspots.json
 │   ├── blast-radius.json
@@ -32,12 +35,15 @@ El productor escribe todo dentro de `outputDir` (default `.ancleto/writer/`):
 Los documentos de `agent/` pueden paginarse como `NAME_p2.md`, `NAME_p3.md`, etc. Cada página
 tiene como máximo 500 líneas. Los consumidores deben considerar todas las páginas que existan.
 
+`ARCHITECTURE.md` incluye capas, comunidades, un diagrama UML Mermaid de clases e interfaces,
+el grafo de imports y los ciclos.
+
 ## `manifest.json`
 
 ```json
 {
   "schemaVersion": 1,
-  "writerVersion": "0.1.0",
+  "writerVersion": "0.2.0",
   "generatedAt": "2026-10-19T12:00:00.000Z",
   "root": ".",
   "gitCommit": "abc123",
@@ -49,6 +55,7 @@ tiene como máximo 500 líneas. Los consumidores deben considerar todas las pág
     "edges": 789,
     "externalImports": 42,
     "cycles": 2,
+    "communities": 2,
     "selfLoops": 0,
     "unresolved": 1,
     "skipped": 0
@@ -97,6 +104,8 @@ timestamps ni del orden del filesystem.
       "fanOut": 1,
       "pageRank": 0.5,
       "layer": "application",
+      "community": "c1",
+      "exportedSymbols": 1,
       "hotspot": 0.2
     },
     {
@@ -160,6 +169,9 @@ Todos declaran `schemaVersion: 1`:
 | Archivo | Contenido |
 |---|---|
 | `cycles.json` | `{ cycles: [{ size, files }], selfLoops: [id] }` |
+| `bridges.json` | `{ bridges: [{ from, to, fromCommunity, toCommunity, score, line }] }` |
+| `communities.json` | `{ communities: [{ id, size, cohesion, files }] }` |
+| `god-nodes.json` | `{ godNodes: [{ path, score, pageRank, fanIn, fanOut, symbols, exportedSymbols }] }` |
 | `layers.json` | `{ layers: { path: layer }, violations: [{ from, to, fromLayer, toLayer, line }] }` |
 | `hotspots.json` | `{ hotspots: [{ path, score, fanIn, fanOut, symbols, cycle }] }` |
 | `blast-radius.json` | `{ seeds: [{ path, reason, direct, transitive, dependents }] }` |
@@ -168,6 +180,17 @@ Todos declaran `schemaVersion: 1`:
 | `skipped.json` | `{ skipped: [{ path, reason }] }` |
 
 `facts/inventory.md` es Markdown libre.
+
+`communities.json` agrupa archivos por modularidad sobre el grafo de imports. `cohesion` es la
+cantidad de aristas internas dividida por las aristas incidentes a la comunidad (0 a 1). Los
+nodos de archivo en `graph.json` incluyen el campo `community` con el id de la comunidad.
+
+`god-nodes.json` ordena archivos por `score = 0.5*pageRankNorm + 0.3*fanInNorm +
+0.2*exportedSymbolsNorm`, con desempate por path ascendente y un límite configurable.
+
+`bridges.json` puntúa aristas de import entre comunidades distintas con
+`score = 0.35*pageRankPromedio + 0.30*fanInNormalizadoDestino + 0.20*sorpresaComunidad +
+0.15*cruceDeCapa`. `sorpresaComunidad = 1 - promedio(cohesión de ambas comunidades)`.
 
 ## Frescura
 
@@ -190,6 +213,20 @@ El consumidor debe ignorar el paquete y usar su propio mecanismo cuando:
 - el manifest o una salida están corruptos.
 
 El fallback nunca debe fallar por culpa de writer.
+
+## Impact
+
+`ancleto-writer impact <archivo...>` lee un paquete fresco (o reconstruye con `--build`) y
+devuelve dependientes directos y transitivos, ciclos afectados, capas y archivos de test.
+Acepta `--depth N` (default sin límite) y `--json`. Devuelve `3` si el paquete está stale,
+`4` si es incompatible y `1` si un archivo no existe en el grafo.
+
+## Lint
+
+`ancleto-writer lint` reconstruye el análisis en memoria, no escribe artefactos y evalúa
+reglas configurables: ciclos, violaciones de capa, imports no resueltos y un umbral de blast
+radius. Devuelve exit `5` si hay hallazgos y `0` si el repositorio está limpio. `--json`
+publica los hallazgos estructurados.
 
 ## Ejemplo de consumo
 

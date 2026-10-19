@@ -34,7 +34,7 @@ cabecera SPDX; `propio` = implementación original sin código copiado.
 | `readmenator/parsers/_javascript.py` | `src/parsers/javascript.js` | portado |
 | `readmenator/_resolver.py` | `src/resolve/imports.js` | portado |
 | `readmenator/_models.py` | `src/graph/build.js` (modelo de nodos/aristas) | portado |
-| `readmenator/_analyzer.py` (solo métricas deterministas) | `src/metrics/cycles.js`, `src/metrics/pagerank.js`, `src/metrics/blast-radius.js` | portado |
+| `readmenator/_analyzer.py` (solo métricas deterministas) | `src/metrics/cycles.js`, `src/metrics/communities.js`, `src/metrics/bridges.js`, `src/metrics/pagerank.js`, `src/metrics/blast-radius.js`, `src/facts/god-nodes.js` | portado |
 | `readmenator/_hotspots.py` | `src/metrics/hotspots.js` | portado |
 | `readmenator/_layers.py` | `src/metrics/layers.js` | portado |
 | `readmenator/_layer_rules.py` | `src/metrics/layers.js` | portado |

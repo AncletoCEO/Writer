@@ -95,10 +95,12 @@ export function buildGraph({ rootAbs, config, tsconfig = null, scanResult }) {
       size: file.size,
       lines: file.lines,
       symbolCount: parse.symbols.length,
+      exportedSymbols: parse.symbols.filter((symbol) => symbol.exported).length,
       fanIn: 0,
       fanOut: 0,
       pageRank: 0,
       layer: 'unknown',
+      community: null,
       hotspot: 0
     })
 
@@ -110,6 +112,7 @@ export function buildGraph({ rootAbs, config, tsconfig = null, scanResult }) {
         name: symbol.name,
         symbolKind: symbol.kind,
         exported: symbol.exported,
+        owner: symbol.owner ?? null,
         line: symbol.line,
         endLine: symbol.endLine,
         signature: symbol.signature
