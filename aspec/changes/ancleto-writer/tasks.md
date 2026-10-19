@@ -24,11 +24,11 @@
 
 ## Fase 1 — Scaffold del paquete
 
-- [ ] Crear `package.json` con `name: @ancleto/writer`, `version: 0.1.0`, `type: module`, `engines.node >= 24`, `license: AGPL-3.0-only`, `bin.ancleto-writer`, `files` y `publishConfig.access: public`.
-- [ ] Agregar scripts `test`, `lint`, `build` (no-op o validación de sintaxis) y `prepublishOnly`.
-- [ ] Configurar ESLint con `eslint` + `globals` como únicas `devDependencies`.
-- [ ] Crear `README.md` con atribución, aviso AGPL, comandos y contrato de artefactos.
-- [ ] Verificar que `npm ls --omit=dev` no reporte dependencias de runtime.
+- [x] Crear `package.json` con `name: @ancleto/writer`, `version: 0.1.0`, `type: module`, `engines.node >= 24`, `license: AGPL-3.0-only`, `bin.ancleto-writer`, `files` y `publishConfig.access: public`.
+- [x] Agregar scripts `test`, `lint`, `build` (no-op o validación de sintaxis) y `prepublishOnly`.
+- [x] Configurar ESLint con `eslint` + `globals` como únicas `devDependencies`.
+- [x] Crear `README.md` con atribución, aviso AGPL, comandos y contrato de artefactos.
+- [x] Verificar que `npm ls --omit=dev` no reporte dependencias de runtime.
 
 ## Fase 2 — Configuración y scanner
 

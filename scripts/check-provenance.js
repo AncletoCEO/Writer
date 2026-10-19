@@ -1,14 +1,15 @@
 #!/usr/bin/env node
-'use strict'
 
 // Audit de procedencia de @ancleto/writer.
 // Falla si un archivo derivado de ReadMenator no declara la cabecera SPDX completa,
 // si aparece una superficie excluida, o si un archivo menciona una derivación
 // sin estar registrado en DERIVED_FILES.
 
-const { existsSync, readFileSync, readdirSync } = require('node:fs')
-const { join, relative, sep } = require('node:path')
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { dirname, join, relative, sep } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
+const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
 const UPSTREAM = 'ReadMenator'
 const UPSTREAM_COMMIT = 'dac48f868722620f0d01dac0d33102c5a514c03c'
