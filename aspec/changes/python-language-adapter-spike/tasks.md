@@ -4,26 +4,26 @@
 
 ## Fase 0 — Preparación
 
-- [ ] Crear un workspace temporal aislado (`spike/` o rama descartable).
-- [ ] Elegir el corpus Python (≥50 archivos variados).
-- [ ] Confirmar que `@ancleto/writer` no cambia sus dependencias.
+- [x] Crear un workspace temporal aislado (`spike/` o rama descartable).
+- [x] Elegir el corpus Python (≥50 archivos variados).
+- [x] Confirmar que `@ancleto/writer` no cambia sus dependencias.
 
 ## Fase 1 — Prototipo WASM
 
-- [ ] Instalar `web-tree-sitter` y una grammar Python WASM en el workspace del spike.
-- [ ] Implementar `parse-python.mjs` para extraer imports/clases/funciones/herencia.
-- [ ] Medir archivos parseados, errores, tiempo y tamaño.
+- [x] Instalar `web-tree-sitter` y una grammar Python WASM en el workspace del spike (bloqueado por incompatibilidad de ABI; documentado en `spike-report.md`).
+- [x] Implementar el prototipo nativo `bench.mjs` para extraer imports/clases/funciones/herencia (WASM no viable).
+- [x] Medir archivos parseados, errores, tiempo y tamaño (nativo; WASM bloqueado).
 
 ## Fase 2 — Prototipo nativo
 
-- [ ] Instalar `tree-sitter` + `tree-sitter-python` en el workspace del spike.
-- [ ] Medir con el mismo corpus y comparar con WASM.
-- [ ] Verificar compatibilidad con Node 24.
+- [x] Instalar `tree-sitter` + `tree-sitter-python` en el workspace del spike.
+- [x] Medir con el mismo corpus y comparar con WASM.
+- [x] Verificar compatibilidad con Node 24.
 
 ## Fase 3 — Reporte y decisión
 
-- [ ] Escribir `spike-report.md` con tabla comparativa y riesgos.
-- [ ] Aplicar los umbrales del análisis #9.
-- [ ] Recomendar go/no-go y, si go, alcance del language pack.
-- [ ] Actualizar el issue #9 con la conclusión.
-- [ ] Registrar la decisión en memoria.
+- [x] Escribir `spike-report.md` con tabla comparativa y riesgos.
+- [x] Aplicar los umbrales del análisis #9.
+- [x] Recomendar go/no-go y, si go, alcance del language pack.
+- [x] Actualizar el issue #9 con la conclusión.
+- [x] Registrar la decisión en memoria.
