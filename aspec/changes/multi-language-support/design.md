@@ -28,3 +28,7 @@ ADR con matriz de lenguajes, estrategia elegida, fases y criterios de salida. No
 - Rendimiento y tamaño del paquete.
 - Licencia y dependencias.
 - Prioridad de lenguajes (Python, Go, Rust, Java, etc.).
+
+## Result
+
+El análisis concluyó en diferir multi-lenguaje. Ver [`analysis.md`](./analysis.md).
