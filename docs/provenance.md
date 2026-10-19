@@ -39,9 +39,9 @@ cabecera SPDX; `propio` = implementación original sin código copiado.
 | `readmenator/_layers.py` | `src/metrics/layers.js` | portado |
 | `readmenator/_layer_rules.py` | `src/metrics/layers.js` | portado |
 | `readmenator/_rank.py` (solo PageRank) | `src/metrics/pagerank.js` | portado |
-| `readmenator/_mermaid.py` | `src/render/mermaid.js` | pendiente |
-| `readmenator/_documentation.py` (solo Markdown de arquitectura) | `src/render/markdown.js` | pendiente |
-| `readmenator/_exporter.py` (solo JSON) | `src/facts/build.js`, `src/contract/*` | pendiente |
+| `readmenator/_mermaid.py` | `src/render/mermaid.js` | portado |
+| `readmenator/_documentation.py` (solo Markdown de arquitectura) | `src/render/markdown.js` | portado |
+| `readmenator/_exporter.py` (solo JSON) | `src/facts/build.js`, `src/facts/symbols.js`, `src/contract/*` | portado |
 | `readmenator/_gitmeta.py` | `src/scan/git.js` | portado |
 | `readmenator/_exclusions.py` | `src/config/load.js`, `src/config/glob.js` | portado |
 

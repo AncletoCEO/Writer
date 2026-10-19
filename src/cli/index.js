@@ -4,6 +4,7 @@
 import { readFileSync } from 'node:fs'
 import { CONFIG_FILE, loadConfig } from '../config/load.js'
 import { checkPackage } from '../contract/check.js'
+import { runBuild } from '../build/run.js'
 import { runInit } from './commands/init.js'
 
 const pkg = JSON.parse(
@@ -25,11 +26,11 @@ function usage() {
   console.log('')
   console.log('Comandos:')
   console.log('  init [--force]   Crea .ancleto-writer.json')
-  console.log('  build            Escanea y publica .ancleto/writer/ (planificado)')
+  console.log('  build            Escanea y publica .ancleto/writer/')
   console.log('  check            Verifica frescura y compatibilidad')
   console.log('  doctor           Diagnostica el entorno (planificado)')
   console.log('')
-  console.log('Opciones: --root <dir>, --json, --help, --version')
+  console.log('Opciones: --root <dir>, --out <dir>, --json, --quiet, --help, --version')
 }
 
 function flagValue(args, flag) {
@@ -65,6 +66,38 @@ if (command === 'init') {
   process.exit(0)
 }
 
+if (command === 'build') {
+  const root = flagValue(rest, '--root')
+  const outputDir = flagValue(rest, '--out')
+  const json = rest.includes('--json')
+  const quiet = rest.includes('--quiet')
+
+  try {
+    const config = loadConfig({ cwd: process.cwd(), cli: { root, outputDir } })
+    const result = runBuild({ rootAbs: config.rootAbs, config })
+    if (json) {
+      console.log(
+        JSON.stringify({
+          status: 'built',
+          outputDir: config.outputDir,
+          stats: result.manifest.stats,
+          durationMs: result.manifest.durationMs
+        })
+      )
+    } else if (!quiet) {
+      console.log(
+        `ancleto-writer: publicado ${config.outputDir} ` +
+          `(${result.manifest.stats.files} archivos, ${result.manifest.stats.edges} aristas, ` +
+          `${result.manifest.durationMs} ms)`
+      )
+    }
+    process.exit(0)
+  } catch (error) {
+    console.error(`ancleto-writer: ${error.message}`)
+    process.exit(error.name === 'ConfigError' ? 1 : 2)
+  }
+}
+
 if (command === 'check') {
   const root = flagValue(rest, '--root')
   const json = rest.includes('--json')
@@ -84,8 +117,8 @@ if (command === 'check') {
   }
 }
 
-if (command === 'build' || command === 'doctor') {
-  console.error(`ancleto-writer: "${command}" se implementa en una fase posterior.`)
+if (command === 'doctor') {
+  console.error('ancleto-writer: "doctor" se implementa en una fase posterior.')
   process.exit(1)
 }
 

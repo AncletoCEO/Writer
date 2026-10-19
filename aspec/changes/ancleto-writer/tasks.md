@@ -81,13 +81,13 @@
 
 ## Fase 7 — Hechos, documentos y memoria read-only
 
-- [ ] Implementar `src/facts/build.js` para `cycles.json`, `layers.json`, `hotspots.json`, `blast-radius.json`, `inventory.md`, `unresolved.json`, `externals.json` y `skipped.json`.
-- [ ] Implementar `src/render/mermaid.js` para grafo de imports, ciclos y capas.
-- [ ] Implementar `src/render/markdown.js` para `INDEX.md`, `SYMBOLS.md`, `GOTCHAS.md` y `ARCHITECTURE.md` con tope de 500 líneas y paginación `_pN.md`.
-- [ ] Implementar `src/memory/read-only.js` con `node:sqlite` en `readOnly`; leer solo `rule` activas de scope `project`.
-- [ ] Incluir la sección "Reglas del proyecto" en `GOTCHAS.md` sin mapeo semántico.
-- [ ] Verificar que `memory.db` no cambia de hash tras un build y que no se abre en modo escritura.
-- [ ] Tests: paginación con repo sintético grande, memoria ausente/bloqueada no rompe el build.
+- [x] Implementar `src/facts/build.js` para `cycles.json`, `layers.json`, `hotspots.json`, `blast-radius.json`, `inventory.md`, `unresolved.json`, `externals.json` y `skipped.json`.
+- [x] Implementar `src/render/mermaid.js` para grafo de imports, ciclos y capas.
+- [x] Implementar `src/render/markdown.js` para `INDEX.md`, `SYMBOLS.md`, `GOTCHAS.md` y `ARCHITECTURE.md` con tope de 500 líneas y paginación `_pN.md`.
+- [x] Implementar `src/memory/read-only.js` con `node:sqlite` en `readOnly`; leer solo `rule` activas de scope `project`.
+- [x] Incluir la sección "Reglas del proyecto" en `GOTCHAS.md` sin mapeo semántico.
+- [x] Verificar que `memory.db` no cambia de hash tras un build y que no se abre en modo escritura.
+- [x] Tests: paginación con repo sintético grande, memoria ausente/bloqueada no rompe el build.
 
 ## Fase 8 — CLI
 

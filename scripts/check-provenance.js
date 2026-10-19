@@ -28,7 +28,11 @@ const DERIVED_FILES = [
   'src/metrics/pagerank.js',
   'src/metrics/layers.js',
   'src/metrics/hotspots.js',
-  'src/metrics/blast-radius.js'
+  'src/metrics/blast-radius.js',
+  'src/render/mermaid.js',
+  'src/render/markdown.js',
+  'src/facts/build.js',
+  'src/facts/symbols.js'
 ]
 
 // Superficies del upstream que no deben portarse.
