@@ -32,7 +32,7 @@ cabecera SPDX; `propio` = implementación original sin código copiado.
 | `readmenator/_scanner.py` | `src/scan/scanner.js` | portado |
 | `readmenator/parsers/_base.py` | `src/parsers/lexer.js` | portado |
 | `readmenator/parsers/_javascript.py` | `src/parsers/javascript.js` | portado |
-| `readmenator/_resolver.py` | `src/resolve/imports.js` | pendiente |
+| `readmenator/_resolver.py` | `src/resolve/imports.js` | portado |
 | `readmenator/_models.py` | `src/graph/build.js` (modelo de nodos/aristas) | pendiente |
 | `readmenator/_analyzer.py` (solo métricas deterministas) | `src/metrics/cycles.js`, `src/metrics/pagerank.js` | pendiente |
 | `readmenator/_hotspots.py` | `src/metrics/hotspots.js` | pendiente |

@@ -21,7 +21,8 @@ const DERIVED_FILES = [
   'src/scan/scanner.js',
   'src/scan/git.js',
   'src/parsers/lexer.js',
-  'src/parsers/javascript.js'
+  'src/parsers/javascript.js',
+  'src/resolve/imports.js'
 ]
 
 // Superficies del upstream que no deben portarse.

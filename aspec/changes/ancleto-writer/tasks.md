@@ -53,12 +53,12 @@
 
 ## Fase 4 — Resolución de imports
 
-- [ ] Implementar `src/resolve/imports.js` para relativos: extensión explícita, lista de extensiones, `index.*`.
-- [ ] Implementar parser JSONC para `tsconfig.json`/`jsconfig.json` (comentarios y trailing commas).
-- [ ] Aplicar `baseUrl` y `paths` en la resolución.
-- [ ] Clasificar externos y contarlos en `stats.externalImports` + `facts/externals.json`.
-- [ ] Reportar relativos no resueltos en `facts/unresolved.json` con `reason` (`not-found`, `outside-root`, `ambiguous`).
-- [ ] Tests: alias, `baseUrl`, extensión `.ts` vs `.js`, index, import fuera del root.
+- [x] Implementar `src/resolve/imports.js` para relativos: extensión explícita, lista de extensiones, `index.*`.
+- [x] Implementar parser JSONC para `tsconfig.json`/`jsconfig.json` (comentarios y trailing commas).
+- [x] Aplicar `baseUrl` y `paths` en la resolución.
+- [x] Clasificar externos y contarlos en `stats.externalImports` + `facts/externals.json`.
+- [x] Reportar relativos no resueltos en `facts/unresolved.json` con `reason` (`not-found`, `outside-root`, `ambiguous`).
+- [x] Tests: alias, `baseUrl`, extensión `.ts` vs `.js`, index, import fuera del root.
 
 ## Fase 5 — Grafo y métricas
 
