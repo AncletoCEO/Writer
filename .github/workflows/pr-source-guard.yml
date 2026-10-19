@@ -1,0 +1,22 @@
+name: PR source guard
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, edited, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  pr-source-guard:
+    name: pr-source-guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require develop as source branch
+        if: ${{ github.event.pull_request.head.ref != 'develop' }}
+        run: |
+          echo "::error::Solo se permite mergear a main desde la rama develop."
+          echo "Rama origen: ${{ github.event.pull_request.head.ref }}"
+          exit 1

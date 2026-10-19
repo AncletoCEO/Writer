@@ -1,0 +1,73 @@
+@ancleto/writer
+Copyright (C) 2026 AncletoCEO
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, version 3 of the License.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+details.
+
+You should have received a copy of the GNU Affero General Public License along
+with this program. If not, see <https://www.gnu.org/licenses/>.
+
+===============================================================================
+UPSTREAM ATTRIBUTION
+===============================================================================
+
+This project is a derivative work based on ReadMenator:
+
+  Project:   ReadMenator
+  Upstream:  https://github.com/grisuno/ReadMenator
+  Author:    Gris Iscomeback (GitHub: grisun0 / grisuno)
+  License:   GNU Affero General Public License v3.0 (AGPL-3.0)
+  Commit:    dac48f868722620f0d01dac0d33102c5a514c03c
+  Commit date: 2026-10-15
+  Version at commit: 1.6.0 (pyproject.toml; version.json reports 1.5.0)
+
+Port preparation date: 2026-10-19
+Derived files created at the time of this notice: none.
+
+The port has not copied any source file yet. When a file is created from an
+upstream module, it must carry this header in its first lines:
+
+  // SPDX-License-Identifier: AGPL-3.0-only
+  // Derived from ReadMenator <module> (commit dac48f868722620f0d01dac0d33102c5a514c03c),
+  // modified 2026-10-19 by AncletoCEO.
+
+The list of derived files is maintained in docs/provenance.md and must be kept
+in sync with the repository.
+
+===============================================================================
+EXCLUDED UPSTREAM SURFACES
+===============================================================================
+
+The following ReadMenator surfaces are intentionally NOT ported and MUST NOT be
+copied into this repository:
+
+  - Interactive HTML/JavaScript/CSS viewers and graph pages
+  - 3D, force-graph, edge-bundling, flow, UML and component diagram pages
+  - Video generation
+  - GraphRAG index and search
+  - GitHub wiki generation and wiki linting
+  - Sphinx/Doxygen-style API documentation
+  - MCP server
+  - Agents, skills and rules installers
+  - README injection and folder READMEs
+  - Refactoring, dead-code and class-stub generators
+  - Ollama integration
+  - Vendored third-party code
+
+Only the static analysis core (scanner, JS/TS parser, import resolver, graph,
+metrics, layers and Markdown/Mermaid rendering) is eligible for porting.
+
+===============================================================================
+THIRD-PARTY CODE
+===============================================================================
+
+No third-party source code is vendored. Runtime dependencies are zero and the
+project uses only Node.js built-in modules.
+
+The full text of the GNU Affero General Public License is in LICENSE.
