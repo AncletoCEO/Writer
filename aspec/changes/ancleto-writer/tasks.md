@@ -20,7 +20,7 @@
 - [x] Crear `scripts/setup-branch-protection.sh` idempotente para ruleset, rama default y check requerido.
 - [x] Agregar plantilla de PR con la distinción `develop` / release.
 - [x] Pushear `main` y `develop` a `origin`.
-- [ ] Aplicar el ruleset en GitHub y marcar `develop` como default (diferido al final por decisión del usuario; requiere admin). Mientras tanto, el equipo integra en `develop` y `main` recibe PRs de release desde `develop`.
+- [ ] Aplicar el ruleset en GitHub y marcar `develop` como default (diferido; **no bloquea el MVP**). Requiere admin. Mientras tanto, el equipo integra en `develop` y `main` recibe PRs de release desde `develop`.
 
 ## Fase 1 — Scaffold del paquete
 
