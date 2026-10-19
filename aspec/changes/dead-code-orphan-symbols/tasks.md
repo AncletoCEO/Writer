@@ -4,30 +4,30 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar el estado actual en Writer.
-- [ ] Revisar la referencia de ReadMenator.
-- [ ] Definir las preguntas y los criterios de decisión.
-- [ ] Considerar: Tasa de falsos positivos y claridad de la confianza.
-- [ ] Considerar: Manejo de dynamic imports, re-exports, decoradores y frameworks.
-- [ ] Considerar: Exclusión de tests, scripts y entrypoints configurable.
-- [ ] Considerar: Valor para `review`/`verify` vs costo.
+- [x] Confirmar el estado actual en Writer.
+- [x] Revisar la referencia de ReadMenator.
+- [x] Definir las preguntas y los criterios de decisión.
+- [x] Considerar: Tasa de falsos positivos y claridad de la confianza.
+- [x] Considerar: Manejo de dynamic imports, re-exports, decoradores y frameworks.
+- [x] Considerar: Exclusión de tests, scripts y entrypoints configurable.
+- [x] Considerar: Valor para `review`/`verify` vs costo.
 
 ## Fase 1 — Opciones y evidencia
 
-- [ ] Evaluar Archivos huérfanos: sin inbound imports y que no sean entrypoint/config/test.
-- [ ] Evaluar Símbolos huérfanos: sin llamadas/referencias conocidas, con confianza `inferred`.
-- [ ] Evaluar Integrar ESLint/TypeScript (`no-unused-vars`) como dependencia opcional.
-- [ ] Evaluar No implementarlo.
-- [ ] Medir o prototipar lo necesario.
-- [ ] Identificar riesgos y falsos positivos.
+- [x] Evaluar Archivos huérfanos: sin inbound imports y que no sean entrypoint/config/test.
+- [x] Evaluar Símbolos huérfanos: sin llamadas/referencias conocidas, con confianza `inferred`.
+- [x] Evaluar Integrar ESLint/TypeScript (`no-unused-vars`) como dependencia opcional.
+- [x] Evaluar No implementarlo.
+- [x] Medir o prototipar lo necesario.
+- [x] Identificar riesgos y falsos positivos.
 
 ## Fase 2 — Decisión
 
-- [ ] Escribir el ADR/diseño con la recomendación.
-- [ ] Definir alcance y criterios de salida.
-- [ ] Presentar la decisión para aprobación.
+- [x] Escribir el ADR/diseño con la recomendación.
+- [x] Definir alcance y criterios de salida.
+- [x] Presentar la decisión para aprobación.
 
 ## Fase 3 — Cierre
 
-- [ ] Actualizar el issue con el resultado.
-- [ ] Si se aprueba, crear el change de implementación.
+- [x] Actualizar el issue con el resultado.
+- [x] Evaluar aprobación: solo archivos huérfanos; no se crea change todavía.

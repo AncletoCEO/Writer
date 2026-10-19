@@ -25,3 +25,7 @@ Diseño con definición operativa de "muerto", algoritmo, formato de salida y ej
 - Manejo de dynamic imports, re-exports, decoradores y frameworks.
 - Exclusión de tests, scripts y entrypoints configurable.
 - Valor para `review`/`verify` vs costo.
+
+## Result
+
+El análisis recomienda implementar solo archivos huérfanos y diferir símbolos huérfanos. Ver [`analysis.md`](./analysis.md).
