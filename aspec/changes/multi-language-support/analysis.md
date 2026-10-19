@@ -14,6 +14,26 @@
 ¿Qué lenguajes adicionales justifican el costo y cómo implementarlos sin romper cero
 dependencias, rendimiento y mantenibilidad?
 
+## Objetivo de producto: paridad de cobertura
+
+El objetivo es alcanzar la **misma cobertura de lenguajes que ReadMenator** (19 lenguajes),
+sin adoptar su implementación. La cobertura se logra con un **language pack opcional**; el
+core JS/TS sigue siendo cero-deps.
+
+Lenguajes objetivo: C, C++, Python, Go, Rust, JavaScript, TypeScript, Java, C#, Shell, PHP,
+Dart, GDScript, Nim, Assembly, Ruby, Swift, Kotlin, Scala, Lua y Elixir.
+
+Fases tentativas:
+
+- **P0 (hecho):** JS/TS/JSX/TSX.
+- **P1:** Python, Go, Rust, Java.
+- **P2:** C#, C/C++, PHP, Ruby, Swift, Kotlin.
+- **P3:** Shell, Dart, GDScript, Nim, Assembly, Lua, Elixir, Scala.
+
+Cada lenguaje debe entregar: parser, resolución de imports, símbolos, llamadas/herencia donde
+sea posible, tests, contrato y medición de cobertura. No se portan los 19 parsers de
+ReadMenator.
+
 ## Evidencia relevada
 
 ### Estado actual de Writer
@@ -86,7 +106,7 @@ paquete si se incluye en el core.
 
 | Criterio | A. Parsers propios | B. Tree-sitter opcional | C. Herramienta externa | D. JS/TS |
 |---|---|---|---|---|
-| Demanda actual | Desconocida; depende de los repos de usuarios | Desconocida | Desconocida | Alta en JS/TS, nula fuera |
+| Demanda / objetivo | Paridad de cobertura con ReadMenator | Paridad de cobertura | Solo si una herramienta externa cubre el lenguaje | Alta en JS/TS; el resto queda fuera |
 | Mantenimiento | Muy alto | Medio (gramáticas) | Bajo en Writer | Nulo |
 | Cero deps del core | Sí | Sí, si es opcional | No | Sí |
 | Tamaño | Bajo | ~12 MB por lenguaje | Depende del runtime | ~50 KB |
@@ -115,8 +135,9 @@ paquete si se incluye en el core.
    - elegir `web-tree-sitter` (WASM, más portable) vs `tree-sitter` nativo;
    - medir archivos parseados, errores fatales, tiempo y tamaño instalado;
    - validar que el core sin adapter siga en cero deps.
-6. **Decisión recomendada:** aprobar la visibilidad de no soportados y el spike de Python;
-   no aprobar todavía la implementación completa ni el port de 19 parsers.
+6. **Decisión de producto:** perseguir paridad de cobertura con ReadMenator mediante un
+   language pack opcional y fases. Aprobar primero la visibilidad de no soportados y el spike
+   de Python; el language pack completo se planifica después del spike.
 
 ## Diseño futuro (condicionado)
 
@@ -145,15 +166,18 @@ Interface propuesta:
 - El paquete opcional declara tree-sitter y gramáticas; el core no las importa.
 - El resolver de cada lenguaje vive en su adapter; no se mezcla con `tsconfig`.
 
-## Criterios para revisar la decisión
+## Criterios de aceptación por lenguaje
 
-Reabrir la implementación solo si se cumple al menos uno:
+Cada lenguaje del language pack debe cumplir:
 
-- 3+ pedidos concretos de usuarios de Writer/spec para un lenguaje específico.
-- Un relevamiento de repos de usuarios donde ≥20% de los archivos sean de lenguajes no
-  soportados.
-- Un spike de Python que parsee ≥95% de archivos sin errores fatales, en <2 s para 2.000
-  archivos, con core intacto y <15 MB de instalación opcional.
+- Parsear ≥95% de los archivos del corpus sin errores fatales.
+- Resolver imports locales del lenguaje (o documentar la limitación).
+- Extraer símbolos, clases/funciones y herencia cuando el lenguaje lo permita.
+- No agregar dependencias al core; el pack es opcional.
+- Mantener el build de 2.000 archivos del lenguaje por debajo de 2 s.
+- Tamaño de instalación opcional <15 MB por lenguaje (o justificar).
+- Tests de parser, resolución y determinismo.
+- Documentar el contrato y los límites del lenguaje.
 
 ## Riesgos
 
@@ -168,8 +192,8 @@ Reabrir la implementación solo si se cumple al menos uno:
 
 ## Decisión
 
-**Diferir la implementación completa, pero elevar multi-lenguaje a roadmap de producto.**
-Mantener JS/TS y cero deps en el core; agregar visibilidad de lenguajes no soportados y
-ejecutar un spike de Python para un language pack opcional. No se crea el change de
-implementación completa hasta que el spike y el relevamiento de repos de usuarios lo
-justifiquen.
+**Objetivo: paridad de cobertura con ReadMenator (19 lenguajes), por fases.** Mantener el core
+JS/TS con cero dependencias y construir un **language pack opcional** con tree-sitter como
+peer. Empezar por visibilidad de lenguajes no soportados y un spike de Python; luego P1
+(Python/Go/Rust/Java), P2 y P3. No portar los 19 parsers de ReadMenator ni romper el core sin
+el pack.

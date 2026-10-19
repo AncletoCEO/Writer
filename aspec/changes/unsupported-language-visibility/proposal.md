@@ -6,10 +6,11 @@
 
 ## Problem
 
-Writer solo analiza JS/TS/JSX/TSX. En un repo de usuario políglota, los archivos de otros
+El objetivo de producto es la **paridad de cobertura con ReadMenator** (19 lenguajes). Hoy
+Writer solo analiza JS/TS/JSX/TSX; en un repo de usuario políglota, los archivos de otros
 lenguajes se ignoran silenciosamente, así que el usuario no sabe qué parte del proyecto quedó
-fuera del contexto. El análisis #9 recomendó agregar visibilidad antes de comprometer un
-language pack.
+fuera del contexto. Este change es el **primer paso**: reportar la cobertura faltante antes de
+construir el language pack.
 
 ## Proposed change
 

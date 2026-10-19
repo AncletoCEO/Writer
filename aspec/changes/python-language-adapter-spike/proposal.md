@@ -6,7 +6,8 @@
 
 ## Problem
 
-El análisis #9 recomendó aprobar un spike de Python antes de comprometer un language pack
+El objetivo de producto es la **paridad de cobertura con ReadMenator** (19 lenguajes). El
+análisis #9 recomendó empezar con un spike de Python antes de comprometer el language pack
 multi-lenguaje. Hoy Writer solo analiza JS/TS y no hay evidencia de calidad, rendimiento ni
 tamaño para un adapter basado en tree-sitter.
 
