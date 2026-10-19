@@ -154,7 +154,8 @@ export function scanRepository({ rootAbs, config }) {
         lang,
         size: stat.size,
         lines: countLines(content),
-        hash: sha256(content)
+        hash: sha256(content),
+        content: content.toString('utf8')
       })
     }
   }

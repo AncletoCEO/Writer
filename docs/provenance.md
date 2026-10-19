@@ -33,12 +33,12 @@ cabecera SPDX; `propio` = implementación original sin código copiado.
 | `readmenator/parsers/_base.py` | `src/parsers/lexer.js` | portado |
 | `readmenator/parsers/_javascript.py` | `src/parsers/javascript.js` | portado |
 | `readmenator/_resolver.py` | `src/resolve/imports.js` | portado |
-| `readmenator/_models.py` | `src/graph/build.js` (modelo de nodos/aristas) | pendiente |
-| `readmenator/_analyzer.py` (solo métricas deterministas) | `src/metrics/cycles.js`, `src/metrics/pagerank.js` | pendiente |
-| `readmenator/_hotspots.py` | `src/metrics/hotspots.js` | pendiente |
-| `readmenator/_layers.py` | `src/metrics/layers.js` | pendiente |
-| `readmenator/_layer_rules.py` | `src/metrics/layers.js` | pendiente |
-| `readmenator/_rank.py` (solo PageRank) | `src/metrics/pagerank.js` | pendiente |
+| `readmenator/_models.py` | `src/graph/build.js` (modelo de nodos/aristas) | portado |
+| `readmenator/_analyzer.py` (solo métricas deterministas) | `src/metrics/cycles.js`, `src/metrics/pagerank.js`, `src/metrics/blast-radius.js` | portado |
+| `readmenator/_hotspots.py` | `src/metrics/hotspots.js` | portado |
+| `readmenator/_layers.py` | `src/metrics/layers.js` | portado |
+| `readmenator/_layer_rules.py` | `src/metrics/layers.js` | portado |
+| `readmenator/_rank.py` (solo PageRank) | `src/metrics/pagerank.js` | portado |
 | `readmenator/_mermaid.py` | `src/render/mermaid.js` | pendiente |
 | `readmenator/_documentation.py` (solo Markdown de arquitectura) | `src/render/markdown.js` | pendiente |
 | `readmenator/_exporter.py` (solo JSON) | `src/facts/build.js`, `src/contract/*` | pendiente |

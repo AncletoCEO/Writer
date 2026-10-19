@@ -22,7 +22,13 @@ const DERIVED_FILES = [
   'src/scan/git.js',
   'src/parsers/lexer.js',
   'src/parsers/javascript.js',
-  'src/resolve/imports.js'
+  'src/resolve/imports.js',
+  'src/graph/build.js',
+  'src/metrics/cycles.js',
+  'src/metrics/pagerank.js',
+  'src/metrics/layers.js',
+  'src/metrics/hotspots.js',
+  'src/metrics/blast-radius.js'
 ]
 
 // Superficies del upstream que no deben portarse.

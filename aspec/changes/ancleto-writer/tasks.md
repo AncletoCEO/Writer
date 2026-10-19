@@ -62,13 +62,13 @@
 
 ## Fase 5 — Grafo y métricas
 
-- [ ] Implementar `src/graph/build.js`: nodos de archivo/símbolo, aristas de import/call/inherits, dedupe y orden estable.
-- [ ] Implementar Tarjan SCC en `src/metrics/cycles.js` (SCC > 1 y self-loops).
-- [ ] Implementar PageRank en `src/metrics/pagerank.js` (damping 0.85, tolerancia 1e-6, 100 iteraciones).
-- [ ] Implementar capas en `src/metrics/layers.js` con defaults por path y overrides de config; marcar `upward-import` como warning.
-- [ ] Implementar hotspots en `src/metrics/hotspots.js` con la fórmula documentada y desempate por path.
-- [ ] Implementar blast radius acotado en `src/metrics/blast-radius.js` (top 100 fan-in + cambiados + `impactSeeds`, tope 200 dependientes).
-- [ ] Tests: ciclo conocido, self-loop, PageRank con suma 1, capas y violaciones, blast radius transitivo.
+- [x] Implementar `src/graph/build.js`: nodos de archivo/símbolo, aristas de import/call/inherits, dedupe y orden estable.
+- [x] Implementar Tarjan SCC en `src/metrics/cycles.js` (SCC > 1 y self-loops).
+- [x] Implementar PageRank en `src/metrics/pagerank.js` (damping 0.85, tolerancia 1e-6, 100 iteraciones).
+- [x] Implementar capas en `src/metrics/layers.js` con defaults por path y overrides de config; marcar `upward-import` como warning.
+- [x] Implementar hotspots en `src/metrics/hotspots.js` con la fórmula documentada y desempate por path.
+- [x] Implementar blast radius acotado en `src/metrics/blast-radius.js` (top 100 fan-in + cambiados + `impactSeeds`, tope 200 dependientes).
+- [x] Tests: ciclo conocido, self-loop, PageRank con suma 1, capas y violaciones, blast radius transitivo.
 
 ## Fase 6 — Contrato y publicación atómica
 
