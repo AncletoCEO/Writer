@@ -39,6 +39,7 @@ Writer produce un paquete versionado en `.ancleto/writer/` con:
 - imports, símbolos, llamadas intra-archivo y herencia;
 - fan-in/fan-out, ciclos, PageRank, capas, comunidades, god nodes, conexiones inesperadas, hotspots y blast radius;
 - documentación accionable para agentes (`INDEX`, `SYMBOLS`, `GOTCHAS`, `ARCHITECTURE`);
+- diagrama UML Mermaid de clases e interfaces;
 - un `manifest.json` con commit, fingerprint y hashes para verificar frescura.
 
 `@ancleto/spec` lo consume de forma **opcional**: si writer no está instalado, está viejo o
@@ -240,6 +241,9 @@ El algoritmo de fingerprint y los casos de fallback están en el contrato.
   "bridges": {
     "limit": 20
   },
+  "uml": {
+    "maxClasses": 40
+  },
   "memory": {
     "enabled": true,
     "path": ".ancleto/memory.db",
@@ -266,7 +270,7 @@ scan → parse → resolve → graph → metrics → facts → render → atomic
 - **graph:** nodos de archivo/símbolo y aristas `import`, `call` e `inherits`.
 - **metrics:** ciclos, PageRank, capas, comunidades, god nodes, conexiones inesperadas, hotspots y blast radius.
 - **facts:** JSON estable para agentes y consumidores.
-- **render:** Markdown y Mermaid, con paginación de 500 líneas.
+- **render:** Markdown, Mermaid, UML y paginación de 500 líneas.
 - **publish:** swap atómico con `manifest.json` al final.
 
 ## Seguridad y límites

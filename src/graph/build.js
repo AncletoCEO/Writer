@@ -112,6 +112,7 @@ export function buildGraph({ rootAbs, config, tsconfig = null, scanResult }) {
         name: symbol.name,
         symbolKind: symbol.kind,
         exported: symbol.exported,
+        owner: symbol.owner ?? null,
         line: symbol.line,
         endLine: symbol.endLine,
         signature: symbol.signature

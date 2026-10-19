@@ -35,6 +35,9 @@ El productor escribe todo dentro de `outputDir` (default `.ancleto/writer/`):
 Los documentos de `agent/` pueden paginarse como `NAME_p2.md`, `NAME_p3.md`, etc. Cada página
 tiene como máximo 500 líneas. Los consumidores deben considerar todas las páginas que existan.
 
+`ARCHITECTURE.md` incluye capas, comunidades, un diagrama UML Mermaid de clases e interfaces,
+el grafo de imports y los ciclos.
+
 ## `manifest.json`
 
 ```json

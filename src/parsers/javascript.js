@@ -371,7 +371,7 @@ function parseInheritance(tokens, startIndex, bodyIndex, child) {
   return entries
 }
 
-function extractMethods(tokens, source, bodyIndex, endIndex) {
+function extractMethods(tokens, source, bodyIndex, endIndex, owner) {
   const methods = []
   let depth = 1
 
@@ -427,6 +427,7 @@ function extractMethods(tokens, source, bodyIndex, endIndex) {
       name: nameToken.value,
       kind: 'method',
       exported: false,
+      owner,
       line: nameToken.line,
       endLine: tokens[end].line,
       signature: `${nameToken.value}(${paramsText(source, tokens, i, close)})`,
@@ -482,7 +483,7 @@ function parseClass(tokens, source, index) {
       startOffset: tokens[index].start,
       endOffset: tokens[lastIndex].end
     },
-    methods: endIndex >= 0 ? extractMethods(tokens, source, body, endIndex) : [],
+    methods: endIndex >= 0 ? extractMethods(tokens, source, body, endIndex, name) : [],
     inheritance: parseInheritance(tokens, cursor, body, name),
     endIndex: lastIndex
   }
@@ -520,6 +521,7 @@ function parseInterface(tokens, source, index) {
       startOffset: tokens[index].start,
       endOffset: tokens[lastIndex].end
     },
+    methods: endIndex >= 0 ? extractMethods(tokens, source, body, endIndex, name) : [],
     inheritance: parseInheritance(tokens, cursor, body, name),
     endIndex: lastIndex
   }
@@ -693,7 +695,10 @@ function extractSymbols(tokens, source) {
 
     if (isIdent(token, 'interface')) {
       const parsed = parseInterface(tokens, source, i)
-      if (parsed) addSymbol(symbols, parsed.symbol)
+      if (parsed) {
+        addSymbol(symbols, parsed.symbol)
+        for (const method of parsed.methods) addSymbol(symbols, method)
+      }
       continue
     }
 

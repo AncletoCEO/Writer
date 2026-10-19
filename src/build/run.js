@@ -37,7 +37,7 @@ export function runBuild({ rootAbs, config, now = () => new Date().toISOString()
   const projectRules = readProjectRules(rootAbs, config.memory)
 
   const facts = buildFacts({ graph, metrics, scanResult, externals, unresolved })
-  const documents = renderDocuments({ graph, metrics, projectRules, unresolved })
+  const documents = renderDocuments({ graph, metrics, projectRules, unresolved, config })
 
   const outputs = {
     'graph.json': json(graph),

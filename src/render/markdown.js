@@ -8,6 +8,7 @@ import {
   renderImportGraph,
   renderLayerGraph
 } from './mermaid.js'
+import { renderUml } from './uml.js'
 
 const PAGE_LIMIT = 500
 
@@ -213,7 +214,7 @@ export function renderGotchas({ metrics, projectRules = null, unresolved = [] })
   return paginate('GOTCHAS', 'Gotchas', body)
 }
 
-export function renderArchitecture({ graph, metrics }) {
+export function renderArchitecture({ graph, metrics, config = {} }) {
   const body = []
 
   body.push('## Capas', '')
@@ -245,6 +246,21 @@ export function renderArchitecture({ graph, metrics }) {
     }
   }
 
+  body.push('## UML', '')
+  const umlDiagrams = renderUml(graph, { maxClasses: config?.uml?.maxClasses ?? 40 })
+  if (umlDiagrams.length === 0) {
+    body.push('- Sin clases o interfaces declaradas.', '')
+  } else {
+    if (umlDiagrams.length > 1) {
+      body.push(`Diagramas: ${umlDiagrams.length} bloques.`, '')
+    }
+    for (const diagram of umlDiagrams) {
+      body.push('```mermaid')
+      body.push(diagram.trimEnd())
+      body.push('```', '')
+    }
+  }
+
   body.push('## Grafo de imports', '')
   body.push('```mermaid')
   body.push(renderImportGraph(graph).trimEnd())
@@ -269,12 +285,18 @@ export function renderArchitecture({ graph, metrics }) {
   return paginate('ARCHITECTURE', 'Architecture', body)
 }
 
-export function renderDocuments({ graph, metrics, projectRules = null, unresolved = [] }) {
+export function renderDocuments({
+  graph,
+  metrics,
+  projectRules = null,
+  unresolved = [],
+  config = {}
+}) {
   const documents = {
     ...renderIndex(graph, metrics.godNodes ?? []),
     ...renderSymbols(graph),
     ...renderGotchas({ metrics, projectRules, unresolved }),
-    ...renderArchitecture({ graph, metrics })
+    ...renderArchitecture({ graph, metrics, config })
   }
 
   return Object.fromEntries(

@@ -39,6 +39,9 @@ const DEFAULTS = {
   bridges: {
     limit: 20
   },
+  uml: {
+    maxClasses: 40
+  },
   impactSeeds: [],
   memory: {
     enabled: true,
@@ -156,6 +159,12 @@ function validate(config) {
   }
   if (!Number.isInteger(config.bridges.limit) || config.bridges.limit <= 0) {
     throw new ConfigError('bridges.limit debe ser un entero positivo')
+  }
+  if (!isPlainObject(config.uml)) {
+    throw new ConfigError('uml debe ser un objeto')
+  }
+  if (!Number.isInteger(config.uml.maxClasses) || config.uml.maxClasses <= 0) {
+    throw new ConfigError('uml.maxClasses debe ser un entero positivo')
   }
   if (!isPlainObject(config.memory)) {
     throw new ConfigError('memory debe ser un objeto')

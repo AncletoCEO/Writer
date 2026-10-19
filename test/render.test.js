@@ -173,3 +173,35 @@ test('gotchas incluye conexiones inesperadas', () => {
   assert.match(documents['agent/GOTCHAS.md'], /## Conexiones inesperadas/)
   assert.match(documents['agent/GOTCHAS.md'], /src\/a\.js/)
 })
+
+test('architectura incluye UML', () => {
+  const path = 'src/a.ts'
+  const graph = {
+    stats: { files: 1, symbols: 1, edges: 0 },
+    nodes: [
+      fileNode(path),
+      {
+        id: `sym:${path}#A@1`,
+        kind: 'symbol',
+        path,
+        name: 'A',
+        symbolKind: 'class',
+        exported: true,
+        line: 1,
+        endLine: 2,
+        signature: 'class A',
+        owner: null
+      }
+    ],
+    edges: []
+  }
+  const documents = renderDocuments({
+    graph,
+    metrics: metrics(),
+    projectRules: { available: false, rules: [] },
+    unresolved: [],
+    config: { uml: { maxClasses: 10 } }
+  })
+
+  assert.match(documents['agent/ARCHITECTURE.md'], /classDiagram/)
+})
