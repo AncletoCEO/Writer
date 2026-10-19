@@ -127,6 +127,24 @@ herencia, métricas y documentos Markdown/Mermaid.
 Fuera del MVP: otros lenguajes, visores HTML/3D, video, GraphRAG, wiki, API docs, MCP,
 inyección de README, escritura en la memoria del proyecto y stubs multi-lenguaje.
 
+## Overrides de capas
+
+La clasificación por path es heurística. Si un path no refleja la arquitectura real, se puede
+corregir por proyecto sin cambiar el clasificador global:
+
+```json
+{
+  "layers": {
+    "overrides": {
+      "domain": ["src/core/memory/database.js"]
+    }
+  }
+}
+```
+
+Los overrides se evalúan antes de la heurística y ganan por coincidencia de glob. Un override
+angosto es preferible a reclasificar todo un directorio.
+
 ## Desarrollo
 
 ```bash

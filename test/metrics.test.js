@@ -39,6 +39,12 @@ test('capas y violaciones upward', () => {
   assert.equal(classifyFile('src/core/model.js'), 'domain')
   assert.equal(classifyFile('src/utils/x.js'), 'shared')
   assert.equal(classifyFile('src/unknown/x.js'), 'unknown')
+  assert.equal(
+    classifyFile('src/core/memory/database.js', {
+      domain: ['src/core/memory/database.js']
+    }),
+    'domain'
+  )
 
   const nodes = [node('src/ui/button.js'), node('src/core/model.js'), node('src/utils/x.js')]
   const edges = [
