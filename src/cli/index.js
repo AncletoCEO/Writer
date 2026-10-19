@@ -7,6 +7,7 @@ import { CONFIG_FILE, loadConfig } from '../config/load.js'
 import { checkPackage } from '../contract/check.js'
 import { runDoctor } from './commands/doctor.js'
 import { runInit } from './commands/init.js'
+import { formatFinding, runLint } from './commands/lint.js'
 import { CliError } from './errors.js'
 import { assertNodeVersion } from './version-check.js'
 
@@ -31,6 +32,7 @@ function usage() {
   console.log('  build [--root <dir>] [--out <dir>]    Escanea y publica .ancleto/writer/')
   console.log('         [--json] [--quiet]')
   console.log('  check [--root <dir>] [--json]         Verifica frescura y compatibilidad')
+  console.log('  lint [--root <dir>] [--json]          Evalúa reglas de arquitectura')
   console.log('  doctor [--root <dir>] [--json]        Diagnostica el entorno')
   console.log('')
   console.log('Opciones: --help, --version')
@@ -129,6 +131,31 @@ function main() {
         console.log(`ancleto-writer: ${CONFIG_FILE} ya existe (usá --force para reemplazarlo)`)
       }
       process.exit(0)
+    }
+
+    if (command === 'lint') {
+      const flags = parseFlags(rest, {
+        '--root': { key: 'root', value: true },
+        '--json': { key: 'json' }
+      })
+      const config = loadConfig({ cwd: process.cwd(), cli: { root: flags.root } })
+      const result = runLint({ rootAbs: config.rootAbs, config })
+
+      if (flags.json) {
+        console.log(
+          JSON.stringify({
+            status: result.exitCode === 0 ? 'ok' : 'fail',
+            exitCode: result.exitCode,
+            findings: result.findings
+          })
+        )
+      } else if (result.findings.length === 0) {
+        console.log('ancleto-writer: lint OK')
+      } else {
+        for (const finding of result.findings) console.log(formatFinding(finding))
+        console.log(`ancleto-writer: ${result.findings.length} hallazgo(s)`)
+      }
+      process.exit(result.exitCode)
     }
 
     if (command === 'build') {

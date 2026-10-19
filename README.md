@@ -82,12 +82,13 @@ ancleto-writer doctor
 | `ancleto-writer init [--force]` | Crea `.ancleto-writer.json` sin sobrescribir salvo `--force` |
 | `ancleto-writer build [--root <dir>] [--out <dir>] [--json] [--quiet]` | Escanea, analiza y publica `.ancleto/writer/` |
 | `ancleto-writer check [--root <dir>] [--json]` | Verifica frescura y compatibilidad sin escribir |
+| `ancleto-writer lint [--root <dir>] [--json]` | Evalúa reglas de arquitectura: ciclos, capas, imports no resueltos y blast radius |
 | `ancleto-writer doctor [--root <dir>] [--json]` | Diagnostica Node, git, permisos, memoria y configuración |
 | `ancleto-writer --help` | Uso y aviso legal |
 | `ancleto-writer --version` | Versión, copyright y licencia |
 
 Códigos de salida: `0` OK, `1` uso/config, `2` análisis/publicación, `3` stale,
-`4` esquema incompatible.
+`4` esquema incompatible, `5` violaciones de `lint`.
 
 ## Ejemplo de salida
 
@@ -244,6 +245,12 @@ El algoritmo de fingerprint y los casos de fallback están en el contrato.
   "uml": {
     "maxClasses": 40
   },
+  "lint": {
+    "cycles": true,
+    "layerViolations": true,
+    "unresolved": true,
+    "maxBlastRadius": null
+  },
   "memory": {
     "enabled": true,
     "path": ".ancleto/memory.db",
@@ -325,6 +332,7 @@ contrato, determinismo, frontera, consumo y un smoke de 2.000 archivos.
 
 ```yaml
 - run: npx @ancleto/writer@0.1.1 build --json
+- run: npx @ancleto/writer@0.1.1 lint --json
 - uses: actions/upload-artifact@v4
   with:
     name: writer-context

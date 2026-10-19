@@ -42,6 +42,12 @@ const DEFAULTS = {
   uml: {
     maxClasses: 40
   },
+  lint: {
+    cycles: true,
+    layerViolations: true,
+    unresolved: true,
+    maxBlastRadius: null
+  },
   impactSeeds: [],
   memory: {
     enabled: true,
@@ -165,6 +171,20 @@ function validate(config) {
   }
   if (!Number.isInteger(config.uml.maxClasses) || config.uml.maxClasses <= 0) {
     throw new ConfigError('uml.maxClasses debe ser un entero positivo')
+  }
+  if (!isPlainObject(config.lint)) {
+    throw new ConfigError('lint debe ser un objeto')
+  }
+  for (const key of ['cycles', 'layerViolations', 'unresolved']) {
+    if (typeof config.lint[key] !== 'boolean') {
+      throw new ConfigError(`lint.${key} debe ser boolean`)
+    }
+  }
+  if (
+    config.lint.maxBlastRadius !== null &&
+    (!Number.isInteger(config.lint.maxBlastRadius) || config.lint.maxBlastRadius < 0)
+  ) {
+    throw new ConfigError('lint.maxBlastRadius debe ser null o un entero no negativo')
   }
   if (!isPlainObject(config.memory)) {
     throw new ConfigError('memory debe ser un objeto')

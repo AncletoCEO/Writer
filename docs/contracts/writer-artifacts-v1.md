@@ -214,6 +214,13 @@ El consumidor debe ignorar el paquete y usar su propio mecanismo cuando:
 
 El fallback nunca debe fallar por culpa de writer.
 
+## Lint
+
+`ancleto-writer lint` reconstruye el análisis en memoria, no escribe artefactos y evalúa
+reglas configurables: ciclos, violaciones de capa, imports no resueltos y un umbral de blast
+radius. Devuelve exit `5` si hay hallazgos y `0` si el repositorio está limpio. `--json`
+publica los hallazgos estructurados.
+
 ## Ejemplo de consumo
 
 ```js
