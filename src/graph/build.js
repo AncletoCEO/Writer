@@ -99,6 +99,7 @@ export function buildGraph({ rootAbs, config, tsconfig = null, scanResult }) {
       fanOut: 0,
       pageRank: 0,
       layer: 'unknown',
+      community: null,
       hotspot: 0
     })
 

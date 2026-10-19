@@ -24,6 +24,8 @@ test('config por defecto', (t) => {
   assert.equal(config.outputDir, '.ancleto/writer')
   assert.equal(config.outputDirAbs, join(dir, '.ancleto', 'writer'))
   assert.ok(config.exclude.includes('node_modules'))
+  assert.equal(config.communities.enabled, true)
+  assert.equal(config.communities.maxIterations, 50)
   assert.deepEqual(config.warnings, [])
 })
 

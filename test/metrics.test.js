@@ -111,9 +111,12 @@ test('applyMetrics anota nodos y stats', () => {
   const metrics = applyMetrics(graph, { config: {}, gitInfo: null })
 
   assert.equal(graph.stats.cycles, 0)
+  assert.equal(graph.stats.communities, 1)
   assert.equal(graph.nodes[0].fanOut, 1)
   assert.equal(graph.nodes[1].fanIn, 1)
+  assert.equal(graph.nodes[0].community, graph.nodes[1].community)
   assert.ok(graph.nodes[0].pageRank > 0)
   assert.equal(typeof graph.nodes[0].layer, 'string')
+  assert.equal(metrics.communities.length, 1)
   assert.equal(metrics.blastRadius.length, 2)
 })

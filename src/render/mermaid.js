@@ -40,6 +40,39 @@ export function renderImportGraph(graph, { maxNodes = 80 } = {}) {
   return `${lines.join('\n')}\n`
 }
 
+export function renderCommunityGraph(graph, communities, { maxCommunities = 10, maxFiles = 20 } = {}) {
+  const selected = (communities ?? []).filter((community) => community.size > 1).slice(0, maxCommunities)
+  if (selected.length === 0) return ''
+
+  const nodes = new Map()
+  let counter = 0
+  const lines = ['flowchart LR']
+
+  for (const community of selected) {
+    lines.push(`  subgraph ${community.id}["${community.id} (${community.size})"]`)
+    for (const path of community.files.slice(0, maxFiles)) {
+      const id = `n${counter}`
+      counter += 1
+      nodes.set(path, id)
+      lines.push(`    ${id}["${label(path)}"]`)
+    }
+    if (community.files.length > maxFiles) {
+      lines.push(`    ${community.id}_more["+${community.files.length - maxFiles} más"]`)
+    }
+    lines.push('  end')
+  }
+
+  for (const edge of graph.edges) {
+    if (edge.kind !== 'import') continue
+    const from = stripFile(edge.from)
+    const to = stripFile(edge.to)
+    if (!nodes.has(from) || !nodes.has(to)) continue
+    lines.push(`  ${nodes.get(from)} --> ${nodes.get(to)}`)
+  }
+
+  return `${lines.join('\n')}\n`
+}
+
 export function renderCycleGraph(cycle, graph) {
   const paths = [...cycle.files].map(stripFile).sort()
   const nodes = buildNodeMap(paths)

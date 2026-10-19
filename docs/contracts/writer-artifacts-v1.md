@@ -15,6 +15,7 @@ El productor escribe todo dentro de `outputDir` (default `.ancleto/writer/`):
 ├── symbols.json
 ├── facts/
 │   ├── cycles.json
+│   ├── communities.json
 │   ├── layers.json
 │   ├── hotspots.json
 │   ├── blast-radius.json
@@ -49,6 +50,7 @@ tiene como máximo 500 líneas. Los consumidores deben considerar todas las pág
     "edges": 789,
     "externalImports": 42,
     "cycles": 2,
+    "communities": 2,
     "selfLoops": 0,
     "unresolved": 1,
     "skipped": 0
@@ -97,6 +99,7 @@ timestamps ni del orden del filesystem.
       "fanOut": 1,
       "pageRank": 0.5,
       "layer": "application",
+      "community": "c1",
       "hotspot": 0.2
     },
     {
@@ -160,6 +163,7 @@ Todos declaran `schemaVersion: 1`:
 | Archivo | Contenido |
 |---|---|
 | `cycles.json` | `{ cycles: [{ size, files }], selfLoops: [id] }` |
+| `communities.json` | `{ communities: [{ id, size, cohesion, files }] }` |
 | `layers.json` | `{ layers: { path: layer }, violations: [{ from, to, fromLayer, toLayer, line }] }` |
 | `hotspots.json` | `{ hotspots: [{ path, score, fanIn, fanOut, symbols, cycle }] }` |
 | `blast-radius.json` | `{ seeds: [{ path, reason, direct, transitive, dependents }] }` |
@@ -168,6 +172,10 @@ Todos declaran `schemaVersion: 1`:
 | `skipped.json` | `{ skipped: [{ path, reason }] }` |
 
 `facts/inventory.md` es Markdown libre.
+
+`communities.json` agrupa archivos por modularidad sobre el grafo de imports. `cohesion` es la
+cantidad de aristas internas dividida por las aristas incidentes a la comunidad (0 a 1). Los
+nodos de archivo en `graph.json` incluyen el campo `community` con el id de la comunidad.
 
 ## Frescura
 

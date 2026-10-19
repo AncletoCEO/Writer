@@ -46,6 +46,10 @@ export function buildFacts({ graph, metrics, scanResult, externals, unresolved }
       layers: metrics.layers.layers,
       violations: metrics.layers.violations
     }),
+    'facts/communities.json': json({
+      schemaVersion: 1,
+      communities: metrics.communities ?? []
+    }),
     'facts/hotspots.json': json({
       schemaVersion: 1,
       hotspots: metrics.hotspots

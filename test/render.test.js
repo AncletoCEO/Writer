@@ -34,6 +34,7 @@ function metrics() {
   return {
     cycles: { cycles: [], selfLoops: [] },
     layers: { layers: { 'src/a.js': 'domain' }, violations: [] },
+    communities: [],
     hotspots: [],
     blastRadius: []
   }
@@ -89,4 +90,28 @@ test('documentos pequeños no paginan', () => {
   assert.ok(documents['agent/SYMBOLS.md'])
   assert.equal(documents['agent/SYMBOLS_p2.md'], undefined)
   assert.match(documents['agent/GOTCHAS.md'], /memoria no disponible/)
+})
+
+test('arquitectura y gotchas incluyen comunidades', () => {
+  const first = 'src/a.js'
+  const second = 'src/b.js'
+  const graph = {
+    stats: { files: 2, symbols: 0, edges: 1 },
+    nodes: [fileNode(first), fileNode(second)],
+    edges: [{ from: `file:${first}`, to: `file:${second}`, kind: 'import', line: 1 }]
+  }
+  const documentMetrics = {
+    ...metrics(),
+    communities: [{ id: 'c1', size: 2, cohesion: 0.5, files: [first, second] }]
+  }
+  const documents = renderDocuments({
+    graph,
+    metrics: documentMetrics,
+    projectRules: { available: false, rules: [] },
+    unresolved: []
+  })
+
+  assert.match(documents['agent/ARCHITECTURE.md'], /## Comunidades/)
+  assert.match(documents['agent/ARCHITECTURE.md'], /subgraph c1/)
+  assert.match(documents['agent/GOTCHAS.md'], /## Comunidades/)
 })

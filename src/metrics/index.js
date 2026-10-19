@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import { computeBlastRadius, defaultSeeds } from './blast-radius.js'
+import { detectCommunities } from './communities.js'
 import { findCycles } from './cycles.js'
 import { computeHotspots } from './hotspots.js'
 import { classifyLayers } from './layers.js'
@@ -43,6 +44,12 @@ export function applyMetrics(graph, { config = {}, gitInfo = null } = {}) {
     node.layer = layerResult.layers[node.path] ?? 'unknown'
   }
 
+  const communityResult = detectCommunities(fileNodes, importEdges, config?.communities ?? {})
+  for (const node of fileNodes) {
+    node.community = communityResult.assignments[node.path] ?? null
+  }
+  graph.stats.communities = communityResult.communities.length
+
   const cycles = findCycles(fileNodes, importEdges)
   const cycleFiles = new Set(cycles.cycles.flatMap((cycle) => cycle.files))
 
@@ -64,6 +71,7 @@ export function applyMetrics(graph, { config = {}, gitInfo = null } = {}) {
   return {
     cycles,
     layers: layerResult,
+    communities: communityResult.communities,
     hotspots,
     blastRadius,
     seeds

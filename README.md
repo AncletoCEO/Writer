@@ -37,7 +37,7 @@ como contexto, sin LLM y sin gastar tokens.
 Writer produce un paquete versionado en `.ancleto/writer/` con:
 
 - imports, símbolos, llamadas intra-archivo y herencia;
-- fan-in/fan-out, ciclos, PageRank, capas, hotspots y blast radius;
+- fan-in/fan-out, ciclos, PageRank, capas, comunidades, hotspots y blast radius;
 - documentación accionable para agentes (`INDEX`, `SYMBOLS`, `GOTCHAS`, `ARCHITECTURE`);
 - un `manifest.json` con commit, fingerprint y hashes para verificar frescura.
 
@@ -102,6 +102,7 @@ ancleto-writer: publicado .ancleto/writer (25 archivos, 458 aristas, 109 ms)
 ├── symbols.json
 ├── facts/
 │   ├── cycles.json
+│   ├── communities.json
 │   ├── layers.json
 │   ├── hotspots.json
 │   ├── blast-radius.json
@@ -227,6 +228,10 @@ El algoritmo de fingerprint y los casos de fallback están en el contrato.
       "domain": ["src/core/memory/database.js"]
     }
   },
+  "communities": {
+    "enabled": true,
+    "maxIterations": 50
+  },
   "memory": {
     "enabled": true,
     "path": ".ancleto/memory.db",
@@ -251,7 +256,7 @@ scan → parse → resolve → graph → metrics → facts → render → atomic
 - **parse:** lexer/parser para JS, TS, JSX y TSX.
 - **resolve:** relativos, extensiones, `index.*`, alias de `tsconfig` y detección de externos.
 - **graph:** nodos de archivo/símbolo y aristas `import`, `call` e `inherits`.
-- **metrics:** ciclos, PageRank, capas, hotspots y blast radius.
+- **metrics:** ciclos, PageRank, capas, comunidades, hotspots y blast radius.
 - **facts:** JSON estable para agentes y consumidores.
 - **render:** Markdown y Mermaid, con paginación de 500 líneas.
 - **publish:** swap atómico con `manifest.json` al final.

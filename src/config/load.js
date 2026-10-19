@@ -29,6 +29,10 @@ const DEFAULTS = {
     enabled: true,
     overrides: {}
   },
+  communities: {
+    enabled: true,
+    maxIterations: 50
+  },
   impactSeeds: [],
   memory: {
     enabled: true,
@@ -125,6 +129,15 @@ function validate(config) {
   }
   if (config.followSymlinks !== false) {
     throw new ConfigError('followSymlinks no está soportado: debe ser false')
+  }
+  if (!isPlainObject(config.communities)) {
+    throw new ConfigError('communities debe ser un objeto')
+  }
+  if (typeof config.communities.enabled !== 'boolean') {
+    throw new ConfigError('communities.enabled debe ser boolean')
+  }
+  if (!Number.isInteger(config.communities.maxIterations) || config.communities.maxIterations <= 0) {
+    throw new ConfigError('communities.maxIterations debe ser un entero positivo')
   }
   if (!isPlainObject(config.memory)) {
     throw new ConfigError('memory debe ser un objeto')
