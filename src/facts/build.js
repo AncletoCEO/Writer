@@ -54,6 +54,10 @@ export function buildFacts({ graph, metrics, scanResult, externals, unresolved }
       schemaVersion: 1,
       godNodes: metrics.godNodes ?? []
     }),
+    'facts/bridges.json': json({
+      schemaVersion: 1,
+      bridges: metrics.bridges ?? []
+    }),
     'facts/hotspots.json': json({
       schemaVersion: 1,
       hotspots: metrics.hotspots

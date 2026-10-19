@@ -171,6 +171,18 @@ export function renderGotchas({ metrics, projectRules = null, unresolved = [] })
   }
   body.push('')
 
+  body.push('## Conexiones inesperadas', '')
+  const bridges = metrics.bridges ?? []
+  if (bridges.length === 0) body.push('- Sin conexiones entre comunidades.')
+  for (const bridge of bridges.slice(0, 10)) {
+    body.push(
+      `- \`${bridge.from}\` (${bridge.fromCommunity}) → \`${bridge.to}\` (${bridge.toCommunity}) — ` +
+        `score ${bridge.score.toFixed(4)}` +
+        (bridge.line === null ? '' : ` (línea ${bridge.line})`)
+    )
+  }
+  body.push('')
+
   body.push('## Violaciones de capa', '')
   if (metrics.layers.violations.length === 0) body.push('- Sin imports upward.')
   for (const violation of metrics.layers.violations) {

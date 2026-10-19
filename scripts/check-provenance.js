@@ -26,6 +26,7 @@ const DERIVED_FILES = [
   'src/graph/build.js',
   'src/metrics/cycles.js',
   'src/metrics/communities.js',
+  'src/metrics/bridges.js',
   'src/metrics/pagerank.js',
   'src/metrics/layers.js',
   'src/metrics/hotspots.js',

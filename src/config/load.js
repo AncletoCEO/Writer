@@ -36,6 +36,9 @@ const DEFAULTS = {
   godNodes: {
     limit: 20
   },
+  bridges: {
+    limit: 20
+  },
   impactSeeds: [],
   memory: {
     enabled: true,
@@ -147,6 +150,12 @@ function validate(config) {
   }
   if (!Number.isInteger(config.godNodes.limit) || config.godNodes.limit <= 0) {
     throw new ConfigError('godNodes.limit debe ser un entero positivo')
+  }
+  if (!isPlainObject(config.bridges)) {
+    throw new ConfigError('bridges debe ser un objeto')
+  }
+  if (!Number.isInteger(config.bridges.limit) || config.bridges.limit <= 0) {
+    throw new ConfigError('bridges.limit debe ser un entero positivo')
   }
   if (!isPlainObject(config.memory)) {
     throw new ConfigError('memory debe ser un objeto')

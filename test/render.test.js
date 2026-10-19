@@ -36,6 +36,7 @@ function metrics() {
     layers: { layers: { 'src/a.js': 'domain' }, violations: [] },
     communities: [],
     godNodes: [],
+    bridges: [],
     hotspots: [],
     blastRadius: []
   }
@@ -139,4 +140,36 @@ test('index y gotchas incluyen god nodes', () => {
 
   assert.match(documents['agent/INDEX.md'], /## God nodes/)
   assert.match(documents['agent/GOTCHAS.md'], /## God nodes/)
+})
+
+test('gotchas incluye conexiones inesperadas', () => {
+  const path = 'src/a.js'
+  const graph = {
+    stats: { files: 1, symbols: 1, edges: 0 },
+    nodes: [fileNode(path), ...symbolNodes(path, 1)],
+    edges: []
+  }
+  const documents = renderDocuments({
+    graph,
+    metrics: {
+      ...metrics(),
+      bridges: [
+        {
+          from: 'src/a.js',
+          to: 'src/b.js',
+          fromCommunity: 'c1',
+          toCommunity: 'c2',
+          fromLayer: 'domain',
+          toLayer: 'presentation',
+          score: 0.5,
+          line: 3
+        }
+      ]
+    },
+    projectRules: { available: false, rules: [] },
+    unresolved: []
+  })
+
+  assert.match(documents['agent/GOTCHAS.md'], /## Conexiones inesperadas/)
+  assert.match(documents['agent/GOTCHAS.md'], /src\/a\.js/)
 })

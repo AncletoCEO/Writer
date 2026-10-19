@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import { computeBlastRadius, defaultSeeds } from './blast-radius.js'
+import { computeBridges } from './bridges.js'
 import { detectCommunities } from './communities.js'
 import { buildGodNodes } from '../facts/god-nodes.js'
 import { findCycles } from './cycles.js'
@@ -57,6 +58,13 @@ export function applyMetrics(graph, { config = {}, gitInfo = null } = {}) {
   const hotspots = computeHotspots(fileNodes, cycleFiles)
   const hotspotScores = new Map(hotspots.map((entry) => [entry.path, entry.score]))
   const godNodes = buildGodNodes(fileNodes, { limit: config?.godNodes?.limit ?? 20 })
+  const bridges = computeBridges(
+    fileNodes,
+    graph.edges,
+    communityResult.communities,
+    layerResult.layers,
+    { limit: config?.bridges?.limit ?? 20 }
+  )
   for (const node of fileNodes) {
     node.hotspot = Number((hotspotScores.get(node.path) ?? 0).toFixed(6))
   }
@@ -75,6 +83,7 @@ export function applyMetrics(graph, { config = {}, gitInfo = null } = {}) {
     layers: layerResult,
     communities: communityResult.communities,
     godNodes,
+    bridges,
     hotspots,
     blastRadius,
     seeds

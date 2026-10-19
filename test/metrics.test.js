@@ -119,5 +119,6 @@ test('applyMetrics anota nodos y stats', () => {
   assert.equal(typeof graph.nodes[0].layer, 'string')
   assert.equal(metrics.communities.length, 1)
   assert.equal(metrics.godNodes.length, 2)
+  assert.equal(metrics.bridges.length, 0)
   assert.equal(metrics.blastRadius.length, 2)
 })

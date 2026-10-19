@@ -15,6 +15,7 @@ El productor escribe todo dentro de `outputDir` (default `.ancleto/writer/`):
 ├── symbols.json
 ├── facts/
 │   ├── cycles.json
+│   ├── bridges.json
 │   ├── communities.json
 │   ├── god-nodes.json
 │   ├── layers.json
@@ -165,6 +166,7 @@ Todos declaran `schemaVersion: 1`:
 | Archivo | Contenido |
 |---|---|
 | `cycles.json` | `{ cycles: [{ size, files }], selfLoops: [id] }` |
+| `bridges.json` | `{ bridges: [{ from, to, fromCommunity, toCommunity, score, line }] }` |
 | `communities.json` | `{ communities: [{ id, size, cohesion, files }] }` |
 | `god-nodes.json` | `{ godNodes: [{ path, score, pageRank, fanIn, fanOut, symbols, exportedSymbols }] }` |
 | `layers.json` | `{ layers: { path: layer }, violations: [{ from, to, fromLayer, toLayer, line }] }` |
@@ -182,6 +184,10 @@ nodos de archivo en `graph.json` incluyen el campo `community` con el id de la c
 
 `god-nodes.json` ordena archivos por `score = 0.5*pageRankNorm + 0.3*fanInNorm +
 0.2*exportedSymbolsNorm`, con desempate por path ascendente y un límite configurable.
+
+`bridges.json` puntúa aristas de import entre comunidades distintas con
+`score = 0.35*pageRankPromedio + 0.30*fanInNormalizadoDestino + 0.20*sorpresaComunidad +
+0.15*cruceDeCapa`. `sorpresaComunidad = 1 - promedio(cohesión de ambas comunidades)`.
 
 ## Frescura
 

@@ -43,6 +43,7 @@ function metrics() {
     layers: { layers: { 'src/a.js': 'domain' }, violations: [] },
     communities: [],
     godNodes: [],
+    bridges: [],
     hotspots: [{ path: 'src/a.js', score: 0 }],
     blastRadius: [{ path: 'src/a.js', reason: 'fan-in', direct: 0, transitive: 0, dependents: [] }]
   }
@@ -79,6 +80,7 @@ test('facts JSON e inventory', () => {
 
   assert.deepEqual(Object.keys(facts).sort(), [
     'facts/blast-radius.json',
+    'facts/bridges.json',
     'facts/communities.json',
     'facts/cycles.json',
     'facts/externals.json',
@@ -93,6 +95,7 @@ test('facts JSON e inventory', () => {
   assert.equal(JSON.parse(facts['facts/cycles.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/communities.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/god-nodes.json']).schemaVersion, 1)
+  assert.equal(JSON.parse(facts['facts/bridges.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/externals.json']).externals[0].specifier, 'lodash')
   assert.equal(JSON.parse(facts['facts/skipped.json']).skipped[0].reason, 'too-large')
   assert.match(facts['facts/inventory.md'], /src\/a\.js/)

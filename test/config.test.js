@@ -27,6 +27,7 @@ test('config por defecto', (t) => {
   assert.equal(config.communities.enabled, true)
   assert.equal(config.communities.maxIterations, 50)
   assert.equal(config.godNodes.limit, 20)
+  assert.equal(config.bridges.limit, 20)
   assert.deepEqual(config.warnings, [])
 })
 
