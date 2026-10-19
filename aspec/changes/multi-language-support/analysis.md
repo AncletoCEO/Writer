@@ -4,6 +4,11 @@
 > Change: `multi-language-support`
 > Fecha: 2026-10-19
 
+> **Corrección de alcance (2026-10-19):** Writer analiza el código del **proyecto del
+> usuario**, no solo el repositorio de `@ancleto/spec`. La demanda de otros lenguajes no se
+> puede inferir de que spec sea JS/TS; es una capacidad de producto y debe medirse. Las
+> secciones de demanda, recomendación y decisión se actualizaron con este criterio.
+
 ## Pregunta
 
 ¿Qué lenguajes adicionales justifican el costo y cómo implementarlos sin romper cero
@@ -27,8 +32,11 @@ dependencias, rendimiento y mantenibilidad?
 
 - Smoke de 2.000 archivos JS: **~325 ms** (límite 5 s, muy holgado).
 - Tamaño del paquete npm: **~50 KB** de tarball, **~181 KB** descomprimido.
-- `@ancleto/spec` es un proyecto Node/JS; no hay evidencia de usuarios que necesiten
-  analizar repos Python/Go/Rust/Java hoy.
+- `@ancleto/spec` es un proyecto Node/JS, pero Writer se ejecuta sobre el proyecto del
+  usuario, que puede ser políglota. La stack de spec **no** mide la demanda de otros
+  lenguajes.
+- No hay telemetría, encuestas ni un relevamiento de lenguajes en repos de usuarios. Esa es
+  la evidencia que falta antes de priorizar el language pack.
 
 ### Metadata de dependencias candidatas
 
@@ -69,15 +77,16 @@ paquete si se incluye en el core.
 
 ### D. Quedarse en JS/TS
 
-- **Pros:** alineado con `@ancleto/spec`, cero deps, paquete pequeño, calidad y mantenimiento.
-- **Contras:** no analiza repos políglotas.
-- **Veredicto:** opción recomendada para el estado actual del producto.
+- **Pros:** cero deps, paquete pequeño, calidad y mantenimiento; cubre el ecosistema JS/TS.
+- **Contras:** deja fuera proyectos de usuarios en Python, Go, Rust, Java, etc.; si el repo
+  del usuario es mayoritariamente no-JS, Writer no aporta contexto.
+- **Veredicto:** válido como **core actual**, pero no como respuesta definitiva al producto.
 
 ## Matriz de decisión
 
 | Criterio | A. Parsers propios | B. Tree-sitter opcional | C. Herramienta externa | D. JS/TS |
 |---|---|---|---|---|
-| Demanda actual | Baja | Baja | Baja | Alta (spec es JS/TS) |
+| Demanda actual | Desconocida; depende de los repos de usuarios | Desconocida | Desconocida | Alta en JS/TS, nula fuera |
 | Mantenimiento | Muy alto | Medio (gramáticas) | Bajo en Writer | Nulo |
 | Cero deps del core | Sí | Sí, si es opcional | No | Sí |
 | Tamaño | Bajo | ~12 MB por lenguaje | Depende del runtime | ~50 KB |
@@ -88,18 +97,26 @@ paquete si se incluye en el core.
 
 ## Recomendación
 
-1. **No implementar multi-lenguaje en el core ahora.** Mantener JS/TS y la promesa de cero
-   dependencias.
+1. **Mantener el core JS/TS y cero deps no significa descartar multi-lenguaje.** Writer
+   analiza el código del proyecto del usuario; si ese proyecto es Python/Go/Rust/Java, la
+   herramienta queda incompleta. Multi-lenguaje es una **capacidad de producto**, no un
+   detalle de integración con spec.
 2. **No portar los 19 parsers de ReadMenator.** El costo de mantenimiento y la deuda AGPL no
-   se justifican sin demanda.
-3. Si aparece demanda, implementar un **adapter opcional** con tree-sitter como peer, en un
-   paquete separado. El core debe seguir funcionando sin ese paquete.
-4. Prioridad tentativa si se aprueba: **Python → Go → Rust → Java**. Python primero por
-   volumen de usuarios; Go/Rust por adopción en tooling.
-5. Antes de comprometer el adapter, ejecutar un **spike de 2-3 días** con Python:
+   se justifican.
+3. **Medir antes de priorizar:**
+   - agregar visibilidad de archivos no soportados (inventario por extensión/lenguaje) para
+     que el usuario vea la cobertura real;
+   - relevar lenguajes en repos de usuarios (issues, consultas, telemetría opt-in) y medir
+     qué porcentaje del repo queda fuera.
+4. Si se avanza, implementar un **language pack opcional** con tree-sitter como peer, en un
+   paquete separado; el core sigue funcionando sin él. Prioridad tentativa:
+   **Python → Go → Rust → Java**.
+5. Ejecutar un **spike de 2-3 días** con Python antes de comprometer el language pack:
    - elegir `web-tree-sitter` (WASM, más portable) vs `tree-sitter` nativo;
    - medir archivos parseados, errores fatales, tiempo y tamaño instalado;
    - validar que el core sin adapter siga en cero deps.
+6. **Decisión recomendada:** aprobar la visibilidad de no soportados y el spike de Python;
+   no aprobar todavía la implementación completa ni el port de 19 parsers.
 
 ## Diseño futuro (condicionado)
 
@@ -132,8 +149,9 @@ Interface propuesta:
 
 Reabrir la implementación solo si se cumple al menos uno:
 
-- 3+ pedidos concretos de usuarios de `@ancleto/spec` para un lenguaje específico.
-- Un repo objetivo de spec que sea mayoritariamente no-JS.
+- 3+ pedidos concretos de usuarios de Writer/spec para un lenguaje específico.
+- Un relevamiento de repos de usuarios donde ≥20% de los archivos sean de lenguajes no
+  soportados.
 - Un spike de Python que parsee ≥95% de archivos sin errores fatales, en <2 s para 2.000
   archivos, con core intacto y <15 MB de instalación opcional.
 
@@ -150,5 +168,8 @@ Reabrir la implementación solo si se cumple al menos uno:
 
 ## Decisión
 
-**Diferir multi-lenguaje.** Mantener JS/TS en el core y dejar preparado el boundary de
-adapters. No se crea change de implementación hasta que se cumplan los criterios de revisión.
+**Diferir la implementación completa, pero elevar multi-lenguaje a roadmap de producto.**
+Mantener JS/TS y cero deps en el core; agregar visibilidad de lenguajes no soportados y
+ejecutar un spike de Python para un language pack opcional. No se crea el change de
+implementación completa hasta que el spike y el relevamiento de repos de usuarios lo
+justifiquen.
