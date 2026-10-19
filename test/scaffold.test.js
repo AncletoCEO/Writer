@@ -10,7 +10,7 @@ const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
 
 test('metadata del paquete', () => {
   assert.equal(pkg.name, '@ancleto/writer')
-  assert.equal(pkg.version, '0.1.0')
+  assert.match(pkg.version, /^\d+\.\d+\.\d+/)
   assert.equal(pkg.type, 'module')
   assert.equal(pkg.license, 'AGPL-3.0-only')
   assert.equal(pkg.engines.node, '>=24.0.0')
@@ -38,6 +38,6 @@ test('el binario reporta versión y licencia', () => {
     [join(ROOT, pkg.bin['ancleto-writer']), '--version'],
     { encoding: 'utf8' }
   )
-  assert.match(out, /ancleto-writer 0\.1\.0/)
+  assert.ok(out.includes(`ancleto-writer ${pkg.version}`))
   assert.match(out, /AGPL-3\.0-only/)
 })
