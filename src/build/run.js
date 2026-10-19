@@ -6,6 +6,7 @@ import { readProjectRules } from '../memory/read-only.js'
 import { renderDocuments } from '../render/markdown.js'
 import { buildFacts } from '../facts/build.js'
 import { buildSymbolsJson } from '../facts/symbols.js'
+import { buildUnsupportedFact } from '../facts/unsupported.js'
 import { buildManifest, computeFingerprint, outputEntry } from '../contract/manifest.js'
 import { publishPackage } from '../contract/writer.js'
 
@@ -24,9 +25,27 @@ export function runBuild({ rootAbs, config, now = () => new Date().toISOString()
   })
 
   const projectRules = readProjectRules(rootAbs, config.memory)
+  const unsupportedFact = buildUnsupportedFact(scanResult.unsupported ?? [], {
+    maxFilesPerLanguage: config.unsupported?.maxFilesPerLanguage
+  })
 
-  const facts = buildFacts({ graph, metrics, scanResult, externals, unresolved })
-  const documents = renderDocuments({ graph, metrics, projectRules, unresolved, config })
+  const facts = buildFacts({
+    graph,
+    metrics,
+    scanResult,
+    externals,
+    unresolved,
+    unsupportedFact,
+    config
+  })
+  const documents = renderDocuments({
+    graph,
+    metrics,
+    projectRules,
+    unresolved,
+    unsupported: unsupportedFact,
+    config
+  })
 
   const outputs = {
     'graph.json': json(graph),
@@ -38,7 +57,8 @@ export function runBuild({ rootAbs, config, now = () => new Date().toISOString()
   const stats = {
     ...graph.stats,
     unresolved: unresolved.length,
-    skipped: scanResult.skipped.length
+    skipped: scanResult.skipped.length,
+    unsupported: scanResult.unsupported.length
   }
 
   const manifest = buildManifest({

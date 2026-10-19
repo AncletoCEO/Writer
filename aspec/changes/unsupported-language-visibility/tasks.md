@@ -4,28 +4,28 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Definir el mapa conservador de extensiones/lenguajes.
-- [ ] Confirmar que el scan respeta excludes y no lee contenido innecesario.
+- [x] Definir el mapa conservador de extensiones/lenguajes.
+- [x] Confirmar que el scan respeta excludes y no lee contenido innecesario.
 
 ## Fase 1 — Implementación
 
-- [ ] Implementar `src/scan/languages.js`.
-- [ ] Agregar la colección `unsupported` al scanner.
-- [ ] Implementar `src/facts/unsupported.js` y publicar el fact.
-- [ ] Mostrar el resumen en `GOTCHAS.md` e `inventory.md`.
-- [ ] Configurar `unsupported.enabled` y `unsupported.maxFilesPerLanguage`.
+- [x] Implementar `src/scan/languages.js`.
+- [x] Agregar la colección `unsupported` al scanner.
+- [x] Implementar `src/facts/unsupported.js` y publicar el fact.
+- [x] Mostrar el resumen en `GOTCHAS.md` e `inventory.md`.
+- [x] Configurar `unsupported.enabled` y `unsupported.maxFilesPerLanguage`.
 
 ## Fase 2 — Documentación
 
-- [ ] Actualizar contrato con `facts/unsupported.json`.
-- [ ] Documentar que los archivos no soportados no se analizan.
-- [ ] Enlazar al análisis #9 y al future language pack.
+- [x] Actualizar contrato con `facts/unsupported.json`.
+- [x] Documentar que los archivos no soportados no se analizan.
+- [x] Enlazar al análisis #9 y al future language pack.
 
 ## Fase 3 — Tests
 
-- [ ] `.py` contado y sin nodo.
-- [ ] Binario/sin extensión ignorado.
-- [ ] Excludes respetados.
-- [ ] JS/TS no aparece como unsupported.
-- [ ] Límite de archivos por lenguaje.
-- [ ] `npm test`, `npm run lint`, `npm run build`.
+- [x] `.py` contado y sin nodo.
+- [x] Binario/sin extensión ignorado.
+- [x] Excludes respetados.
+- [x] JS/TS no aparece como unsupported.
+- [x] Límite de archivos por lenguaje.
+- [x] `npm test`, `npm run lint`, `npm run build`.

@@ -73,7 +73,10 @@ test('facts JSON e inventory', () => {
   const facts = buildFacts({
     graph: graph(),
     metrics: metrics(),
-    scanResult: { skipped: [{ path: 'big.js', reason: 'too-large' }] },
+    scanResult: {
+      skipped: [{ path: 'big.js', reason: 'too-large' }],
+      unsupported: [{ path: 'src/a.py', extension: '.py', language: 'python' }]
+    },
     externals: [{ specifier: 'lodash', path: 'src/a.js' }],
     unresolved: [{ path: 'src/a.js', specifier: './x', kind: 'static', line: 1, reason: 'not-found' }]
   })
@@ -89,13 +92,16 @@ test('facts JSON e inventory', () => {
     'facts/inventory.md',
     'facts/layers.json',
     'facts/skipped.json',
-    'facts/unresolved.json'
+    'facts/unresolved.json',
+    'facts/unsupported.json'
   ])
 
   assert.equal(JSON.parse(facts['facts/cycles.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/communities.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/god-nodes.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/bridges.json']).schemaVersion, 1)
+  assert.equal(JSON.parse(facts['facts/unsupported.json']).schemaVersion, 1)
+  assert.equal(JSON.parse(facts['facts/unsupported.json']).totals.files, 1)
   assert.equal(JSON.parse(facts['facts/externals.json']).externals[0].specifier, 'lodash')
   assert.equal(JSON.parse(facts['facts/skipped.json']).skipped[0].reason, 'too-large')
   assert.match(facts['facts/inventory.md'], /src\/a\.js/)

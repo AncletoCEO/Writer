@@ -178,8 +178,12 @@ Todos declaran `schemaVersion: 1`:
 | `unresolved.json` | `{ unresolved: [{ path, specifier, kind, line, reason }] }` |
 | `externals.json` | `{ externals: [{ specifier, count, files }] }` |
 | `skipped.json` | `{ skipped: [{ path, reason }] }` |
+| `unsupported.json` | `{ unsupported: [{ extension, language, count, files }], totals }` |
 
 `facts/inventory.md` es Markdown libre.
+
+`unsupported.json` reporta archivos de lenguajes conocidos que Writer todavía no analiza. No
+generan nodos ni aristas; existen solo para que el consumidor vea la cobertura faltante.
 
 `communities.json` agrupa archivos por modularidad sobre el grafo de imports. `cohesion` es la
 cantidad de aristas internas dividida por las aristas incidentes a la comunidad (0 a 1). Los

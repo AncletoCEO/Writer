@@ -116,7 +116,7 @@ export function renderSymbols(graph) {
   return paginate('SYMBOLS', 'Symbols', body)
 }
 
-export function renderGotchas({ metrics, projectRules = null, unresolved = [] }) {
+export function renderGotchas({ metrics, projectRules = null, unresolved = [], unsupported = null }) {
   const body = []
 
   body.push('## Blast radius', '')
@@ -199,6 +199,18 @@ export function renderGotchas({ metrics, projectRules = null, unresolved = [] })
     body.push(
       `- \`${entry.path}\`${entry.specifier ? ` → \`${entry.specifier}\`` : ''} — ${entry.reason}`
     )
+  }
+  body.push('')
+
+  body.push('## Lenguajes no soportados', '')
+  const unsupportedEntries = unsupported?.unsupported ?? []
+  if (unsupportedEntries.length === 0) {
+    body.push('- Sin archivos de lenguajes no soportados.')
+  } else {
+    body.push('Estos archivos no fueron analizados:', '')
+    for (const entry of unsupportedEntries) {
+      body.push(`- ${entry.language} (${entry.extension}): ${entry.count} archivo(s)`)
+    }
   }
   body.push('')
 
@@ -290,12 +302,13 @@ export function renderDocuments({
   metrics,
   projectRules = null,
   unresolved = [],
+  unsupported = null,
   config = {}
 }) {
   const documents = {
     ...renderIndex(graph, metrics.godNodes ?? []),
     ...renderSymbols(graph),
-    ...renderGotchas({ metrics, projectRules, unresolved }),
+    ...renderGotchas({ metrics, projectRules, unresolved, unsupported }),
     ...renderArchitecture({ graph, metrics, config })
   }
 

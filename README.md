@@ -39,6 +39,7 @@ Writer produce un paquete versionado en `.ancleto/writer/` con:
 - imports, símbolos, llamadas intra-archivo y herencia;
 - fan-in/fan-out, ciclos, PageRank, capas, comunidades, god nodes, conexiones inesperadas, hotspots y blast radius;
 - documentación accionable para agentes (`INDEX`, `SYMBOLS`, `GOTCHAS`, `ARCHITECTURE`);
+- reporte de archivos de lenguajes no soportados, sin analizarlos;
 - diagrama UML Mermaid de clases e interfaces;
 - un `manifest.json` con commit, fingerprint y hashes para verificar frescura.
 

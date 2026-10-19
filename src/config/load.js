@@ -18,6 +18,10 @@ const DEFAULTS = {
   include: ['**/*'],
   exclude: ['node_modules', '.git', '.ancleto', 'dist', 'build', 'coverage', 'aspec'],
   languages: ['js', 'ts', 'jsx', 'tsx'],
+  unsupported: {
+    enabled: true,
+    maxFilesPerLanguage: 50
+  },
   maxFileSizeBytes: 1048576,
   maxDepth: 32,
   followSymlinks: false,
@@ -132,6 +136,18 @@ function validate(config) {
     if (!ALLOWED_LANGUAGES.includes(language)) {
       throw new ConfigError(`lenguaje no soportado: ${language}`)
     }
+  }
+  if (!isPlainObject(config.unsupported)) {
+    throw new ConfigError('unsupported debe ser un objeto')
+  }
+  if (typeof config.unsupported.enabled !== 'boolean') {
+    throw new ConfigError('unsupported.enabled debe ser boolean')
+  }
+  if (
+    !Number.isInteger(config.unsupported.maxFilesPerLanguage) ||
+    config.unsupported.maxFilesPerLanguage <= 0
+  ) {
+    throw new ConfigError('unsupported.maxFilesPerLanguage debe ser un entero positivo')
   }
   if (typeof config.outputDir !== 'string' || config.outputDir.trim() === '') {
     throw new ConfigError('outputDir debe ser un string no vacío')

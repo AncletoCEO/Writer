@@ -26,6 +26,8 @@ test('config por defecto', (t) => {
   assert.ok(config.exclude.includes('node_modules'))
   assert.equal(config.communities.enabled, true)
   assert.equal(config.communities.maxIterations, 50)
+  assert.equal(config.unsupported.enabled, true)
+  assert.equal(config.unsupported.maxFilesPerLanguage, 50)
   assert.equal(config.godNodes.limit, 20)
   assert.equal(config.bridges.limit, 20)
   assert.equal(config.uml.maxClasses, 40)

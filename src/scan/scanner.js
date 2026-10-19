@@ -6,6 +6,7 @@ import { lstatSync, readdirSync, readFileSync, realpathSync } from 'node:fs'
 import { extname, isAbsolute, join, relative } from 'node:path'
 import { createIgnoreMatcher, matchesAny, toPosix } from '../config/glob.js'
 import { sha256 } from '../util/hash.js'
+import { unsupportedLanguageFor } from './languages.js'
 
 const LANGUAGE_BY_EXT = {
   '.js': 'js',
@@ -61,6 +62,8 @@ export function scanRepository({ rootAbs, config }) {
 
   const files = []
   const skipped = []
+  const unsupported = []
+  const reportUnsupported = config.unsupported?.enabled !== false
 
   function skip(rel, reason) {
     skipped.push({ path: rel, reason })
@@ -104,8 +107,21 @@ export function scanRepository({ rootAbs, config }) {
         continue
       }
 
-      const lang = LANGUAGE_BY_EXT[extname(entry.name).toLowerCase()]
-      if (!lang || !config.languages.includes(lang)) continue
+      const extension = extname(entry.name).toLowerCase()
+      const lang = LANGUAGE_BY_EXT[extension]
+      if (!lang || !config.languages.includes(lang)) {
+        if (reportUnsupported) {
+          const unsupportedLanguage = unsupportedLanguageFor(extension)
+          if (
+            unsupportedLanguage &&
+            (includeAll || matchesAny(rel, config.include)) &&
+            depth <= config.maxDepth
+          ) {
+            unsupported.push({ path: rel, extension, language: unsupportedLanguage })
+          }
+        }
+        continue
+      }
       if (!includeAll && !matchesAny(rel, config.include)) continue
       if (depth > config.maxDepth) {
         skip(rel, 'too-deep')
@@ -164,14 +180,17 @@ export function scanRepository({ rootAbs, config }) {
 
   files.sort((a, b) => a.path.localeCompare(b.path))
   skipped.sort((a, b) => a.path.localeCompare(b.path) || a.reason.localeCompare(b.reason))
+  unsupported.sort((a, b) => a.path.localeCompare(b.path))
 
   return {
     files,
     skipped,
+    unsupported,
     stats: {
       files: files.length,
       bytes: files.reduce((total, file) => total + file.size, 0),
-      skipped: skipped.length
+      skipped: skipped.length,
+      unsupported: unsupported.length
     }
   }
 }
