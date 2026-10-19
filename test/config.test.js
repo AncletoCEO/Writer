@@ -33,6 +33,7 @@ test('config por defecto', (t) => {
   assert.equal(config.uml.maxClasses, 40)
   assert.equal(config.docs.enabled, true)
   assert.equal(config.apiDocs.enabled, true)
+  assert.equal(config.outputReadme.enabled, true)
   assert.equal(config.docs.minCoverage, 0.5)
   assert.equal(config.orphans.enabled, true)
   assert.deepEqual(config.orphans.entrypoints, [])

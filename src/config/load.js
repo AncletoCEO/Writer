@@ -58,6 +58,9 @@ const DEFAULTS = {
   apiDocs: {
     enabled: true
   },
+  outputReadme: {
+    enabled: true
+  },
   lint: {
     cycles: true,
     layerViolations: true,
@@ -230,6 +233,12 @@ function validate(config) {
   }
   if (typeof config.apiDocs.enabled !== 'boolean') {
     throw new ConfigError('apiDocs.enabled debe ser boolean')
+  }
+  if (!isPlainObject(config.outputReadme)) {
+    throw new ConfigError('outputReadme debe ser un objeto')
+  }
+  if (typeof config.outputReadme.enabled !== 'boolean') {
+    throw new ConfigError('outputReadme.enabled debe ser boolean')
   }
   if (!isPlainObject(config.lint)) {
     throw new ConfigError('lint debe ser un objeto')

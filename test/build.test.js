@@ -75,6 +75,7 @@ test('build completo publica el contrato y queda fresco', (t) => {
   const result = runBuild({ rootAbs: dir, config })
 
   for (const rel of [
+    'README.md',
     'manifest.json',
     'graph.json',
     'symbols.json',

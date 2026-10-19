@@ -107,6 +107,7 @@ ancleto-writer: publicado .ancleto/writer (25 archivos, 458 aristas, 109 ms)
 
 ```text
 .ancleto/writer/
+├── README.md
 ├── manifest.json
 ├── graph.json
 ├── symbols.json

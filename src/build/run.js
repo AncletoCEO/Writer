@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs'
 import { analyzeRepository } from './analyze.js'
 import { readProjectRules } from '../memory/read-only.js'
 import { renderDocuments } from '../render/markdown.js'
+import { renderOutputReadme } from '../render/output-readme.js'
 import { buildFacts } from '../facts/build.js'
 import { buildSymbolsJson } from '../facts/symbols.js'
 import { buildDocCoverageFact } from '../facts/doc-coverage.js'
@@ -56,6 +57,11 @@ export function runBuild({ rootAbs, config, now = () => new Date().toISOString()
     'symbols.json': buildSymbolsJson(graph),
     ...facts,
     ...documents
+  }
+
+  if (config.outputReadme?.enabled !== false) {
+    const paths = [...Object.keys(outputs), 'manifest.json', 'README.md'].sort()
+    outputs['README.md'] = renderOutputReadme({ paths })
   }
 
   const stats = {

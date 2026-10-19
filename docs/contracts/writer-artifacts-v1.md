@@ -10,6 +10,7 @@ El productor escribe todo dentro de `outputDir` (default `.ancleto/writer/`):
 
 ```text
 .ancleto/writer/
+├── README.md
 ├── manifest.json
 ├── graph.json
 ├── symbols.json
@@ -32,6 +33,9 @@ El productor escribe todo dentro de `outputDir` (default `.ancleto/writer/`):
     ├── GOTCHAS.md
     └── ARCHITECTURE.md
 ```
+
+`README.md` describe el propio paquete y cómo regenerarlo. No reemplaza ni modifica el README
+del repositorio del usuario.
 
 Los documentos de `agent/` pueden paginarse como `NAME_p2.md`, `NAME_p3.md`, etc. Cada página
 tiene como máximo 500 líneas. Los consumidores deben considerar todas las páginas que existan.

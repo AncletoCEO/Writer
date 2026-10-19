@@ -4,20 +4,20 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar el mapa de outputs y la frontera de escritura.
-- [ ] Definir el contenido y los archivos que se listan.
+- [x] Confirmar el mapa de outputs y la frontera de escritura.
+- [x] Definir el contenido y los archivos que se listan.
 
 ## Fase 1 — Implementación
 
-- [ ] Implementar `src/render/output-readme.js`.
-- [ ] Agregar `README.md` al mapa de outputs en `runBuild`.
-- [ ] Agregar `outputReadme.enabled` a config y validación.
-- [ ] Actualizar contrato y README del proyecto.
+- [x] Implementar `src/render/output-readme.js`.
+- [x] Agregar `README.md` al mapa de outputs en `runBuild`.
+- [x] Agregar `outputReadme.enabled` a config y validación.
+- [x] Actualizar contrato y README del proyecto.
 
 ## Fase 2 — Tests
 
-- [ ] README presente en `outputDir`.
-- [ ] Solo lista archivos existentes.
-- [ ] README del usuario sin cambios.
-- [ ] Regeneración actualiza el contenido.
-- [ ] `npm test`, `npm run lint`, `npm run build`.
+- [x] README presente en `outputDir`.
+- [x] Solo lista archivos existentes.
+- [x] README del usuario sin cambios.
+- [x] Regeneración actualiza el contenido.
+- [x] `npm test`, `npm run lint`, `npm run build`.
