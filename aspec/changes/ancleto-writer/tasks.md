@@ -32,14 +32,14 @@
 
 ## Fase 2 — Configuración y scanner
 
-- [ ] Implementar `src/config/glob.js`: matcher mínimo para `*`, `**`, `?` y clases, sin dependencias.
-- [ ] Implementar `src/config/load.js` con precedencia CLI > `.ancleto-writer.json` > `.ancletorc` (`discovery.exclude`) > defaults.
-- [ ] Implementar `init` para escribir `.ancleto-writer.json` sin sobrescribir salvo `--force`.
-- [ ] Implementar `src/scan/scanner.js`: walk determinista, ignores, `lstat`, contención con `realpath`, topes de tamaño/profundidad.
-- [ ] Registrar `facts/skipped.json` con `reason` para archivos omitidos.
-- [ ] Implementar hash SHA-256 por archivo durante el scan (una sola lectura).
-- [ ] Implementar `src/scan/git.js` opcional (`rev-parse`, `diff --name-only`), con fallback silencioso si no hay git.
-- [ ] Tests: excludes por defecto, symlink rechazado, archivo > 1 MiB omitido, orden estable.
+- [x] Implementar `src/config/glob.js`: matcher mínimo para `*`, `**`, `?` y clases, sin dependencias.
+- [x] Implementar `src/config/load.js` con precedencia CLI > `.ancleto-writer.json` > `.ancletorc` (`discovery.exclude`) > defaults.
+- [x] Implementar `init` para escribir `.ancleto-writer.json` sin sobrescribir salvo `--force`.
+- [x] Implementar `src/scan/scanner.js`: walk determinista, ignores, `lstat`, contención con `realpath`, topes de tamaño/profundidad.
+- [x] Registrar `facts/skipped.json` con `reason` para archivos omitidos.
+- [x] Implementar hash SHA-256 por archivo durante el scan (una sola lectura).
+- [x] Implementar `src/scan/git.js` opcional (`rev-parse`, `diff --name-only`), con fallback silencioso si no hay git.
+- [x] Tests: excludes por defecto, symlink rechazado, archivo > 1 MiB omitido, orden estable.
 
 ## Fase 3 — Lexer y parser JavaScript/TypeScript
 
@@ -114,8 +114,6 @@
 - [ ] Escribir `docs/contracts/writer-artifacts-v1.md` con layout, esquema, frescura, fallback y ejemplo de consumo.
 - [ ] Documentar en `README.md` instalación, comandos, contrato, límites, licencia y atribución.
 - [ ] Verificar `npm pack --dry-run`: incluye `src/`, `LICENSE`, `NOTICE`, `docs/` y `README.md`; no incluye tests ni fixtures.
-- [ ] Configurar workflow de GitHub Actions: `npm ci`, `npm test`, `npm run lint`, publish a npm en tags `v*`.
-- [ ] Reservar/publicar `@ancleto/writer` para asegurar el nombre.
 - [ ] Revisar checklist AGPL: licencia, avisos, fuente en tarball, aviso en CLI, sin restricciones adicionales.
 
 ## Fase 11 — Verificación final
@@ -126,3 +124,15 @@
 - [ ] Confirmar que un consumidor sin writer y otro con writer stale producen el mismo fallback.
 - [ ] Revisar que no existan `dependencies` en `package.json` y que el build funcione sin red.
 - [ ] Cerrar el change con `ancleto-verify` y registrar la decisión de licencia en la memoria del repo.
+
+## Fase 12 — Publicación en npm
+
+- [ ] Reservar el nombre `@ancleto/writer` en npm y confirmar que el scope `@ancleto` está bajo control de la organización.
+- [ ] Configurar `NPM_TOKEN` como secret de GitHub Actions con permiso de publicación y 2FA/automation token.
+- [ ] Crear `.github/workflows/publish.yml` disparado por tags `v*`: `npm ci`, `npm test`, `npm run lint`, `npm run build`, `npm publish --access public --provenance`.
+- [ ] Ejecutar `npm publish --dry-run` y revisar el tarball final (fuente, `LICENSE`, `NOTICE`, `README.md`, `docs/`).
+- [ ] Publicar la primera versión `0.1.0` y crear el tag `v0.1.0` + GitHub Release.
+- [ ] Verificar la ficha de npm: nombre, versión, licencia AGPL-3.0-only, README, repositorio y procedencia.
+- [ ] Smoke post-publicación: `npx @ancleto/writer@0.1.0 --version` y `npm view @ancleto/writer`.
+- [ ] Documentar el proceso de release y rollback (`npm deprecate`) en `docs/releasing.md`.
+- [ ] Confirmar que el workflow no publica si faltan tests, lint o el build.
