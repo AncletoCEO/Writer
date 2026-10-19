@@ -20,7 +20,7 @@
 - [x] Crear `scripts/setup-branch-protection.sh` idempotente para ruleset, rama default y check requerido.
 - [x] Agregar plantilla de PR con la distinción `develop` / release.
 - [x] Pushear `main` y `develop` a `origin`.
-- [ ] Aplicar el ruleset en GitHub y marcar `develop` como default (diferido; **no bloquea el MVP**). Requiere admin. Mientras tanto, el equipo integra en `develop` y `main` recibe PRs de release desde `develop`.
+- [x] Aplicar el ruleset en GitHub (aplicado por Ancleto el 2026-10-19: `main-pr-only-from-develop` sobre `refs/heads/main`, check `pr-source-guard`, sin bypass). La rama default sigue siendo `main`.
 
 ## Fase 1 — Scaffold del paquete
 
@@ -123,7 +123,7 @@
 - [x] Modificar un archivo y confirmar exit `3`; restaurar y confirmar `0`.
 - [x] Confirmar que un consumidor sin writer y otro con writer stale producen el mismo fallback.
 - [x] Revisar que no existan `dependencies` en `package.json` y que el build funcione sin red (auditoría estática; `unshare -n` no permitido en este entorno).
-- [x] Cerrar el change con `ancleto-verify` y registrar la decisión de licencia en la memoria del repo (verify ejecutado; decisión `writer-license` registrada). El ruleset de ramas queda como follow-up diferido y no bloqueante.
+- [x] Cerrar el change con `ancleto-verify` y registrar la decisión de licencia en la memoria del repo (verify ejecutado; decisión `writer-license` registrada). El ruleset de ramas quedó aplicado el 2026-10-19 sobre `main`.
 
 ## Fase 12 — Publicación en npm
 
@@ -137,3 +137,4 @@
 - [x] Documentar el proceso de release y rollback (`npm deprecate`) en `docs/releasing.md`.
 - [x] Confirmar que el workflow no publica si faltan tests, lint o el build.
 - [x] Eliminar la versión placeholder `0.0.0-stage` creada por el flujo de autenticación (`npm unpublish @ancleto/writer@0.0.0-stage --force`, requiere OTP).
+- [x] Publicar `0.1.1` por OIDC con el README nuevo y verificar provenance.
