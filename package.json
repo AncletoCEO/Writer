@@ -1,6 +1,6 @@
 {
   "name": "@ancleto/writer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Motor de conocimiento estático determinista para @ancleto/spec",
   "type": "module",
   "bin": {
