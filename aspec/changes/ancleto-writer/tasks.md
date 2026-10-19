@@ -19,7 +19,8 @@
 - [x] Documentar el flujo `feature/* → develop → main` en `docs/branching.md`.
 - [x] Crear `scripts/setup-branch-protection.sh` idempotente para ruleset, rama default y check requerido.
 - [x] Agregar plantilla de PR con la distinción `develop` / release.
-- [ ] Aplicar el ruleset en GitHub y marcar `develop` como default (bloqueado: la cuenta autenticada tiene permiso READ; requiere admin).
+- [x] Pushear `main` y `develop` a `origin`.
+- [ ] Aplicar el ruleset en GitHub y marcar `develop` como default (bloqueado: se necesita rol admin; la cuenta `Lubonch` tiene WRITE pero no admin).
 
 ## Fase 1 — Scaffold del paquete
 
