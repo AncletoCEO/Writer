@@ -1,0 +1,61 @@
+name: Publish npm
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Verify tag matches package version
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if [ "v$PKG_VERSION" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::El tag ${GITHUB_REF_NAME} no coincide con v${PKG_VERSION}"
+            exit 1
+          fi
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Verify zero runtime dependencies
+        run: |
+          node - <<'NODE'
+          const pkg = require('./package.json')
+          const count = pkg.dependencies ? Object.keys(pkg.dependencies).length : 0
+          if (count > 0) {
+            console.error(`::error::El paquete declara ${count} dependencies de runtime`)
+            process.exit(1)
+          }
+          console.log('sin dependencies de runtime')
+          NODE
+
+      - name: Publish
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

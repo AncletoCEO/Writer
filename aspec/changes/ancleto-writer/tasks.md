@@ -127,12 +127,12 @@
 
 ## Fase 12 — Publicación en npm
 
-- [ ] Reservar el nombre `@ancleto/writer` en npm y confirmar que el scope `@ancleto` está bajo control de la organización.
-- [ ] Configurar `NPM_TOKEN` como secret de GitHub Actions con permiso de publicación y 2FA/automation token.
-- [ ] Crear `.github/workflows/publish.yml` disparado por tags `v*`: `npm ci`, `npm test`, `npm run lint`, `npm run build`, `npm publish --access public --provenance`.
-- [ ] Ejecutar `npm publish --dry-run` y revisar el tarball final (fuente, `LICENSE`, `NOTICE`, `README.md`, `docs/`).
+- [ ] Reservar el nombre `@ancleto/writer` en npm (hoy disponible: 404) y confirmar el acceso al scope `@ancleto`; la reserva efectiva ocurre con la primera publicación.
+- [ ] Configurar `NPM_TOKEN` como secret de GitHub Actions con permiso de publicación y 2FA/automation token (npm local sin autenticar: E401).
+- [x] Crear `.github/workflows/publish.yml` disparado por tags `v*`: `npm ci`, `npm test`, `npm run lint`, `npm run build`, `npm publish --access public --provenance`.
+- [x] Ejecutar `npm publish --dry-run` y revisar el tarball final (fuente, `LICENSE`, `NOTICE`, `README.md`, `docs/`).
 - [ ] Publicar la primera versión `0.1.0` y crear el tag `v0.1.0` + GitHub Release.
 - [ ] Verificar la ficha de npm: nombre, versión, licencia AGPL-3.0-only, README, repositorio y procedencia.
 - [ ] Smoke post-publicación: `npx @ancleto/writer@0.1.0 --version` y `npm view @ancleto/writer`.
-- [ ] Documentar el proceso de release y rollback (`npm deprecate`) en `docs/releasing.md`.
-- [ ] Confirmar que el workflow no publica si faltan tests, lint o el build.
+- [x] Documentar el proceso de release y rollback (`npm deprecate`) en `docs/releasing.md`.
+- [x] Confirmar que el workflow no publica si faltan tests, lint o el build.

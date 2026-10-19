@@ -160,6 +160,7 @@ contrato, determinismo, frontera, consumo y un smoke de 2.000 archivos.
 - Contrato: [`docs/contracts/writer-artifacts-v1.md`](docs/contracts/writer-artifacts-v1.md)
 - Flujo de ramas: [`docs/branching.md`](docs/branching.md)
 - Procedencia del port: [`docs/provenance.md`](docs/provenance.md)
+- Releases y rollback: [`docs/releasing.md`](docs/releasing.md)
 - Cambio activo: `aspec/changes/ancleto-writer/`
 
 ## Contribución
