@@ -2,21 +2,22 @@
 
 ## Estado actual (2026-10-19)
 
-El enforcement server-side está **diferido al final del proyecto**. Mientras tanto:
+El enforcement server-side está **activo**:
 
-- El equipo integra directamente en `develop` (rama de trabajo).
-- `main` recibe únicamente PRs de release desde `develop`, por convención.
-- El workflow `pr-source-guard` ya está en `main`, pero no bloquea merges hasta que se
-  aplique el ruleset.
-- `scripts/setup-branch-protection.sh` queda listo para ejecutarse cuando haya una cuenta
-  admin disponible.
+- Ruleset `main-pr-only-from-develop` activo sobre `refs/heads/main`.
+- Reglas: `deletion`, `non_fast_forward`, `pull_request` (sin aprobaciones, dismiss stale,
+  conversación resuelta) y `required_status_checks` (`pr-source-guard`, rama actualizada).
+- Sin bypass configurado.
+- `pr-source-guard` corre con `pull_request_target` y exige que el origen sea `develop`.
+- `develop` es la rama de integración. La rama default en GitHub sigue siendo `main`; para
+  que los PRs apunten a `develop` por defecto, cambiarla en Settings → General.
 
 ## Modelo de ramas
 
 | Rama | Rol | Protección |
 |---|---|---|
-| `main` | Releases estables | Solo PR desde `develop`; sin push directo, force push ni borrado |
-| `develop` | Integración; rama default | Push directo permitido al equipo |
+| `main` | Releases estables; default actual en GitHub | Solo PR desde `develop`; sin push directo, force push ni borrado |
+| `develop` | Integración; default recomendada | Push directo permitido al equipo |
 | `feature/*`, `fix/*`, `chore/*` | Trabajo diario | PR hacia `develop` |
 
 ```text
@@ -28,7 +29,7 @@ chore/z   ──PR──▶ develop
 Reglas:
 
 - Ningún cambio llega a `main` sin pasar por un PR cuyo origen sea `develop`.
-- `develop` es la rama default: los PRs de contribución apuntan ahí, no a `main`.
+- `develop` es la rama de integración: los PRs de contribución apuntan ahí, no a `main`. Si `main` sigue como default, hay que elegir `develop` al abrir el PR.
 - Un release es un PR `develop → main`. No se crean ramas `release/*` en el MVP.
 - `main` no acepta force push ni borrado.
 
@@ -45,7 +46,7 @@ Reglas:
 - `deletion`: bloquea el borrado de `main`.
 - `bypass_actors: []`: sin bypass configurado.
 
-Además, el script crea `develop` desde `main` si no existe y la marca como rama default.
+El script también puede crear `develop` desde `main` si no existe y marcarla como default. En este repo el ruleset se creó desde el front; la default sigue siendo `main`.
 
 ### 2. Workflow `pr-source-guard`
 
@@ -65,7 +66,7 @@ git config --local branch.main.pushRemote no_push
 
 No es enforcement real: se puede omitir. La garantía está en GitHub.
 
-## Configuración inicial (cuando se active el enforcement)
+## Configuración del ruleset (ya aplicado)
 
 Requiere una cuenta con permiso **admin** sobre el repositorio:
 
@@ -82,8 +83,19 @@ Orden recomendado:
 5. Verificar en GitHub → Settings → Rules → Rulesets.
 
 Si el ruleset se aplica antes de que el workflow exista en `main`, los PRs a `main`
-quedarán bloqueados porque el check requerido nunca corre. El script emite un aviso en ese
+quedan bloqueados porque el check requerido nunca corre. El script emite un aviso en ese
 caso.
+
+### Verificación
+
+```bash
+gh api repos/AncletoCEO/Writer/rulesets/25421980 --jq ".conditions.ref_name"
+gh api repos/AncletoCEO/Writer/rules/branches/main
+gh api repos/AncletoCEO/Writer/rules/branches/develop
+```
+
+`main` debe listar `deletion`, `non_fast_forward`, `pull_request` y
+`required_status_checks`; `develop` debe devolver `[]`.
 
 ## Flujo diario
 
