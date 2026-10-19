@@ -34,6 +34,10 @@ jobs:
           else
             TAG="v${VERSION}"
           fi
+          if [ "v${VERSION}" != "${TAG}" ]; then
+            echo "::error::El tag ${TAG} no coincide con la version v${VERSION} de package.json"
+            exit 1
+          fi
           echo "PKG_VERSION=${VERSION}" >> "$GITHUB_ENV"
           echo "TAG=${TAG}" >> "$GITHUB_ENV"
           echo "tag a publicar: ${TAG} (version ${VERSION})"

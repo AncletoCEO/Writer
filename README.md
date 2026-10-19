@@ -12,7 +12,7 @@ Motor de conocimiento estático, determinista y offline para complementar
 JavaScript/TypeScript, construye un grafo de código y publica hechos que spec puede consumir
 como contexto, sin LLM y sin gastar tokens.
 
-> **Estado:** `0.1.0` publicado en npm. Licencia AGPL-3.0-only, Node ≥ 24 y cero
+> **Estado:** `0.1.1` publicado en npm. Licencia AGPL-3.0-only, Node ≥ 24 y cero
 > dependencias de runtime.
 
 ## Contenido
@@ -121,7 +121,7 @@ ancleto-writer: publicado .ancleto/writer (25 archivos, 458 aristas, 109 ms)
 ```json
 {
   "schemaVersion": 1,
-  "writerVersion": "0.1.0",
+  "writerVersion": "0.1.1",
   "gitCommit": "abc123",
   "gitDirty": false,
   "fingerprint": "sha256:...",
@@ -307,7 +307,7 @@ contrato, determinismo, frontera, consumo y un smoke de 2.000 archivos.
 ### Uso en CI
 
 ```yaml
-- run: npx @ancleto/writer@0.1.0 build --json
+- run: npx @ancleto/writer@0.1.1 build --json
 - uses: actions/upload-artifact@v4
   with:
     name: writer-context
@@ -327,8 +327,8 @@ contrato, determinismo, frontera, consumo y un smoke de 2.000 archivos.
 - CI (`.github/workflows/ci.yml`): build, tests, lint y `npm pack --dry-run` en pushes y PRs.
 - Publish (`.github/workflows/publish.yml`): tags `v*`, Trusted Publishing por OIDC, sin
   `NPM_TOKEN`, con provenance y GitHub Release.
-- `0.1.0` fue la primera publicación manual; a partir de la próxima versión publica el
-  workflow.
+- `0.1.0` fue la primera publicación manual. `0.1.1` fue la primera release por OIDC con
+  provenance; las siguientes salen por el workflow.
 - La ficha de npm muestra el README del tarball publicado: los cambios de este README se
   verán en npm al publicar la próxima versión.
 

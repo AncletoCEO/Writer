@@ -44,7 +44,7 @@ function buildFixture(t) {
 test('--version y --help', () => {
   const version = run(['--version'], ROOT)
   assert.equal(version.status, 0)
-  assert.match(version.stdout, /ancleto-writer 0\.1\.0/)
+  assert.match(version.stdout, /ancleto-writer \d+\.\d+\.\d+/)
   assert.match(version.stdout, /AGPL-3\.0-only/)
 
   const help = run(['--help'], ROOT)
