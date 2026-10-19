@@ -25,3 +25,7 @@ Propuesta de formato (campos `summary`, `description`, `tags`), reglas de extrac
 - Costo de parseo y falsos positivos.
 - Cobertura de convenciones (JSDoc, TSDoc, comentarios sueltos).
 - Impacto en el tamaño de los docs y en el contrato.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

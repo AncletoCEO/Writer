@@ -24,3 +24,7 @@ ADR corto con recomendación (probablemente no implementar). No implementar.
 - Dependencias, peso y mantenibilidad.
 - Licencia de assets/música.
 - Tiempo de cómputo.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

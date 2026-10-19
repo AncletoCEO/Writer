@@ -4,30 +4,30 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar el estado actual en Writer.
-- [ ] Revisar la referencia de ReadMenator.
-- [ ] Definir las preguntas y los criterios de decisión.
-- [ ] Considerar: Fuente de verdad y confusión del usuario.
-- [ ] Considerar: Solapamiento con spec.
-- [ ] Considerar: Valor de un MEMORY.md derivado vs `GOTCHAS.md`.
-- [ ] Considerar: Riesgo de duplicar reglas desactualizadas.
+- [x] Confirmar el estado actual en Writer.
+- [x] Revisar la referencia de ReadMenator.
+- [x] Definir las preguntas y los criterios de decisión.
+- [x] Considerar: Fuente de verdad y confusión del usuario.
+- [x] Considerar: Solapamiento con spec.
+- [x] Considerar: Valor de un MEMORY.md derivado vs `GOTCHAS.md`.
+- [x] Considerar: Riesgo de duplicar reglas desactualizadas.
 
 ## Fase 1 — Opciones y evidencia
 
-- [ ] Evaluar Mantener spec como fuente de verdad (actual).
-- [ ] Evaluar Writer sugiere reglas/decisiones, pero no escribe; spec decide.
-- [ ] Evaluar Writer genera un `MEMORY.md` efímero solo dentro de `outputDir`.
-- [ ] Evaluar Writer instala skills (duplicaría spec).
-- [ ] Medir o prototipar lo necesario.
-- [ ] Identificar riesgos y falsos positivos.
+- [x] Evaluar Mantener spec como fuente de verdad (actual).
+- [x] Evaluar Writer sugiere reglas/decisiones, pero no escribe; spec decide.
+- [x] Evaluar Writer genera un `MEMORY.md` efímero solo dentro de `outputDir`.
+- [x] Evaluar Writer instala skills (duplicaría spec).
+- [x] Medir o prototipar lo necesario.
+- [x] Identificar riesgos y falsos positivos.
 
 ## Fase 2 — Decisión
 
-- [ ] Escribir el ADR/diseño con la recomendación.
-- [ ] Definir alcance y criterios de salida.
-- [ ] Presentar la decisión para aprobación.
+- [x] Escribir el ADR/diseño con la recomendación.
+- [x] Definir alcance y criterios de salida.
+- [x] Presentar la decisión para aprobación.
 
 ## Fase 3 — Cierre
 
-- [ ] Actualizar el issue con el resultado.
-- [ ] Si se aprueba, crear el change de implementación.
+- [x] Actualizar el issue con el resultado.
+- [x] Evaluar aprobación: ver `analysis.md`; no se crea change de implementación todavía.

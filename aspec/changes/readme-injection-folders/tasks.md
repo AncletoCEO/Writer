@@ -4,30 +4,30 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar el estado actual en Writer.
-- [ ] Revisar la referencia de ReadMenator.
-- [ ] Definir las preguntas y los criterios de decisión.
-- [ ] Considerar: Confianza del usuario y conflictos de merge.
-- [ ] Considerar: Idempotencia y reversibilidad.
-- [ ] Considerar: Valor real del link.
-- [ ] Considerar: Coherencia con la regla de no tocar el repo.
+- [x] Confirmar el estado actual en Writer.
+- [x] Revisar la referencia de ReadMenator.
+- [x] Definir las preguntas y los criterios de decisión.
+- [x] Considerar: Confianza del usuario y conflictos de merge.
+- [x] Considerar: Idempotencia y reversibilidad.
+- [x] Considerar: Valor real del link.
+- [x] Considerar: Coherencia con la regla de no tocar el repo.
 
 ## Fase 1 — Opciones y evidencia
 
-- [ ] Evaluar Mantener cero efectos laterales (actual).
-- [ ] Evaluar Inyección opt-in con bloque marcado e idempotente.
-- [ ] Evaluar READMEs solo dentro de `.ancleto/writer/` (no en el repo del usuario).
-- [ ] Evaluar No hacerlo.
-- [ ] Medir o prototipar lo necesario.
-- [ ] Identificar riesgos y falsos positivos.
+- [x] Evaluar Mantener cero efectos laterales (actual).
+- [x] Evaluar Inyección opt-in con bloque marcado e idempotente.
+- [x] Evaluar READMEs solo dentro de `.ancleto/writer/` (no en el repo del usuario).
+- [x] Evaluar No hacerlo.
+- [x] Medir o prototipar lo necesario.
+- [x] Identificar riesgos y falsos positivos.
 
 ## Fase 2 — Decisión
 
-- [ ] Escribir el ADR/diseño con la recomendación.
-- [ ] Definir alcance y criterios de salida.
-- [ ] Presentar la decisión para aprobación.
+- [x] Escribir el ADR/diseño con la recomendación.
+- [x] Definir alcance y criterios de salida.
+- [x] Presentar la decisión para aprobación.
 
 ## Fase 3 — Cierre
 
-- [ ] Actualizar el issue con el resultado.
-- [ ] Si se aprueba, crear el change de implementación.
+- [x] Actualizar el issue con el resultado.
+- [x] Evaluar aprobación: ver `analysis.md`; no se crea change de implementación todavía.

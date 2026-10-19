@@ -24,3 +24,7 @@ ADR con decisión y, si aplica, formato de sugerencias. No implementar.
 - Solapamiento con spec y sus skills.
 - Valor real vs ruido.
 - Mantenimiento de formatos de reglas.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

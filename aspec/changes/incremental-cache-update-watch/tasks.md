@@ -4,30 +4,30 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar el estado actual en Writer.
-- [ ] Revisar la referencia de ReadMenator.
-- [ ] Definir las preguntas y los criterios de decisión.
-- [ ] Considerar: Tiempo de build en repos objetivo (medir p50/p95).
-- [ ] Considerar: Costo de complejidad y bugs de frescura.
-- [ ] Considerar: Beneficio en CI vs local.
-- [ ] Considerar: Portabilidad de `watch`.
+- [x] Confirmar el estado actual en Writer.
+- [x] Revisar la referencia de ReadMenator.
+- [x] Definir las preguntas y los criterios de decisión.
+- [x] Considerar: Tiempo de build en repos objetivo (medir p50/p95).
+- [x] Considerar: Costo de complejidad y bugs de frescura.
+- [x] Considerar: Beneficio en CI vs local.
+- [x] Considerar: Portabilidad de `watch`.
 
 ## Fase 1 — Opciones y evidencia
 
-- [ ] Evaluar Cache por archivo (hash/mtime) para parse y resolución, con invalidación por fingerprint.
-- [ ] Evaluar `update` que reutilice el paquete anterior y reanalice solo archivos cambiados.
-- [ ] Evaluar `watch` con polling (sin deps) o `fs.watch`.
-- [ ] Evaluar No implementar hasta que haya un caso real.
-- [ ] Medir o prototipar lo necesario.
-- [ ] Identificar riesgos y falsos positivos.
+- [x] Evaluar Cache por archivo (hash/mtime) para parse y resolución, con invalidación por fingerprint.
+- [x] Evaluar `update` que reutilice el paquete anterior y reanalice solo archivos cambiados.
+- [x] Evaluar `watch` con polling (sin deps) o `fs.watch`.
+- [x] Evaluar No implementar hasta que haya un caso real.
+- [x] Medir o prototipar lo necesario.
+- [x] Identificar riesgos y falsos positivos.
 
 ## Fase 2 — Decisión
 
-- [ ] Escribir el ADR/diseño con la recomendación.
-- [ ] Definir alcance y criterios de salida.
-- [ ] Presentar la decisión para aprobación.
+- [x] Escribir el ADR/diseño con la recomendación.
+- [x] Definir alcance y criterios de salida.
+- [x] Presentar la decisión para aprobación.
 
 ## Fase 3 — Cierre
 
-- [ ] Actualizar el issue con el resultado.
-- [ ] Si se aprueba, crear el change de implementación.
+- [x] Actualizar el issue con el resultado.
+- [x] Evaluar aprobación: ver `analysis.md`; no se crea change de implementación todavía.

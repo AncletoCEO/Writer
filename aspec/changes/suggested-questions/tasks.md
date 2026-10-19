@@ -4,29 +4,29 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar el estado actual en Writer.
-- [ ] Revisar la referencia de ReadMenator.
-- [ ] Definir las preguntas y los criterios de decisión.
-- [ ] Considerar: Valor real para el usuario final.
-- [ ] Considerar: Solapamiento con el seed de spec.
-- [ ] Considerar: Costo de mantenimiento y ruido.
+- [x] Confirmar el estado actual en Writer.
+- [x] Revisar la referencia de ReadMenator.
+- [x] Definir las preguntas y los criterios de decisión.
+- [x] Considerar: Valor real para el usuario final.
+- [x] Considerar: Solapamiento con el seed de spec.
+- [x] Considerar: Costo de mantenimiento y ruido.
 
 ## Fase 1 — Opciones y evidencia
 
-- [ ] Evaluar Plantillas deterministas a partir de anomalías (ciclos, god nodes, capas, huérfanos).
-- [ ] Evaluar Generación con LLM (fuera del alcance token-free de Writer).
-- [ ] Evaluar No hacerlo; dejarlo a spec.
-- [ ] Evaluar Solo preguntas operativas fijas ("¿por qué este ciclo?").
-- [ ] Medir o prototipar lo necesario.
-- [ ] Identificar riesgos y falsos positivos.
+- [x] Evaluar Plantillas deterministas a partir de anomalías (ciclos, god nodes, capas, huérfanos).
+- [x] Evaluar Generación con LLM (fuera del alcance token-free de Writer).
+- [x] Evaluar No hacerlo; dejarlo a spec.
+- [x] Evaluar Solo preguntas operativas fijas ("¿por qué este ciclo?").
+- [x] Medir o prototipar lo necesario.
+- [x] Identificar riesgos y falsos positivos.
 
 ## Fase 2 — Decisión
 
-- [ ] Escribir el ADR/diseño con la recomendación.
-- [ ] Definir alcance y criterios de salida.
-- [ ] Presentar la decisión para aprobación.
+- [x] Escribir el ADR/diseño con la recomendación.
+- [x] Definir alcance y criterios de salida.
+- [x] Presentar la decisión para aprobación.
 
 ## Fase 3 — Cierre
 
-- [ ] Actualizar el issue con el resultado.
-- [ ] Si se aprueba, crear el change de implementación.
+- [x] Actualizar el issue con el resultado.
+- [x] Evaluar aprobación: ver `analysis.md`; no se crea change de implementación todavía.

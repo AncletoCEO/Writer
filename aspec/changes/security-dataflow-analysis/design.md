@@ -25,3 +25,7 @@ Análisis de valor/riesgo y recomendación (probablemente no implementar en el c
 - Falsos positivos y confianza.
 - Solapamiento con herramientas dedicadas.
 - Valor para spec vs riesgo reputacional.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

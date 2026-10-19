@@ -23,3 +23,7 @@ ADR con ejemplos y decisión. No implementar.
 - Valor real para el usuario final.
 - Solapamiento con el seed de spec.
 - Costo de mantenimiento y ruido.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

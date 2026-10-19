@@ -4,31 +4,31 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar el estado actual en Writer.
-- [ ] Revisar la referencia de ReadMenator.
-- [ ] Definir las preguntas y los criterios de decisión.
-- [ ] Considerar: Expertise y mantenimiento.
-- [ ] Considerar: Falsos positivos y confianza.
-- [ ] Considerar: Solapamiento con herramientas dedicadas.
-- [ ] Considerar: Valor para spec vs riesgo reputacional.
+- [x] Confirmar el estado actual en Writer.
+- [x] Revisar la referencia de ReadMenator.
+- [x] Definir las preguntas y los criterios de decisión.
+- [x] Considerar: Expertise y mantenimiento.
+- [x] Considerar: Falsos positivos y confianza.
+- [x] Considerar: Solapamiento con herramientas dedicadas.
+- [x] Considerar: Valor para spec vs riesgo reputacional.
 
 ## Fase 1 — Opciones y evidencia
 
-- [ ] Evaluar Taint mínimo sobre imports peligrosos (`child_process`, `eval`, etc.) con confianza baja.
-- [ ] Evaluar CPG/dataflow completo (muy costoso).
-- [ ] Evaluar Integrar Semgrep/CodeQL como herramienta externa.
-- [ ] Evaluar SARIF solo como formato de salida de hallazgos existentes.
-- [ ] Evaluar No hacerlo.
-- [ ] Medir o prototipar lo necesario.
-- [ ] Identificar riesgos y falsos positivos.
+- [x] Evaluar Taint mínimo sobre imports peligrosos (`child_process`, `eval`, etc.) con confianza baja.
+- [x] Evaluar CPG/dataflow completo (muy costoso).
+- [x] Evaluar Integrar Semgrep/CodeQL como herramienta externa.
+- [x] Evaluar SARIF solo como formato de salida de hallazgos existentes.
+- [x] Evaluar No hacerlo.
+- [x] Medir o prototipar lo necesario.
+- [x] Identificar riesgos y falsos positivos.
 
 ## Fase 2 — Decisión
 
-- [ ] Escribir el ADR/diseño con la recomendación.
-- [ ] Definir alcance y criterios de salida.
-- [ ] Presentar la decisión para aprobación.
+- [x] Escribir el ADR/diseño con la recomendación.
+- [x] Definir alcance y criterios de salida.
+- [x] Presentar la decisión para aprobación.
 
 ## Fase 3 — Cierre
 
-- [ ] Actualizar el issue con el resultado.
-- [ ] Si se aprueba, crear el change de implementación.
+- [x] Actualizar el issue con el resultado.
+- [x] Evaluar aprobación: ver `analysis.md`; no se crea change de implementación todavía.

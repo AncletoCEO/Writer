@@ -4,30 +4,30 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar el estado actual en Writer.
-- [ ] Revisar la referencia de ReadMenator.
-- [ ] Definir las preguntas y los criterios de decisión.
-- [ ] Considerar: Valor para spec vs costo/mantenimiento.
-- [ ] Considerar: Licencia/AGPL de templates copiados.
-- [ ] Considerar: Accesibilidad y peso de salida.
-- [ ] Considerar: Demanda real.
+- [x] Confirmar el estado actual en Writer.
+- [x] Revisar la referencia de ReadMenator.
+- [x] Definir las preguntas y los criterios de decisión.
+- [x] Considerar: Valor para spec vs costo/mantenimiento.
+- [x] Considerar: Licencia/AGPL de templates copiados.
+- [x] Considerar: Accesibilidad y peso de salida.
+- [x] Considerar: Demanda real.
 
 ## Fase 1 — Opciones y evidencia
 
-- [ ] Evaluar Quedarse en Mermaid (actual).
-- [ ] Evaluar SVG estático generado por código propio.
-- [ ] Evaluar HTML interactivo propio (sin copiar vis.js de ReadMenator).
-- [ ] Evaluar Integrar ReadMenator como herramienta externa opcional.
-- [ ] Medir o prototipar lo necesario.
-- [ ] Identificar riesgos y falsos positivos.
+- [x] Evaluar Quedarse en Mermaid (actual).
+- [x] Evaluar SVG estático generado por código propio.
+- [x] Evaluar HTML interactivo propio (sin copiar vis.js de ReadMenator).
+- [x] Evaluar Integrar ReadMenator como herramienta externa opcional.
+- [x] Medir o prototipar lo necesario.
+- [x] Identificar riesgos y falsos positivos.
 
 ## Fase 2 — Decisión
 
-- [ ] Escribir el ADR/diseño con la recomendación.
-- [ ] Definir alcance y criterios de salida.
-- [ ] Presentar la decisión para aprobación.
+- [x] Escribir el ADR/diseño con la recomendación.
+- [x] Definir alcance y criterios de salida.
+- [x] Presentar la decisión para aprobación.
 
 ## Fase 3 — Cierre
 
-- [ ] Actualizar el issue con el resultado.
-- [ ] Si se aprueba, crear el change de implementación.
+- [x] Actualizar el issue con el resultado.
+- [x] Evaluar aprobación: ver `analysis.md`; no se crea change de implementación todavía.

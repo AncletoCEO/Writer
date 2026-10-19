@@ -25,3 +25,7 @@ ADR con comandos, sintaxis, algoritmos (BFS bidireccional, ranking) y ejemplos. 
 - Solapamiento con spec y con el IDE.
 - Costo de mantener un lenguaje de consulta.
 - Calidad de resultados sin LLM.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

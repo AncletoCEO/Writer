@@ -23,3 +23,7 @@ ADR con decisión. No implementar.
 - Valor vs costo de permisos/autenticación.
 - Solapamiento con GitHub Pages/docs.
 - Mantenimiento de enlaces y sidebar.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

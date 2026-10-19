@@ -25,3 +25,7 @@ Benchmark con repos de 2k/10k/50k archivos, diseño de cache e invalidación, y 
 - Costo de complejidad y bugs de frescura.
 - Beneficio en CI vs local.
 - Portabilidad de `watch`.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

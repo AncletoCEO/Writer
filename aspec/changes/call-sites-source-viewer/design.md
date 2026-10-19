@@ -26,3 +26,7 @@ Diseño de índice/snippets, formato y límites. No implementar.
 - Privacidad y ruido de código embebido.
 - Resolución cross-file (hoy las llamadas son intra-archivo).
 - Solapamiento con el IDE.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

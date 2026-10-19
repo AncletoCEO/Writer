@@ -24,3 +24,7 @@ ADR con demanda y decisión. No implementar.
 - Riesgo de drift semántico.
 - Mantenimiento por lenguaje.
 - Relación con el core de Writer.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

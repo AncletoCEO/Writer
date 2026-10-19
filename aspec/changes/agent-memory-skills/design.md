@@ -25,3 +25,7 @@ ADR con decisión (probablemente A + B). No implementar.
 - Solapamiento con spec.
 - Valor de un MEMORY.md derivado vs `GOTCHAS.md`.
 - Riesgo de duplicar reglas desactualizadas.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

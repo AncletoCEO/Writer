@@ -25,3 +25,7 @@ ADR con alcance, formato, estructura de archivos y criterios de aceptación. No 
 - Valor para agentes vs costo de mantenimiento.
 - Dependencia de docstrings (issue relacionado).
 - Tamaño de salida y paginación.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

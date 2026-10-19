@@ -4,30 +4,30 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar el estado actual en Writer.
-- [ ] Revisar la referencia de ReadMenator.
-- [ ] Definir las preguntas y los criterios de decisión.
-- [ ] Considerar: Seguridad y responsabilidad de scripts.
-- [ ] Considerar: Solapamiento con spec y sus skills.
-- [ ] Considerar: Valor real vs ruido.
-- [ ] Considerar: Mantenimiento de formatos de reglas.
+- [x] Confirmar el estado actual en Writer.
+- [x] Revisar la referencia de ReadMenator.
+- [x] Definir las preguntas y los criterios de decisión.
+- [x] Considerar: Seguridad y responsabilidad de scripts.
+- [x] Considerar: Solapamiento con spec y sus skills.
+- [x] Considerar: Valor real vs ruido.
+- [x] Considerar: Mantenimiento de formatos de reglas.
 
 ## Fase 1 — Opciones y evidencia
 
-- [ ] Evaluar No implementar; spec decide.
-- [ ] Evaluar Sugerencias read-only en `GOTCHAS.md`.
-- [ ] Evaluar Scripts ejecutables (riesgoso).
-- [ ] Evaluar Generar `.cursorrules`/reglas desde hechos.
-- [ ] Medir o prototipar lo necesario.
-- [ ] Identificar riesgos y falsos positivos.
+- [x] Evaluar No implementar; spec decide.
+- [x] Evaluar Sugerencias read-only en `GOTCHAS.md`.
+- [x] Evaluar Scripts ejecutables (riesgoso).
+- [x] Evaluar Generar `.cursorrules`/reglas desde hechos.
+- [x] Medir o prototipar lo necesario.
+- [x] Identificar riesgos y falsos positivos.
 
 ## Fase 2 — Decisión
 
-- [ ] Escribir el ADR/diseño con la recomendación.
-- [ ] Definir alcance y criterios de salida.
-- [ ] Presentar la decisión para aprobación.
+- [x] Escribir el ADR/diseño con la recomendación.
+- [x] Definir alcance y criterios de salida.
+- [x] Presentar la decisión para aprobación.
 
 ## Fase 3 — Cierre
 
-- [ ] Actualizar el issue con el resultado.
-- [ ] Si se aprueba, crear el change de implementación.
+- [x] Actualizar el issue con el resultado.
+- [x] Evaluar aprobación: ver `analysis.md`; no se crea change de implementación todavía.

@@ -25,3 +25,7 @@ ADR con decisión y, si se elige MCP, esquema de tools/recursos. No implementar.
 - Costo de mantener auth, transporte y esquema MCP.
 - Valor real para agentes vs leer JSON.
 - Token/contexto que agrega cada tool MCP.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

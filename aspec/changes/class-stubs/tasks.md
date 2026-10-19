@@ -4,30 +4,30 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar el estado actual en Writer.
-- [ ] Revisar la referencia de ReadMenator.
-- [ ] Definir las preguntas y los criterios de decisión.
-- [ ] Considerar: Demanda real de scaffolding.
-- [ ] Considerar: Riesgo de drift semántico.
-- [ ] Considerar: Mantenimiento por lenguaje.
-- [ ] Considerar: Relación con el core de Writer.
+- [x] Confirmar el estado actual en Writer.
+- [x] Revisar la referencia de ReadMenator.
+- [x] Definir las preguntas y los criterios de decisión.
+- [x] Considerar: Demanda real de scaffolding.
+- [x] Considerar: Riesgo de drift semántico.
+- [x] Considerar: Mantenimiento por lenguaje.
+- [x] Considerar: Relación con el core de Writer.
 
 ## Fase 1 — Opciones y evidencia
 
-- [ ] Evaluar No implementar.
-- [ ] Evaluar Generar solo declaraciones desde plantillas para 1-2 lenguajes.
-- [ ] Evaluar Generar desde UML con un motor de templates.
-- [ ] Evaluar Delegar a herramientas externas.
-- [ ] Medir o prototipar lo necesario.
-- [ ] Identificar riesgos y falsos positivos.
+- [x] Evaluar No implementar.
+- [x] Evaluar Generar solo declaraciones desde plantillas para 1-2 lenguajes.
+- [x] Evaluar Generar desde UML con un motor de templates.
+- [x] Evaluar Delegar a herramientas externas.
+- [x] Medir o prototipar lo necesario.
+- [x] Identificar riesgos y falsos positivos.
 
 ## Fase 2 — Decisión
 
-- [ ] Escribir el ADR/diseño con la recomendación.
-- [ ] Definir alcance y criterios de salida.
-- [ ] Presentar la decisión para aprobación.
+- [x] Escribir el ADR/diseño con la recomendación.
+- [x] Definir alcance y criterios de salida.
+- [x] Presentar la decisión para aprobación.
 
 ## Fase 3 — Cierre
 
-- [ ] Actualizar el issue con el resultado.
-- [ ] Si se aprueba, crear el change de implementación.
+- [x] Actualizar el issue con el resultado.
+- [x] Evaluar aprobación: ver `analysis.md`; no se crea change de implementación todavía.

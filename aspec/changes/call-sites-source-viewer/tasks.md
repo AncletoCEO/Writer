@@ -4,30 +4,30 @@
 
 ## Fase 0 — Relevamiento
 
-- [ ] Confirmar el estado actual en Writer.
-- [ ] Revisar la referencia de ReadMenator.
-- [ ] Definir las preguntas y los criterios de decisión.
-- [ ] Considerar: Utilidad para agentes vs tamaño de salida.
-- [ ] Considerar: Privacidad y ruido de código embebido.
-- [ ] Considerar: Resolución cross-file (hoy las llamadas son intra-archivo).
-- [ ] Considerar: Solapamiento con el IDE.
+- [x] Confirmar el estado actual en Writer.
+- [x] Revisar la referencia de ReadMenator.
+- [x] Definir las preguntas y los criterios de decisión.
+- [x] Considerar: Utilidad para agentes vs tamaño de salida.
+- [x] Considerar: Privacidad y ruido de código embebido.
+- [x] Considerar: Resolución cross-file (hoy las llamadas son intra-archivo).
+- [x] Considerar: Solapamiento con el IDE.
 
 ## Fase 1 — Opciones y evidencia
 
-- [ ] Evaluar Índice de call sites con `caller`, `callee`, `file:line` y confianza.
-- [ ] Evaluar Snippets de código embebidos en `symbols.json` (con tope de bytes).
-- [ ] Evaluar Source viewer HTML (fuera de alcance).
-- [ ] Evaluar No hacerlo.
-- [ ] Medir o prototipar lo necesario.
-- [ ] Identificar riesgos y falsos positivos.
+- [x] Evaluar Índice de call sites con `caller`, `callee`, `file:line` y confianza.
+- [x] Evaluar Snippets de código embebidos en `symbols.json` (con tope de bytes).
+- [x] Evaluar Source viewer HTML (fuera de alcance).
+- [x] Evaluar No hacerlo.
+- [x] Medir o prototipar lo necesario.
+- [x] Identificar riesgos y falsos positivos.
 
 ## Fase 2 — Decisión
 
-- [ ] Escribir el ADR/diseño con la recomendación.
-- [ ] Definir alcance y criterios de salida.
-- [ ] Presentar la decisión para aprobación.
+- [x] Escribir el ADR/diseño con la recomendación.
+- [x] Definir alcance y criterios de salida.
+- [x] Presentar la decisión para aprobación.
 
 ## Fase 3 — Cierre
 
-- [ ] Actualizar el issue con el resultado.
-- [ ] Si se aprueba, crear el change de implementación.
+- [x] Actualizar el issue con el resultado.
+- [x] Evaluar aprobación: ver `analysis.md`; no se crea change de implementación todavía.

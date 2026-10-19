@@ -25,3 +25,7 @@ ADR con decisión (probablemente mantener A + C). No implementar.
 - Idempotencia y reversibilidad.
 - Valor real del link.
 - Coherencia con la regla de no tocar el repo.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

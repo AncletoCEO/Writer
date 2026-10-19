@@ -25,3 +25,7 @@ ADR con decisión y límites. Probablemente mantener Mermaid y rechazar el resto
 - Licencia/AGPL de templates copiados.
 - Accesibilidad y peso de salida.
 - Demanda real.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).

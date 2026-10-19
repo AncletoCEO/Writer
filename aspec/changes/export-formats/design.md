@@ -27,3 +27,7 @@ ADR con matriz formato/demanda/costo y decisión. No implementar.
 - Cero dependencias y tamaño.
 - Esfuerzo de mantenimiento por formato.
 - Riesgo de contaminar outputs del usuario.
+
+## Result
+
+El análisis y la decisión están en [`analysis.md`](./analysis.md).
