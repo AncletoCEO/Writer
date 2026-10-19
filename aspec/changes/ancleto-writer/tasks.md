@@ -137,3 +137,4 @@
 - [x] Documentar el proceso de release y rollback (`npm deprecate`) en `docs/releasing.md`.
 - [x] Confirmar que el workflow no publica si faltan tests, lint o el build.
 - [x] Eliminar la versión placeholder `0.0.0-stage` creada por el flujo de autenticación (`npm unpublish @ancleto/writer@0.0.0-stage --force`, requiere OTP).
+- [x] Publicar `0.1.1` por OIDC con el README nuevo y verificar provenance.
