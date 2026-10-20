@@ -42,6 +42,16 @@ jobs:
           echo "TAG=${TAG}" >> "$GITHUB_ENV"
           echo "tag a publicar: ${TAG} (version ${VERSION})"
 
+      - name: Verify tag commit is on main
+        run: |
+          git fetch origin main
+          COMMIT=$(git rev-parse HEAD)
+          if ! git merge-base --is-ancestor "$COMMIT" origin/main; then
+            echo "::error::El tag ${TAG} no apunta a un commit de main. Mergeá develop -> main y taggeá main."
+            exit 1
+          fi
+          echo "tag ${TAG} apunta a ${COMMIT}, incluido en main"
+
       - name: Install
         run: npm ci
 

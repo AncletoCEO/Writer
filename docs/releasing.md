@@ -70,15 +70,19 @@ dentro de los 2 días; si expira, se elimina y se crea de nuevo.
 
 ## Tag y publicación
 
-Con el pack ya publicado y ambos trusts configurados:
+Primero mergear `develop` → `main` con un PR y **merge commit**. El tag debe crearse sobre
+`main`; el workflow rechaza cualquier tag cuyo commit no sea ancestro de `origin/main`.
 
 ```bash
+git switch main
+git pull --ff-only
+
 git tag -a v0.3.1 -m "v0.3.1: README completo del language pack"
-git push origin develop
 git push origin v0.3.1
 ```
 
-El workflow publica el core `0.3.1` por OIDC y omite el pack `0.1.0` porque ya existe.
+El workflow verifica que el tag esté en `main`, publica el core `0.3.1` por OIDC y omite el
+pack `0.1.0` porque ya existe.
 
 ## Publicaciones siguientes (OIDC, sin token)
 
