@@ -13,7 +13,7 @@ JavaScript/TypeScript (y, con el language pack opcional, Python, Go, Rust, C#, J
 PHP, Ruby, Swift y Kotlin), construye un grafo de código y publica hechos que spec puede
 consumir como contexto, sin LLM y sin gastar tokens.
 
-> **Estado:** `0.3.1` — release actual con el language pack P1+P2 (11 lenguajes). Licencia
+> **Estado:** `0.4.0` — release actual con el language pack P1+P2 (11 lenguajes) y reportes humanos HTML/interactivos. Licencia
 > AGPL-3.0-only, Node ≥ 24 y cero dependencias de runtime en el core. El badge de npm muestra
 > la última versión publicada.
 
@@ -23,6 +23,7 @@ consumir como contexto, sin LLM y sin gastar tokens.
 - [Instalación](#instalación)
 - [Language pack](#language-pack)
 - [Uso rápido](#uso-rápido)
+- [Vista humana](#vista-humana)
 - [Ejemplo de salida](#ejemplo-de-salida)
 - [Contrato de artefactos](#contrato-de-artefactos)
 - [Integración con `@ancleto/spec`](#integración-con-ancletospec)
@@ -81,7 +82,7 @@ npm install @ancleto/writer @ancleto/writer-languages
 ```
 
 `npx @ancleto/writer` instala solo el core. Para usar el pack, instalá ambos paquetes en el
-proyecto (o ambos globalmente). En esta release: core `0.3.1` + pack `0.1.0`.
+proyecto (o ambos globalmente). En esta release: core `0.4.0` + pack `0.1.0`.
 
 ### Por qué es un paquete aparte
 
@@ -167,12 +168,54 @@ ancleto-writer doctor
 | `ancleto-writer check [--root <dir>] [--json]` | Verifica frescura y compatibilidad sin escribir |
 | `ancleto-writer lint [--root <dir>] [--json]` | Evalúa reglas de arquitectura: ciclos, capas, imports no resueltos y blast radius |
 | `ancleto-writer impact <archivo...> [--root <dir>] [--depth N] [--build] [--json]` | Dependientes directos y transitivos de uno o más archivos |
+| `ancleto-writer human [--root <dir>] [--out <dir>] [--top N] [--max-classes N] [--max-nodes N] [--max-communities N] [--interactive] [--json]` | Genera una vista humana compacta desde el paquete ya construido |
 | `ancleto-writer doctor [--root <dir>] [--json]` | Diagnostica Node, git, permisos, memoria y configuración |
 | `ancleto-writer --help` | Uso y aviso legal |
 | `ancleto-writer --version` | Versión, copyright y licencia |
 
 Códigos de salida: `0` OK, `1` uso/config, `2` análisis/publicación, `3` stale,
 `4` esquema incompatible, `5` violaciones de `lint`.
+
+## Vista humana
+
+Los artefactos de `agent/` están pensados para agentes y pueden ser enormes en repos grandes.
+Para una lectura humana hay una proyección compacta y opcional:
+
+```bash
+ancleto-writer build
+ancleto-writer human
+```
+
+Genera, dentro de `outputDir`:
+
+```text
+.ancleto/writer/human/
+├── OVERVIEW.md       # resumen, lenguajes, god nodes, hotspots, ciclos, huérfanos
+├── ARCHITECTURE.md   # capas, comunidades, UML acotado, imports y ciclos
+└── data.json         # los mismos datos curados, deterministas
+```
+
+Características:
+
+- **Derivada:** lee `graph.json` y `facts/*`; no reescanea ni reparsea.
+- **Acotada:** `--top` (default 20), `--max-classes` (20), `--max-nodes` (30) y
+  `--max-communities` (6) evitan documentos gigantes.
+- **Determinista:** dos ejecuciones sobre el mismo paquete producen los mismos bytes.
+- **Fuera del manifest:** `human/` es una salida humana opcional; el contrato de agentes y
+  `schemaVersion: 1` no cambian.
+- **Sin dependencias nuevas:** HTML/CSS/SVG inline, Markdown/Mermaid y JSON. Sin frameworks, JS externo, CDN ni red.
+- **Offline:** `index.html` se abre directo en el navegador y los diagramas ya están renderizados como SVG.
+- **Interactivo opcional:** `--interactive` agrega `interactive.html` con Cytoscape vendorizado (MIT, ~426 KB inline), grafo de comunidades, búsqueda, filtros, layouts, zoom/pan y drill-down a archivos. La licencia está en `src/human/vendor/CYTOSCAPE-LICENSE` y no agrega una dependencia de runtime.
+- **Seguro:** todo path/nombre del repo se escapa antes de entrar al HTML/SVG/DOM.
+
+Ejemplos:
+
+```bash
+ancleto-writer human --top 30
+ancleto-writer human --max-classes 10 --max-nodes 20
+ancleto-writer human --interactive
+ancleto-writer human --interactive --max-communities 12 --json
+```
 
 ## Ejemplo de salida
 
@@ -215,7 +258,7 @@ ancleto-writer: publicado .ancleto/writer (25 archivos, 458 aristas, 109 ms)
 ```json
 {
   "schemaVersion": 1,
-  "writerVersion": "0.3.1",
+  "writerVersion": "0.4.0",
   "gitCommit": "abc123",
   "gitDirty": false,
   "fingerprint": "sha256:...",
@@ -273,6 +316,10 @@ El contrato completo —layout, esquemas, frescura, fallback y ejemplo de consum
 `php`, `ruby`, `swift` y `kotlin`. El `schemaVersion` sigue en `1`: un consumidor que no conoce
 un `lang` nuevo puede ignorarlo sin romper el contrato. Sin pack, `.py`, `.go`, etc. aparecen en
 `facts/unsupported.json` y no generan nodos.
+
+`human/` es una salida derivada y opcional (`index.html`, `interactive.html` opcional,
+Markdown y JSON). No aparece en `manifest.outputs` ni en el fingerprint; un consumidor de
+agentes puede ignorarla. Se regenera con `ancleto-writer human`.
 
 ## Integración con `@ancleto/spec`
 
@@ -452,7 +499,7 @@ nuevo pueden ignorarlo.
 ```bash
 npm install
 npm run build     # valida sintaxis de todos los .js
-npm test          # 193 tests
+npm test          # 202 tests
 npm run lint
 npm pack --dry-run
 ```
@@ -465,6 +512,7 @@ src/
 ├── config/     # glob, defaults y precedencia
 ├── scan/       # walk seguro, hash y git read-only
 ├── languages/  # carga opcional del language pack
+├── human/      # proyección humana (HTML/SVG, Cytoscape opcional, OVERVIEW, ARCHITECTURE, data.json)
 ├── parsers/    # lexer y parser JS/TS/JSX/TSX
 ├── resolve/    # imports, JSONC y tsconfig
 ├── graph/      # nodos y aristas
@@ -492,8 +540,8 @@ resolver, integración y fallback para cada adapter del pack.
 ```yaml
 # npx instala solo el core. Para el pack, agregá antes:
 #   npm install @ancleto/writer-languages
-- run: npx @ancleto/writer@0.3.1 build --json
-- run: npx @ancleto/writer@0.3.1 lint --json
+- run: npx @ancleto/writer@0.4.0 build --json
+- run: npx @ancleto/writer@0.4.0 lint --json
 - uses: actions/upload-artifact@v4
   with:
     name: writer-context
@@ -518,8 +566,8 @@ resolver, integración y fallback para cada adapter del pack.
 - `0.1.0` fue la primera publicación manual. `0.1.1` fue la primera release por OIDC con
   provenance. `0.2.0` agrega comunidades, god nodes, conexiones inesperadas, UML, lint e
   impact. `0.3.0` agrega el language pack opcional P1+P2 (`@ancleto/writer-languages@0.1.0`).
-  `0.3.1` es un patch de documentación: README completo del pack y guía de release. Las
-  siguientes salen por el workflow.
+  `0.3.1` fue un patch de documentación. `0.4.0` agrega `human` con HTML estático/SVG y la
+  vista interactiva Cytoscape. Las siguientes salen por el workflow.
 - La ficha de npm muestra el README del tarball publicado: los cambios de este README se
   verán en npm al publicar la próxima versión.
 

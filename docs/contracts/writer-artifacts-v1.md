@@ -306,6 +306,29 @@ nodos de archivo en `graph.json` incluyen el campo `community` con el id de la c
 `score = 0.35*pageRankPromedio + 0.30*fanInNormalizadoDestino + 0.20*sorpresaComunidad +
 0.15*cruceDeCapa`. `sorpresaComunidad = 1 - promedio(cohesión de ambas comunidades)`.
 
+## Vista humana derivada
+
+`ancleto-writer human` publica una proyección humana opcional en `human/`:
+
+```text
+human/
+├── index.html
+├── interactive.html   # opcional con --interactive
+├── OVERVIEW.md
+├── ARCHITECTURE.md
+└── data.json
+```
+
+- Es derivada de `graph.json` y `facts/*`; no reanaliza el repositorio.
+- No forma parte de `manifest.outputs` ni del fingerprint.
+- No cambia `schemaVersion`.
+- Los consumidores de agentes pueden ignorarla.
+- Los límites (`--top`, `--max-classes`, `--max-nodes`, `--max-communities`) controlan el
+  tamaño de tablas y diagramas.
+- `index.html` es autocontenido: CSS inline y SVG inline, sin JS externo, CDN ni red.
+- `interactive.html` es opcional (`--interactive`): Cytoscape.js vendorizado (MIT) inline, grafo de comunidades, drill-down y filtros, sin recursos remotos.
+- `data.json` usa rutas relativas y no incluye timestamps.
+
 ## Frescura
 
 Un consumidor debe considerar el paquete fresco solo si:

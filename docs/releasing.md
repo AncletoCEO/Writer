@@ -14,13 +14,13 @@
 Se usa semver y un único tag de release: `v<versión del core>`.
 
 - `@ancleto/writer` y `@ancleto/writer-languages` versionan por separado.
-- En `0.3.1`: core `0.3.1` y pack `0.1.0`.
-- El tag `v0.3.1` dispara la publicación del core; el pack se publica solo si cambió su versión.
+- En `0.4.0`: core `0.4.0` y pack `0.1.0`.
+- El tag `v0.4.0` dispara la publicación del core; el pack se publica solo si cambió su versión.
 
 ```bash
-npm version 0.3.1 --no-git-tag-version
+npm version 0.4.0 --no-git-tag-version
 git add package.json package-lock.json packages/writer-languages/package.json
-git commit -m "chore(release): v0.3.1"
+git commit -m "chore(release): v0.4.0"
 ```
 
 Todavía **no** crear el tag: primero hay que publicar el pack y configurar su trust.
@@ -77,11 +77,11 @@ Primero mergear `develop` → `main` con un PR y **merge commit**. El tag debe c
 git switch main
 git pull --ff-only
 
-git tag -a v0.3.1 -m "v0.3.1: README completo del language pack"
-git push origin v0.3.1
+git tag -a v0.4.0 -m "v0.4.0: human reports y language pack"
+git push origin v0.4.0
 ```
 
-El workflow verifica que el tag esté en `main`, publica el core `0.3.1` por OIDC y omite el
+El workflow verifica que el tag esté en `main`, publica el core `0.4.0` por OIDC y omite el
 pack `0.1.0` porque ya existe.
 
 ## Publicaciones siguientes (OIDC, sin token)
@@ -156,8 +156,8 @@ npm view @ancleto/writer version
 npm view @ancleto/writer-languages version
 npm view @ancleto/writer license
 npm view @ancleto/writer-languages license
-npx @ancleto/writer@0.3.1 --version
-npx @ancleto/writer@0.3.1 build
+npx @ancleto/writer@0.4.0 --version
+npx @ancleto/writer@0.4.0 build
 ```
 
 Revisar en npm:
@@ -173,20 +173,20 @@ Revisar en npm:
 Preferir deprecar antes que despublicar:
 
 ```bash
-npm deprecate @ancleto/writer@0.3.1 "Motivo del retiro; usar 0.3.2"
+npm deprecate @ancleto/writer@0.4.0 "Motivo del retiro; usar 0.4.1"
 npm deprecate @ancleto/writer-languages@0.1.0 "Motivo del retiro; usar 0.1.1"
 ```
 
 `npm unpublish` solo dentro de las 72 horas permitidas y como última opción:
 
 ```bash
-npm unpublish @ancleto/writer@0.3.1 --force
+npm unpublish @ancleto/writer@0.4.0 --force
 npm unpublish @ancleto/writer-languages@0.1.0 --force
 ```
 
 Después de un rollback, publicar un patch con la corrección.
 
-## Checklist de release 0.3.1
+## Checklist de release 0.4.0
 
 1. `@ancleto/writer-languages@0.1.0` publicado manualmente una vez.
 2. `npm trust github @ancleto/writer-languages --file publish.yml --repo AncletoCEO/Writer --allow-publish -y` OK.
@@ -194,6 +194,6 @@ Después de un rollback, publicar un patch con la corrección.
 4. `npm ci && npm run build && npm test && npm run lint` OK.
 5. Smoke core solo: `.py` unsupported.
 6. Smoke core + pack: `.py` analizado.
-7. Tag `v0.3.1` con el mensaje de release.
-8. Workflow publica core `0.3.1` y omite el pack `0.1.0` porque ya existe.
-9. Verificar fichas npm y `npx @ancleto/writer@0.3.1 --version`.
+7. Tag `v0.4.0` con el mensaje de release.
+8. Workflow publica core `0.4.0` y omite el pack `0.1.0` porque ya existe.
+9. Verificar fichas npm y `npx @ancleto/writer@0.4.0 --version`.
