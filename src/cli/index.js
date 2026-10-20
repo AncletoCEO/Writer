@@ -39,7 +39,7 @@ function usage() {
   console.log('  lint [--root <dir>] [--json]          Evalúa reglas de arquitectura')
   console.log('  human [--root <dir>] [--out <dir>]    Genera outputDir/human/ (vista humana)')
   console.log('         [--top N] [--max-classes N] [--max-nodes N]')
-  console.log('         [--max-communities N] [--json]')
+  console.log('         [--max-communities N] [--interactive] [--json]')
   console.log('  doctor [--root <dir>] [--json]        Diagnostica el entorno')
   console.log('')
   console.log('Opciones: --help, --version')
@@ -201,6 +201,7 @@ function main() {
         '--max-classes': { key: 'maxClasses', value: true },
         '--max-nodes': { key: 'maxNodes', value: true },
         '--max-communities': { key: 'maxCommunities', value: true },
+        '--interactive': { key: 'interactive' },
         '--json': { key: 'json' }
       })
       const config = loadConfig({
@@ -212,7 +213,8 @@ function main() {
         top: positiveInt(flags.top, '--top'),
         maxClasses: positiveInt(flags.maxClasses, '--max-classes'),
         maxNodes: positiveInt(flags.maxNodes, '--max-nodes'),
-        maxCommunities: positiveInt(flags.maxCommunities, '--max-communities')
+        maxCommunities: positiveInt(flags.maxCommunities, '--max-communities'),
+        interactive: Boolean(flags.interactive)
       })
       const humanDir = `${config.outputDir}/human`
 
@@ -230,7 +232,8 @@ function main() {
       } else {
         console.log(
           `ancleto-writer: generado ${humanDir} ` +
-            `(${result.files.length} archivos, top ${result.limits.top})`
+            `(${result.files.length} archivos, top ${result.limits.top})` +
+            (flags.interactive ? ' + interactive.html' : '')
         )
       }
       process.exit(0)

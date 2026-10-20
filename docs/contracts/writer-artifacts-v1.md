@@ -313,6 +313,7 @@ nodos de archivo en `graph.json` incluyen el campo `community` con el id de la c
 ```text
 human/
 ├── index.html
+├── interactive.html   # opcional con --interactive
 ├── OVERVIEW.md
 ├── ARCHITECTURE.md
 └── data.json
@@ -325,6 +326,7 @@ human/
 - Los límites (`--top`, `--max-classes`, `--max-nodes`, `--max-communities`) controlan el
   tamaño de tablas y diagramas.
 - `index.html` es autocontenido: CSS inline y SVG inline, sin JS externo, CDN ni red.
+- `interactive.html` es opcional (`--interactive`): Cytoscape.js vendorizado (MIT) inline, grafo de comunidades, drill-down y filtros, sin recursos remotos.
 - `data.json` usa rutas relativas y no incluye timestamps.
 
 ## Frescura

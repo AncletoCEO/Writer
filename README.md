@@ -168,7 +168,7 @@ ancleto-writer doctor
 | `ancleto-writer check [--root <dir>] [--json]` | Verifica frescura y compatibilidad sin escribir |
 | `ancleto-writer lint [--root <dir>] [--json]` | Evalúa reglas de arquitectura: ciclos, capas, imports no resueltos y blast radius |
 | `ancleto-writer impact <archivo...> [--root <dir>] [--depth N] [--build] [--json]` | Dependientes directos y transitivos de uno o más archivos |
-| `ancleto-writer human [--root <dir>] [--out <dir>] [--top N] [--max-classes N] [--max-nodes N] [--max-communities N] [--json]` | Genera una vista humana compacta desde el paquete ya construido |
+| `ancleto-writer human [--root <dir>] [--out <dir>] [--top N] [--max-classes N] [--max-nodes N] [--max-communities N] [--interactive] [--json]` | Genera una vista humana compacta desde el paquete ya construido |
 | `ancleto-writer doctor [--root <dir>] [--json]` | Diagnostica Node, git, permisos, memoria y configuración |
 | `ancleto-writer --help` | Uso y aviso legal |
 | `ancleto-writer --version` | Versión, copyright y licencia |
@@ -205,14 +205,16 @@ Características:
   `schemaVersion: 1` no cambian.
 - **Sin dependencias nuevas:** HTML/CSS/SVG inline, Markdown/Mermaid y JSON. Sin frameworks, JS externo, CDN ni red.
 - **Offline:** `index.html` se abre directo en el navegador y los diagramas ya están renderizados como SVG.
-- **Seguro:** todo path/nombre del repo se escapa antes de entrar al HTML/SVG.
+- **Interactivo opcional:** `--interactive` agrega `interactive.html` con Cytoscape vendorizado (MIT, ~426 KB inline), grafo de comunidades, búsqueda, filtros, layouts, zoom/pan y drill-down a archivos. La licencia está en `src/human/vendor/CYTOSCAPE-LICENSE` y no agrega una dependencia de runtime.
+- **Seguro:** todo path/nombre del repo se escapa antes de entrar al HTML/SVG/DOM.
 
 Ejemplos:
 
 ```bash
 ancleto-writer human --top 30
 ancleto-writer human --max-classes 10 --max-nodes 20
-ancleto-writer human --json
+ancleto-writer human --interactive
+ancleto-writer human --interactive --max-communities 12 --json
 ```
 
 ## Ejemplo de salida
@@ -315,9 +317,9 @@ El contrato completo —layout, esquemas, frescura, fallback y ejemplo de consum
 un `lang` nuevo puede ignorarlo sin romper el contrato. Sin pack, `.py`, `.go`, etc. aparecen en
 `facts/unsupported.json` y no generan nodos.
 
-`human/` es una salida derivada y opcional (`index.html`, Markdown y JSON). No aparece en
-`manifest.outputs` ni en el fingerprint; un consumidor de agentes puede ignorarla. Se regenera
-con `ancleto-writer human`.
+`human/` es una salida derivada y opcional (`index.html`, `interactive.html` opcional,
+Markdown y JSON). No aparece en `manifest.outputs` ni en el fingerprint; un consumidor de
+agentes puede ignorarla. Se regenera con `ancleto-writer human`.
 
 ## Integración con `@ancleto/spec`
 
@@ -497,7 +499,7 @@ nuevo pueden ignorarlo.
 ```bash
 npm install
 npm run build     # valida sintaxis de todos los .js
-npm test          # 199 tests
+npm test          # 202 tests
 npm run lint
 npm pack --dry-run
 ```
@@ -510,7 +512,7 @@ src/
 ├── config/     # glob, defaults y precedencia
 ├── scan/       # walk seguro, hash y git read-only
 ├── languages/  # carga opcional del language pack
-├── human/      # proyección humana (HTML/SVG, OVERVIEW, ARCHITECTURE, data.json)
+├── human/      # proyección humana (HTML/SVG, Cytoscape opcional, OVERVIEW, ARCHITECTURE, data.json)
 ├── parsers/    # lexer y parser JS/TS/JSX/TSX
 ├── resolve/    # imports, JSONC y tsconfig
 ├── graph/      # nodos y aristas

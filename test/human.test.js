@@ -125,6 +125,52 @@ test('escapa texto del repo en el HTML', (t) => {
   assert.ok(!html.includes('<script>alert(1)</script>'))
 })
 
+test('genera la vista interactiva con Cytoscape', (t) => {
+  const dir = copyFixture(t, 'mixed')
+  const config = build(dir)
+  const result = runHuman({
+    outputDirAbs: config.outputDirAbs,
+    interactive: true,
+    maxCommunities: 5
+  })
+
+  assert.ok(result.files.includes('interactive.html'))
+  assert.equal(result.limits.maxCommunities, 5)
+  const html = readFileSync(join(config.outputDirAbs, 'human', 'interactive.html'), 'utf8')
+  assert.match(html, /^<!doctype html>/i)
+  assert.match(html, /cytoscape\(/)
+  assert.match(html, /id="writer-data"/)
+  assert.match(html, /href="index\.html"/)
+  assert.ok(!html.includes('src="http'))
+  assert.ok(!html.includes('href="http'))
+  assert.ok(!html.includes(dir), 'interactive.html no debe incluir paths absolutos')
+})
+
+test('la vista interactiva por defecto usa 20 comunidades', (t) => {
+  const dir = copyFixture(t, 'mixed')
+  const config = build(dir)
+  const result = runHuman({ outputDirAbs: config.outputDirAbs, interactive: true })
+  assert.equal(result.limits.maxCommunities, 20)
+})
+
+test('escapa datos en la vista interactiva', (t) => {
+  const dir = copyFixture(t, 'mixed')
+  const config = build(dir)
+  const path = join(config.outputDirAbs, 'facts', 'communities.json')
+  const fact = JSON.parse(readFileSync(path, 'utf8'))
+  if (fact.communities.length === 0) {
+    t.skip('el fixture no tiene comunidades')
+    return
+  }
+  fact.communities[0].files[0] = '<script>alert(1)</script>'
+  writeFileSync(path, JSON.stringify(fact))
+
+  runHuman({ outputDirAbs: config.outputDirAbs, interactive: true })
+  const html = readFileSync(join(config.outputDirAbs, 'human', 'interactive.html'), 'utf8')
+  assert.ok(!html.includes('<script>alert(1)</script>'))
+  assert.ok(html.includes('\\u003cscript>alert(1)'))
+})
+
 test('falla si el paquete no existe', (t) => {
   const dir = tempDir(t)
   assert.throws(
@@ -139,7 +185,7 @@ test('el comando CLI human responde JSON', (t) => {
 
   const output = execFileSync(
     process.execPath,
-    [join(ROOT, 'src', 'cli', 'index.js'), 'human', '--root', dir, '--top', '2', '--json'],
+    [join(ROOT, 'src', 'cli', 'index.js'), 'human', '--root', dir, '--top', '2', '--interactive', '--json'],
     { encoding: 'utf8' }
   )
   const result = JSON.parse(output.trim())
@@ -148,6 +194,7 @@ test('el comando CLI human responde JSON', (t) => {
   assert.equal(result.limits.top, 2)
   assert.ok(result.totals.files > 0)
   assert.ok(result.files.includes('index.html'))
+  assert.ok(result.files.includes('interactive.html'))
   assert.ok(existsSync(join(dir, '.ancleto', 'writer', 'human', 'OVERVIEW.md')))
   assert.ok(existsSync(join(dir, '.ancleto', 'writer', 'human', 'index.html')))
 })

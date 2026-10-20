@@ -10,6 +10,7 @@ import {
 } from '../render/mermaid.js'
 import { renderUml } from '../render/uml.js'
 import { renderHumanHtml } from './html.js'
+import { renderInteractiveHtml } from './interactive.js'
 
 export const HUMAN_DEFAULTS = {
   top: 20,
@@ -621,12 +622,18 @@ export function runHuman({ outputDirAbs, ...options } = {}) {
   if (!outputDirAbs) throw new Error('outputDirAbs es requerido')
 
   const limits = normalizeHumanLimits(options)
+  if (options.interactive && options.maxCommunities === undefined) {
+    limits.maxCommunities = 20
+  }
   const model = loadModel(outputDirAbs)
   const files = {
     'OVERVIEW.md': buildOverview(model, limits),
     'ARCHITECTURE.md': buildArchitecture(model, limits),
     'data.json': `${JSON.stringify(buildData(model, limits), null, 2)}\n`,
     'index.html': renderHumanHtml(model, limits)
+  }
+  if (options.interactive) {
+    files['interactive.html'] = renderInteractiveHtml(model, limits)
   }
 
   const humanDir = join(outputDirAbs, 'human')

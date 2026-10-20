@@ -2,7 +2,7 @@ import globals from 'globals'
 
 export default [
   {
-    ignores: ['node_modules/**', '.ancleto/**', 'dist/**', 'coverage/**', 'aspec/**', 'docs/**']
+    ignores: ['node_modules/**', '.ancleto/**', 'dist/**', 'coverage/**', 'aspec/**', 'docs/**', 'src/human/vendor/**']
   },
   {
     languageOptions: {
