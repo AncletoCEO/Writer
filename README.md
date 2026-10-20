@@ -13,7 +13,7 @@ JavaScript/TypeScript (y, con el language pack opcional, Python, Go, Rust, C#, J
 PHP, Ruby, Swift y Kotlin), construye un grafo de código y publica hechos que spec puede
 consumir como contexto, sin LLM y sin gastar tokens.
 
-> **Estado:** `0.3.1` — release actual con el language pack P1+P2 (11 lenguajes). Licencia
+> **Estado:** `0.4.0` — release actual con el language pack P1+P2 (11 lenguajes) y reportes humanos HTML/interactivos. Licencia
 > AGPL-3.0-only, Node ≥ 24 y cero dependencias de runtime en el core. El badge de npm muestra
 > la última versión publicada.
 
@@ -82,7 +82,7 @@ npm install @ancleto/writer @ancleto/writer-languages
 ```
 
 `npx @ancleto/writer` instala solo el core. Para usar el pack, instalá ambos paquetes en el
-proyecto (o ambos globalmente). En esta release: core `0.3.1` + pack `0.1.0`.
+proyecto (o ambos globalmente). En esta release: core `0.4.0` + pack `0.1.0`.
 
 ### Por qué es un paquete aparte
 
@@ -258,7 +258,7 @@ ancleto-writer: publicado .ancleto/writer (25 archivos, 458 aristas, 109 ms)
 ```json
 {
   "schemaVersion": 1,
-  "writerVersion": "0.3.1",
+  "writerVersion": "0.4.0",
   "gitCommit": "abc123",
   "gitDirty": false,
   "fingerprint": "sha256:...",
@@ -540,8 +540,8 @@ resolver, integración y fallback para cada adapter del pack.
 ```yaml
 # npx instala solo el core. Para el pack, agregá antes:
 #   npm install @ancleto/writer-languages
-- run: npx @ancleto/writer@0.3.1 build --json
-- run: npx @ancleto/writer@0.3.1 lint --json
+- run: npx @ancleto/writer@0.4.0 build --json
+- run: npx @ancleto/writer@0.4.0 lint --json
 - uses: actions/upload-artifact@v4
   with:
     name: writer-context
@@ -566,8 +566,8 @@ resolver, integración y fallback para cada adapter del pack.
 - `0.1.0` fue la primera publicación manual. `0.1.1` fue la primera release por OIDC con
   provenance. `0.2.0` agrega comunidades, god nodes, conexiones inesperadas, UML, lint e
   impact. `0.3.0` agrega el language pack opcional P1+P2 (`@ancleto/writer-languages@0.1.0`).
-  `0.3.1` es un patch de documentación: README completo del pack y guía de release. Las
-  siguientes salen por el workflow.
+  `0.3.1` fue un patch de documentación. `0.4.0` agrega `human` con HTML estático/SVG y la
+  vista interactiva Cytoscape. Las siguientes salen por el workflow.
 - La ficha de npm muestra el README del tarball publicado: los cambios de este README se
   verán en npm al publicar la próxima versión.
 
