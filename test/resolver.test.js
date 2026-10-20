@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path'
 import { loadConfig } from '../src/config/load.js'
 import { buildExternalsFact } from '../src/facts/externals.js'
 import { buildUnresolvedFact } from '../src/facts/unresolved.js'
-import { createResolver } from '../src/resolve/imports.js'
+import { createResolver, resolveImports } from '../src/resolve/imports.js'
 import { loadTsconfig } from '../src/resolve/tsconfig.js'
 
 function tempDir(t) {
@@ -108,6 +108,24 @@ test('ambiguo cuando hay múltiples extensiones', (t) => {
   assert.equal(result.type, 'unresolved')
   assert.equal(result.reason, 'ambiguous')
   assert.deepEqual(result.candidates.sort(), ['src/b.js', 'src/b.ts'])
+})
+
+test('un import puede resolver a múltiples targets', () => {
+  const file = { path: 'main.go', absPath: '/repo/main.go' }
+  const parseResult = {
+    imports: [{ specifier: 'example.com/app/db', kind: 'static', line: 3 }],
+    unresolved: []
+  }
+  const resolution = resolveImports({
+    file,
+    parseResult,
+    resolve: () => ({ type: 'resolved', targets: ['db/b.go', 'db/a.go', 'db/a.go'] })
+  })
+
+  assert.deepEqual(
+    resolution.resolved.map((entry) => entry.target),
+    ['db/a.go', 'db/b.go']
+  )
 })
 
 test('facts de externos y no resueltos', () => {

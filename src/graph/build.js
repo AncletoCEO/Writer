@@ -6,6 +6,7 @@ import { parseJavaScript } from '../parsers/javascript.js'
 import { createResolver, resolveImports } from '../resolve/imports.js'
 
 const FILE_PREFIX = 'file:'
+const BUILTIN_LANGUAGES = new Set(['js', 'ts', 'jsx', 'tsx'])
 
 export function fileId(path) {
   return `${FILE_PREFIX}${path}`
@@ -31,9 +32,11 @@ function pickSymbol(symbols, name, line) {
 }
 
 function resolveParent(name, path, symbolsByName) {
-  const candidates = (symbolsByName.get(name) ?? []).filter(
-    (symbol) => symbol.kind === 'class' || symbol.kind === 'interface'
-  )
+  const lastSegment = String(name).split('.').pop()
+  const candidates = [
+    ...(symbolsByName.get(name) ?? []),
+    ...(lastSegment && lastSegment !== name ? symbolsByName.get(lastSegment) ?? [] : [])
+  ].filter((symbol) => symbol.kind === 'class' || symbol.kind === 'interface')
   if (candidates.length === 0) return null
 
   const sameFile = candidates.find((symbol) => symbol.path === path)
@@ -42,18 +45,54 @@ function resolveParent(name, path, symbolsByName) {
   return { symbol: candidates[0], sameFile: false }
 }
 
-export function buildGraph({ rootAbs, config, tsconfig = null, scanResult }) {
-  const resolve = createResolver({ rootAbs, config, tsconfig })
+export function buildGraph({ rootAbs, config, tsconfig = null, scanResult, adapters = [] }) {
+  const resolveBuiltin = createResolver({ rootAbs, config, tsconfig })
+  const adapterById = new Map(adapters.map((adapter) => [adapter.id, adapter]))
   const parsed = new Map()
+  const parsedRaw = new Map()
   const externals = []
   const unresolved = []
 
   for (const file of scanResult.files) {
-    const parse = parseJavaScript({ path: file.path, lang: file.lang, source: file.content })
+    const adapter = adapterById.get(file.lang)
+    let parse
+    if (adapter) {
+      parse = adapter.parse({ path: file.path, lang: file.lang, source: file.content })
+    } else if (BUILTIN_LANGUAGES.has(file.lang)) {
+      parse = parseJavaScript({ path: file.path, lang: file.lang, source: file.content })
+    } else {
+      continue
+    }
+    parsedRaw.set(file.path, { file, parse })
+  }
+
+  const namespaceIndex = new Map()
+  for (const [path, entry] of parsedRaw) {
+    for (const namespace of entry.parse.namespaces ?? []) {
+      if (!namespaceIndex.has(namespace)) namespaceIndex.set(namespace, [])
+      namespaceIndex.get(namespace).push(path)
+    }
+  }
+  for (const paths of namespaceIndex.values()) paths.sort()
+
+  for (const [path, entry] of parsedRaw) {
+    const { file, parse } = entry
+    const adapter = adapterById.get(file.lang)
+    const resolve = adapter
+      ? (specifier, fromFileAbs, importEntry) =>
+          adapter.resolveImport({
+            specifier,
+            fromFileAbs,
+            rootAbs,
+            config,
+            namespaces: namespaceIndex,
+            importEntry
+          })
+      : resolveBuiltin
     const resolution = resolveImports({ file, parseResult: parse, resolve })
-    parsed.set(file.path, { file, parse, resolution })
-    for (const entry of resolution.external) {
-      externals.push({ specifier: entry.specifier, path: file.path })
+    parsed.set(path, { file, parse, resolution })
+    for (const external of resolution.external) {
+      externals.push({ specifier: external.specifier, path: file.path })
     }
     unresolved.push(...resolution.unresolved)
   }
@@ -156,7 +195,8 @@ export function buildGraph({ rootAbs, config, tsconfig = null, scanResult }) {
         to: symbolId(parent.symbol.path, parent.symbol.name, parent.symbol.line),
         kind: 'inherits',
         confidence: parent.sameFile && inherit.confidence === 'extracted' ? 'extracted' : 'inferred',
-        inheritsKind: inherit.implements ? 'implements' : 'extends',
+        inheritsKind:
+          inherit.implements || parent.symbol.kind === 'interface' ? 'implements' : 'extends',
         line: inherit.line
       })
     }

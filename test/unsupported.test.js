@@ -75,21 +75,38 @@ test('unsupported.enabled=false desactiva el reporte', (t) => {
 test('build publica el fact y el resumen en docs', (t) => {
   const dir = tempDir(t)
   write(dir, 'src/a.ts', 'export const a = 1\n')
-  write(dir, 'src/app.py', 'print(1)\n')
+  write(dir, 'src/main.go', 'package main\n')
   const config = loadConfig({ cwd: dir })
+  config.languagePack.enabled = false
   runBuild({ rootAbs: dir, config })
 
   const unsupported = JSON.parse(
     readFileSync(join(config.outputDirAbs, 'facts', 'unsupported.json'), 'utf8')
   )
   assert.equal(unsupported.totals.files, 1)
-  assert.equal(unsupported.unsupported[0].language, 'python')
+  assert.equal(unsupported.unsupported[0].language, 'go')
   assert.match(
     readFileSync(join(config.outputDirAbs, 'agent', 'GOTCHAS.md'), 'utf8'),
     /Lenguajes no soportados/
   )
   assert.match(
     readFileSync(join(config.outputDirAbs, 'facts', 'inventory.md'), 'utf8'),
-    /python/
+    /go/
   )
+})
+
+test('con el language pack desactivado, .py sigue siendo unsupported', (t) => {
+  const dir = tempDir(t)
+  write(dir, 'src/a.ts', 'export const a = 1\n')
+  write(dir, 'src/app.py', 'print(1)\n')
+  const config = loadConfig({ cwd: dir })
+  config.languagePack.enabled = false
+  const result = runBuild({ rootAbs: dir, config })
+
+  assert.equal(result.manifest.stats.files, 1)
+  const unsupported = JSON.parse(
+    readFileSync(join(config.outputDirAbs, 'facts', 'unsupported.json'), 'utf8')
+  )
+  assert.equal(unsupported.totals.files, 1)
+  assert.equal(unsupported.unsupported[0].language, 'python')
 })

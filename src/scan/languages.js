@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-// Extensiones de lenguajes que Writer todavía no analiza. El mapa es conservador a
-// propósito: solo se reportan extensiones de código conocidas, no assets/binarios.
+// Extensiones de lenguajes que el core todavía no analiza por sí solo. El mapa es
+// conservador a propósito: solo se reportan extensiones de código conocidas, no
+// assets/binarios. Con el language pack activo, las extensiones de sus adapters dejan
+// de clasificarse como no soportadas.
 export const UNSUPPORTED_LANGUAGES = {
   '.py': 'python',
   '.pyi': 'python',

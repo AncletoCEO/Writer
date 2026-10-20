@@ -70,6 +70,19 @@ jobs:
             npm publish --access public --provenance
           fi
 
+      # El Trusted Publisher de @ancleto/writer-languages debe configurarse en npmjs.com
+      # con el mismo workflow. La primera publicación del pack es manual (ver docs/releasing.md).
+      - name: Publish language pack to npm via Trusted Publishing (skipped if the version already exists)
+        working-directory: packages/writer-languages
+        run: |
+          PACK_VERSION=$(node -p "require('./package.json').version")
+          echo "PACK_VERSION=${PACK_VERSION}" >> "$GITHUB_ENV"
+          if npm view "@ancleto/writer-languages@${PACK_VERSION}" version >/dev/null 2>&1; then
+            echo "ya publicado: ${PACK_VERSION} — se omite npm publish del pack"
+          else
+            npm publish --access public --provenance
+          fi
+
       - name: Create GitHub Release (skipped if it already exists)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -106,3 +119,19 @@ jobs:
             if [ "$attempt" -lt 3 ]; then sleep 10; fi
           done
           echo "::warning::npm todavía no sirve el tarball de ${PKG_VERSION} (propagación lenta, es normal)."
+
+      # Canary corto y NO bloqueante del language pack.
+      - name: Canary - language pack tarball disponible (no bloqueante)
+        continue-on-error: true
+        run: |
+          URL="https://registry.npmjs.org/@ancleto/writer-languages/-/writer-languages-${PACK_VERSION}.tgz"
+          for attempt in 1 2 3; do
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" -L "$URL")
+            if [ "$CODE" = "200" ]; then
+              echo "tarball OK: $URL"
+              exit 0
+            fi
+            echo "intento ${attempt}/3: HTTP ${CODE}"
+            if [ "$attempt" -lt 3 ]; then sleep 10; fi
+          done
+          echo "::warning::npm todavía no sirve el tarball del pack ${PACK_VERSION} (propagación lenta, es normal)."

@@ -9,7 +9,23 @@ import { toPosix } from './glob.js'
 export const CONFIG_FILE = '.ancleto-writer.json'
 export const ANCLETORC_FILE = '.ancletorc'
 export const SCHEMA_VERSION = 1
-export const ALLOWED_LANGUAGES = ['js', 'ts', 'jsx', 'tsx']
+export const ALLOWED_LANGUAGES = [
+  'js',
+  'ts',
+  'jsx',
+  'tsx',
+  'python',
+  'go',
+  'rust',
+  'csharp',
+  'java',
+  'c',
+  'cpp',
+  'php',
+  'ruby',
+  'swift',
+  'kotlin'
+]
 
 const DEFAULTS = {
   schemaVersion: SCHEMA_VERSION,
@@ -18,6 +34,10 @@ const DEFAULTS = {
   include: ['**/*'],
   exclude: ['node_modules', '.git', '.ancleto', 'dist', 'build', 'coverage', 'aspec'],
   languages: ['js', 'ts', 'jsx', 'tsx'],
+  languagePack: {
+    enabled: true,
+    module: '@ancleto/writer-languages'
+  },
   unsupported: {
     enabled: true,
     maxFilesPerLanguage: 50
@@ -152,6 +172,18 @@ function validate(config) {
     if (!ALLOWED_LANGUAGES.includes(language)) {
       throw new ConfigError(`lenguaje no soportado: ${language}`)
     }
+  }
+  if (!isPlainObject(config.languagePack)) {
+    throw new ConfigError('languagePack debe ser un objeto')
+  }
+  if (typeof config.languagePack.enabled !== 'boolean') {
+    throw new ConfigError('languagePack.enabled debe ser boolean')
+  }
+  if (
+    typeof config.languagePack.module !== 'string' ||
+    config.languagePack.module.trim() === ''
+  ) {
+    throw new ConfigError('languagePack.module debe ser un string no vacío')
   }
   if (!isPlainObject(config.unsupported)) {
     throw new ConfigError('unsupported debe ser un objeto')

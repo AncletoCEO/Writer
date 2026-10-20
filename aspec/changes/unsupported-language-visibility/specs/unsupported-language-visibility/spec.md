@@ -5,11 +5,17 @@
 El sistema SHALL detectar archivos de lenguajes conocidos no soportados y publicar conteos en
 `facts/unsupported.json` sin analizarlos.
 
-#### Scenario: Archivo Python
+#### Scenario: Archivo Python sin adapter
 
-- **WHEN** el repositorio contiene `src/app.py`
+- **WHEN** el repositorio contiene `src/app.py` y no hay un adapter de Python activo
 - **THEN** aparece en `unsupported` con `extension: .py` y `language: python`
 - **AND** no se crea un nodo de archivo en `graph.json`
+
+#### Scenario: Archivo Python con adapter activo
+
+- **WHEN** el repositorio contiene `src/app.py` y el language pack de Python está activo
+- **THEN** no aparece en `unsupported`
+- **AND** se crea un nodo de archivo con `lang: python`
 
 #### Scenario: Archivo binario o desconocido
 

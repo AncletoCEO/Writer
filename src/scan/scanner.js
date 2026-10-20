@@ -39,7 +39,9 @@ function countLines(content) {
   return lines
 }
 
-export function scanRepository({ rootAbs, config }) {
+export function scanRepository({ rootAbs, config, languageExtensions = {} }) {
+  const languageByExt = { ...LANGUAGE_BY_EXT, ...languageExtensions }
+  const packLanguages = new Set(Object.values(languageExtensions))
   let rootReal
   try {
     rootReal = realpathSync(rootAbs)
@@ -108,8 +110,9 @@ export function scanRepository({ rootAbs, config }) {
       }
 
       const extension = extname(entry.name).toLowerCase()
-      const lang = LANGUAGE_BY_EXT[extension]
-      if (!lang || !config.languages.includes(lang)) {
+      const lang = languageByExt[extension]
+      const enabled = lang && (config.languages.includes(lang) || packLanguages.has(lang))
+      if (!enabled) {
         if (reportUnsupported) {
           const unsupportedLanguage = unsupportedLanguageFor(extension)
           if (

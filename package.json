@@ -1,6 +1,6 @@
 {
   "name": "@ancleto/writer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Motor de conocimiento estático determinista para @ancleto/spec",
   "type": "module",
   "bin": {
@@ -36,6 +36,17 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "overrides": {
+    "tree-sitter-swift": {
+      "tree-sitter": "0.25.1"
+    },
+    "@tree-sitter-grammars/tree-sitter-kotlin": {
+      "tree-sitter": "0.25.1"
+    }
   },
   "scripts": {
     "build": "node scripts/check-syntax.js",

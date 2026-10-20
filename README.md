@@ -9,11 +9,12 @@
 
 Motor de conocimiento estático, determinista y offline para complementar
 [`@ancleto/spec`](https://github.com/damianarganaras/spec). Escanea un repositorio
-JavaScript/TypeScript, construye un grafo de código y publica hechos que spec puede consumir
-como contexto, sin LLM y sin gastar tokens.
+JavaScript/TypeScript (y, con el language pack opcional, Python, Go, Rust, C#, Java, C, C++,
+PHP, Ruby, Swift y Kotlin), construye un grafo de código y publica hechos que spec puede
+consumir como contexto, sin LLM y sin gastar tokens.
 
-> **Estado:** `0.2.0` publicado en npm. Licencia AGPL-3.0-only, Node ≥ 24 y cero
-> dependencias de runtime.
+> **Estado:** `0.3.0` publicado en npm. Licencia AGPL-3.0-only, Node ≥ 24 y cero
+> dependencias de runtime. El language pack opcional cubre P1+P2 (11 lenguajes).
 
 ## Contenido
 
@@ -39,7 +40,7 @@ Writer produce un paquete versionado en `.ancleto/writer/` con:
 - imports, símbolos, llamadas intra-archivo y herencia;
 - fan-in/fan-out, ciclos, PageRank, capas, comunidades, god nodes, conexiones inesperadas, hotspots y blast radius;
 - documentación accionable para agentes (`INDEX`, `SYMBOLS`, `GOTCHAS`, `ARCHITECTURE`);
-- reporte de archivos de lenguajes no soportados, sin analizarlos;
+- reporte de archivos de lenguajes no soportados (salvo que tengan un adapter activo), sin analizarlos;
 - candidatos a archivos huérfanos con exclusiones y confianza;
 - summaries de símbolos y cobertura de documentación;
 - `API.md` liviano con la API pública exportada;
@@ -66,6 +67,19 @@ ancleto-writer --help
 ```
 
 El paquete y el binario son `@ancleto/writer` y `ancleto-writer`.
+
+### Language pack opcional
+
+Para analizar Python, Go, Rust, C#, Java, C, C++, PHP, Ruby, Swift y Kotlin además de JS/TS:
+
+```bash
+npm install @ancleto/writer-languages
+```
+
+El core lo detecta y habilita `.py`/`.pyi`, `.go`, `.rs`, `.cs`, `.java`, `.c`/`.h`,
+`.cpp`/`.cc`/`.cxx`/`.hpp`/`.hh`/`.hxx`, `.php`, `.rb`, `.swift` y `.kt`/`.kts`
+automáticamente. Si no está instalado, el build sigue funcionando y esos archivos aparecen en
+`facts/unsupported.json`. Se puede desactivar con `languagePack.enabled: false`.
 
 ## Uso rápido
 
@@ -136,7 +150,7 @@ ancleto-writer: publicado .ancleto/writer (25 archivos, 458 aristas, 109 ms)
 ```json
 {
   "schemaVersion": 1,
-  "writerVersion": "0.2.0",
+  "writerVersion": "0.3.0",
   "gitCommit": "abc123",
   "gitDirty": false,
   "fingerprint": "sha256:...",
@@ -252,6 +266,10 @@ El algoritmo de fingerprint y los casos de fallback están en el contrato.
   "bridges": {
     "limit": 20
   },
+  "languagePack": {
+    "enabled": true,
+    "module": "@ancleto/writer-languages"
+  },
   "uml": {
     "maxClasses": 40
   },
@@ -283,8 +301,8 @@ scan → parse → resolve → graph → metrics → facts → render → atomic
 ```
 
 - **scan:** recorre el repo, excluye paths, rechaza symlinks y calcula SHA-256 en una sola lectura.
-- **parse:** lexer/parser para JS, TS, JSX y TSX.
-- **resolve:** relativos, extensiones, `index.*`, alias de `tsconfig` y detección de externos.
+- **parse:** lexer/parser para JS, TS, JSX y TSX, más los adapters del language pack (Python, Go, Rust, C#, Java, C, C++, PHP, Ruby, Swift y Kotlin).
+- **resolve:** relativos, extensiones, `index.*`, `__init__.py`, paquetes de Go vía `go.mod`, módulos de Rust (`crate`/`self`/`super`), namespaces de C#, packages de Java/Kotlin, headers de C/C++, namespaces de PHP, `require_relative` de Ruby, imports externos de Swift, alias de `tsconfig` y detección de externos.
 - **graph:** nodos de archivo/símbolo y aristas `import`, `call` e `inherits`.
 - **metrics:** ciclos, PageRank, capas, comunidades, god nodes, conexiones inesperadas, hotspots y blast radius.
 - **facts:** JSON estable para agentes y consumidores.
@@ -305,15 +323,30 @@ scan → parse → resolve → graph → metrics → facts → render → atomic
 Incluido: JavaScript, TypeScript, JSX, TSX; imports, símbolos, llamadas intra-archivo,
 herencia, métricas y documentos Markdown/Mermaid.
 
-Fuera del MVP: otros lenguajes, visores HTML/3D, video, GraphRAG, wiki, API docs, MCP,
-inyección de README, escritura en la memoria del proyecto y stubs multi-lenguaje.
+Language pack opcional (`@ancleto/writer-languages`): **Python** con imports, clases,
+funciones, métodos, herencia, llamadas y docstrings; **Go** con imports de paquete, structs,
+interfaces, funciones, métodos, embebido, llamadas y doc comments; **Rust** con `use`, `mod`,
+structs, enums, traits, impls, funciones, métodos y llamadas; **C#** con `using`, namespaces,
+clases, structs, records, interfaces, enums, delegates, métodos y constructores; **Java** con
+packages, imports, clases, interfaces, enums, records, anotaciones, métodos y constructores;
+**C** con includes, structs, typedefs, enums, prototipos y funciones; **C++** con includes,
+namespaces, clases, structs, templates, métodos, constructores, destructores y herencia;
+**PHP** con namespaces, `use`, clases, interfaces, traits, enums y métodos; **Ruby** con
+`require`/`require_relative`, clases, módulos, mixins, métodos y herencia; **Swift** con
+imports, protocolos, clases, structs, enums, extensions, métodos y conformancia; **Kotlin**
+con packages, imports, clases, interfaces, objects, enums, funciones y herencia. P3 está
+planificado en el issue [#9](https://github.com/AncletoCEO/Writer/issues/9) con un change por
+lenguaje.
+
+Fuera del MVP: visores HTML/3D, video, GraphRAG, wiki, MCP, inyección de README y escritura en
+la memoria del proyecto.
 
 ## Desarrollo
 
 ```bash
 npm install
 npm run build     # valida sintaxis de todos los .js
-npm test          # 97 tests
+npm test          # 193 tests
 npm run lint
 npm pack --dry-run
 ```
@@ -325,6 +358,7 @@ src/
 ├── cli/        # comandos y validación de flags
 ├── config/     # glob, defaults y precedencia
 ├── scan/       # walk seguro, hash y git read-only
+├── languages/  # carga opcional del language pack
 ├── parsers/    # lexer y parser JS/TS/JSX/TSX
 ├── resolve/    # imports, JSONC y tsconfig
 ├── graph/      # nodos y aristas
@@ -334,6 +368,9 @@ src/
 ├── memory/     # lectura read-only de memory.db
 ├── contract/   # manifest, validación y publicación atómica
 └── build/      # pipeline completo
+
+packages/
+└── writer-languages/  # language pack opcional (@ancleto/writer-languages)
 ```
 
 La suite cubre fixtures vacío, mixto, monorepo con alias, ciclos y archivos omitidos;
@@ -342,8 +379,8 @@ contrato, determinismo, frontera, consumo y un smoke de 2.000 archivos.
 ### Uso en CI
 
 ```yaml
-- run: npx @ancleto/writer@0.2.0 build --json
-- run: npx @ancleto/writer@0.2.0 lint --json
+- run: npx @ancleto/writer@0.3.0 build --json
+- run: npx @ancleto/writer@0.3.0 lint --json
 - uses: actions/upload-artifact@v4
   with:
     name: writer-context
@@ -365,7 +402,8 @@ contrato, determinismo, frontera, consumo y un smoke de 2.000 archivos.
   `NPM_TOKEN`, con provenance y GitHub Release.
 - `0.1.0` fue la primera publicación manual. `0.1.1` fue la primera release por OIDC con
   provenance. `0.2.0` agrega comunidades, god nodes, conexiones inesperadas, UML, lint e
-  impact; las siguientes salen por el workflow.
+  impact. `0.3.0` agrega el language pack opcional P1+P2 (`@ancleto/writer-languages@0.1.0`);
+  las siguientes salen por el workflow.
 - La ficha de npm muestra el README del tarball publicado: los cambios de este README se
   verán en npm al publicar la próxima versión.
 
