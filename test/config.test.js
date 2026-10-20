@@ -26,13 +26,25 @@ test('config por defecto', (t) => {
   assert.ok(config.exclude.includes('node_modules'))
   assert.equal(config.communities.enabled, true)
   assert.equal(config.communities.maxIterations, 50)
+  assert.equal(config.unsupported.enabled, true)
+  assert.equal(config.unsupported.maxFilesPerLanguage, 50)
+  assert.equal(config.languagePack.enabled, true)
+  assert.equal(config.languagePack.module, '@ancleto/writer-languages')
   assert.equal(config.godNodes.limit, 20)
   assert.equal(config.bridges.limit, 20)
   assert.equal(config.uml.maxClasses, 40)
+  assert.equal(config.docs.enabled, true)
+  assert.equal(config.apiDocs.enabled, true)
+  assert.equal(config.outputReadme.enabled, true)
+  assert.equal(config.docs.minCoverage, 0.5)
+  assert.equal(config.orphans.enabled, true)
+  assert.deepEqual(config.orphans.entrypoints, [])
+  assert.deepEqual(config.orphans.exclude, [])
   assert.equal(config.lint.cycles, true)
   assert.equal(config.lint.layerViolations, true)
   assert.equal(config.lint.unresolved, true)
   assert.equal(config.lint.maxBlastRadius, null)
+  assert.equal(config.lint.orphanFiles, false)
   assert.deepEqual(config.warnings, [])
 })
 
@@ -115,6 +127,43 @@ test('writeConfigFile escribe defaults', (t) => {
   assert.equal(written.schemaVersion, 1)
   assert.equal(written.outputDir, '.ancleto/writer')
   assert.equal(written.dependencies, undefined)
+})
+
+test('acepta lenguajes del language pack en languages', (t) => {
+  const dir = tempDir(t)
+  writeFileSync(
+    join(dir, '.ancleto-writer.json'),
+    JSON.stringify({
+      languages: [
+        'js',
+        'python',
+        'go',
+        'csharp',
+        'java',
+        'c',
+        'cpp',
+        'php',
+        'ruby',
+        'swift',
+        'kotlin'
+      ]
+    })
+  )
+
+  const config = loadConfig({ cwd: dir })
+  assert.deepEqual(config.languages, [
+    'js',
+    'python',
+    'go',
+    'csharp',
+    'java',
+    'c',
+    'cpp',
+    'php',
+    'ruby',
+    'swift',
+    'kotlin'
+  ])
 })
 
 test('lint.maxBlastRadius inválido', (t) => {

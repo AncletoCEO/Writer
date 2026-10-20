@@ -2,7 +2,7 @@
 // Derived from ReadMenator readmenator/parsers/_javascript.py (commit dac48f868722620f0d01dac0d33102c5a514c03c),
 // modified 2026-10-19 by AncletoCEO.
 
-import { tokenize } from './lexer.js'
+import { tokenizeWithComments } from './lexer.js'
 
 const MODIFIERS = new Set([
   'default',
@@ -836,10 +836,32 @@ function applyInheritanceConfidence(entries, symbols, importedNames) {
   }
 }
 
+function summaryFromComment(comment) {
+  return comment.lines.find((line) => !line.startsWith('@')) ?? null
+}
+
+function attachSummaries(symbols, comments) {
+  if (!comments || comments.length === 0) return
+  const ordered = [...comments].sort((a, b) => a.start - b.start)
+
+  for (const symbol of symbols) {
+    if (!Number.isInteger(symbol.startOffset)) continue
+    let match = null
+    for (const comment of ordered) {
+      if (comment.end >= symbol.startOffset) continue
+      if (comment.endLine === symbol.line - 1) match = comment
+    }
+    if (!match) continue
+    const summary = summaryFromComment(match)
+    if (summary) symbol.summary = summary
+  }
+}
+
 export function parseJavaScript({ path, lang, source }) {
-  const tokens = tokenize(source, { jsx: lang !== 'ts' })
+  const { tokens, comments } = tokenizeWithComments(source, { jsx: lang !== 'ts' })
   const { imports, unresolved, importedNames: importedNamesSet, ranges } = extractImports(tokens)
   const symbols = extractSymbols(tokens, source)
+  attachSummaries(symbols, comments)
   const inheritance = extractInheritance(tokens)
   applyInheritanceConfidence(inheritance, symbols, importedNamesSet)
   const calls = extractCalls(tokens, symbols, ranges)

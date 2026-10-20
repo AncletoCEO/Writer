@@ -2,13 +2,13 @@
 
 ## Purpose
 
-Define cómo `@ancleto/writer` descubre archivos, extrae estructura de JavaScript/TypeScript, resuelve imports y construye el grafo determinista que alimenta las métricas y los artefactos de contexto.
+Define cómo `@ancleto/writer` descubre archivos, extrae estructura de JavaScript/TypeScript y de los adapters del language pack, resuelve imports y construye el grafo determinista que alimenta las métricas y los artefactos de contexto.
 
 ## Requirements
 
 ### Requirement: Descubrimiento determinista de archivos fuente
 
-The system SHALL recorrer el repositorio y seleccionar únicamente archivos JavaScript, TypeScript, JSX y TSX, aplicando las exclusiones efectivas, sin seguir symlinks y respetando los topes de tamaño y profundidad.
+The system SHALL recorrer el repositorio y seleccionar archivos JavaScript, TypeScript, JSX y TSX, y SHALL incluir las extensiones de los adapters del language pack opcional cuando estén activos, aplicando las exclusiones efectivas, sin seguir symlinks y respetando los topes de tamaño y profundidad.
 
 #### Scenario: Exclusiones por defecto
 
@@ -32,6 +32,18 @@ The system SHALL recorrer el repositorio y seleccionar únicamente archivos Java
 
 - **WHEN** dos builds recorren el mismo repositorio
 - **THEN** los archivos se procesan y emiten en el mismo orden, independiente del orden del filesystem
+
+#### Scenario: Language pack activo
+
+- **WHEN** un adapter del language pack está activo y el repositorio contiene sus extensiones
+- **THEN** esos archivos se incluyen en el grafo con su `lang`
+- **AND** dejan de reportarse en `facts/unsupported.json`
+
+#### Scenario: Language pack ausente
+
+- **WHEN** el language pack no está instalado o está deshabilitado
+- **THEN** solo se incluyen JS, TS, JSX y TSX
+- **AND** las extensiones de otros lenguajes conocidos se reportan en `facts/unsupported.json`
 
 ### Requirement: Extracción de imports
 
@@ -96,6 +108,78 @@ The system SHALL resolver imports relativos considerando extensión explícita, 
 - **WHEN** un import relativo no encuentra archivo destino
 - **THEN** se registra en `facts/unresolved.json` con `reason: not-found`
 - **AND** no se emite arista
+
+### Requirement: Resolución de un import a múltiples targets
+
+The system SHALL aceptar que un adapter resuelva un import a múltiples archivos destino y
+SHALL emitir una arista `import` por cada target, de forma ordenada y deduplicada, sin cambiar
+el `schemaVersion` ni el formato de las aristas.
+
+#### Scenario: Adapter multi-target
+
+- **WHEN** un adapter devuelve `{ type: 'resolved', targets: ['pkg/a.go', 'pkg/b.go'] }`
+- **THEN** el grafo emite una arista `import` hacia cada archivo
+- **AND** el orden de las aristas es determinista
+- **AND** los targets duplicados se colapsan
+
+#### Scenario: Adapter single-target
+
+- **WHEN** un adapter devuelve `{ type: 'resolved', target: 'pkg/a.go' }`
+- **THEN** el comportamiento es idéntico al anterior a esta extensión
+
+### Requirement: Índice de namespaces compartido
+
+The system SHALL construir un índice de namespaces después de parsear todos los archivos y
+SHALL pasarlo a los adapters durante la resolución de imports, de modo que un adapter pueda
+resolver una referencia de namespace a múltiples archivos sin reescanear el repositorio.
+
+#### Scenario: Adapter resuelve namespace
+
+- **WHEN** los archivos parseados declaran `namespace A` y `namespace A.B`
+- **THEN** el índice contiene `A -> [archivos]` y `A.B -> [archivos]`
+- **AND** el adapter recibe el índice en `resolveImport`
+- **AND** puede devolver `{ type: 'resolved', targets: [...] }`
+
+#### Scenario: Archivo sin namespaces
+
+- **WHEN** un archivo no declara namespaces
+- **THEN** no aporta entradas al índice
+- **AND** el resto del grafo no cambia
+
+### Requirement: Tipo de herencia según el padre local
+
+The system SHALL emitir `inheritsKind: implements` cuando el símbolo padre local es una
+interfaz, aunque el adapter no haya podido determinarlo por sintaxis; en los demás casos SHALL
+respetar el flag `implements` del adapter y usar `extends` por defecto.
+
+#### Scenario: Clase con base e interfaz
+
+- **WHEN** `class App : Base, IRunner` y `Base` es `class` e `IRunner` es `interface`
+- **THEN** la arista hacia `Base` es `extends`
+- **AND** la arista hacia `IRunner` es `implements`
+
+#### Scenario: Interfaz que hereda interfaz
+
+- **WHEN** `interface IChild : IBase` y `IBase` es una interfaz local
+- **THEN** la arista es `implements`
+
+### Requirement: Contexto del import para adapters
+
+The system SHALL pasar la entrada completa del import a `resolveImport`, además del specifier
+y el archivo origen, para que los adapters puedan usar metadatos específicos del lenguaje
+(por ejemplo, si un include de C es quoted o system).
+
+#### Scenario: Adapter recibe la entrada
+
+- **WHEN** un adapter resuelve un import
+- **THEN** recibe el specifier, el archivo origen y la entrada del import
+- **AND** los adapters que no la usan no cambian su comportamiento
+
+#### Scenario: Include quoted
+
+- **WHEN** un adapter marcó un import con `quoted: true`
+- **THEN** puede leer ese valor desde `importEntry`
+- **AND** decidir la estrategia de resolución
 
 ### Requirement: Símbolos, llamadas y herencia
 

@@ -10,6 +10,7 @@ El productor escribe todo dentro de `outputDir` (default `.ancleto/writer/`):
 
 ```text
 .ancleto/writer/
+├── README.md
 ├── manifest.json
 ├── graph.json
 ├── symbols.json
@@ -27,16 +28,21 @@ El productor escribe todo dentro de `outputDir` (default `.ancleto/writer/`):
 │   └── skipped.json
 └── agent/
     ├── INDEX.md
+    ├── API.md
     ├── SYMBOLS.md
     ├── GOTCHAS.md
     └── ARCHITECTURE.md
 ```
 
+`README.md` describe el propio paquete y cómo regenerarlo. No reemplaza ni modifica el README
+del repositorio del usuario.
+
 Los documentos de `agent/` pueden paginarse como `NAME_p2.md`, `NAME_p3.md`, etc. Cada página
 tiene como máximo 500 líneas. Los consumidores deben considerar todas las páginas que existan.
 
-`ARCHITECTURE.md` incluye capas, comunidades, un diagrama UML Mermaid de clases e interfaces,
-el grafo de imports y los ciclos.
+`API.md` lista solo los símbolos exportados, agrupados por archivo, con firma y `summary`
+opcional. `ARCHITECTURE.md` incluye capas, comunidades, un diagrama UML Mermaid de clases e
+interfaces, el grafo de imports y los ciclos.
 
 ## `manifest.json`
 
@@ -137,6 +143,9 @@ timestamps ni del orden del filesystem.
 - `kind` de arista: `import`, `call`, `inherits`.
 - `confidence`: `extracted` o `inferred`.
 - Los paquetes externos no generan nodos; se cuentan en `stats.externalImports`.
+- `lang`: `js`, `ts`, `jsx`, `tsx` y, cuando el language pack está activo, `python`, `go`,
+  `rust`, `csharp`, `java`, `c`, `cpp`, `php`, `ruby`, `swift` y `kotlin`. Los lenguajes del
+  pack son aditivos: el `schemaVersion` no cambia.
 
 ## `symbols.json`
 
@@ -152,6 +161,7 @@ timestamps ni del orden del filesystem.
           "name": "run",
           "kind": "function",
           "exported": true,
+          "summary": "Runs the input.",
           "line": 3,
           "endLine": 5,
           "signature": "run(input)"
@@ -169,6 +179,8 @@ Todos declaran `schemaVersion: 1`:
 | Archivo | Contenido |
 |---|---|
 | `cycles.json` | `{ cycles: [{ size, files }], selfLoops: [id] }` |
+| `dead-code.json` | `{ orphanFiles: [{ path, reason, confidence }], excluded: [{ path, reason }], dynamicImports }` |
+| `doc-coverage.json` | `{ files: [{ path, documented, total, ratio }], totals }` |
 | `bridges.json` | `{ bridges: [{ from, to, fromCommunity, toCommunity, score, line }] }` |
 | `communities.json` | `{ communities: [{ id, size, cohesion, files }] }` |
 | `god-nodes.json` | `{ godNodes: [{ path, score, pageRank, fanIn, fanOut, symbols, exportedSymbols }] }` |
@@ -178,8 +190,110 @@ Todos declaran `schemaVersion: 1`:
 | `unresolved.json` | `{ unresolved: [{ path, specifier, kind, line, reason }] }` |
 | `externals.json` | `{ externals: [{ specifier, count, files }] }` |
 | `skipped.json` | `{ skipped: [{ path, reason }] }` |
+| `unsupported.json` | `{ unsupported: [{ extension, language, count, files }], totals }` |
 
 `facts/inventory.md` es Markdown libre.
+
+`unsupported.json` reporta archivos de lenguajes conocidos que Writer todavía no analiza. No
+generan nodos ni aristas; existen solo para que el consumidor vea la cobertura faltante. Un
+lenguaje deja de aparecer cuando su adapter está instalado y activo (por ejemplo, `.py` con
+`@ancleto/writer-languages`).
+
+## Language pack opcional
+
+`@ancleto/writer` mantiene cero dependencias de runtime. Los lenguajes adicionales viven en
+`@ancleto/writer-languages`, un paquete opcional:
+
+```bash
+npm install @ancleto/writer-languages
+```
+
+Cuando está instalado, el core lo carga automáticamente y habilita sus extensiones. Si falta o
+falla la carga, el build sigue con JS/TS y los archivos afectados aparecen en
+`facts/unsupported.json`. Se puede desactivar con:
+
+```json
+{ "languagePack": { "enabled": false } }
+```
+
+El adapter de Python extrae imports (`import`, `from ... import`), clases, funciones
+top-level, métodos, herencia, llamadas intra-archivo y docstrings. La resolución de imports
+cubre rutas absolutas del root y relativas (`.`/`..`) incluyendo `__init__.py`; stdlib y
+third-party quedan como externos.
+
+El adapter de Go extrae imports, structs, interfaces, tipos, funciones, métodos, embebido,
+llamadas y doc comments. Los imports locales se resuelven con el `module` de `go.mod` y
+generan una arista por cada archivo `.go` no-test del paquete destino; stdlib y third-party
+quedan externos. El embebido se modela como relación `inherits`/`extends` (composición, no
+herencia clásica).
+
+El adapter de Rust extrae `use`, `mod`, structs, enums, unions, traits, type aliases,
+funciones, métodos, impls, supertraits, llamadas y doc comments `///`. `crate::`, `self::`,
+`super::` y `mod foo;` se resuelven a `.rs` o `mod.rs` dentro de `src/`; los crates externos
+quedan externos. `impl Trait for Type` se modela como `inherits` con
+`inheritsKind: implements`.
+
+El adapter de C# extrae `using` (normal, `static`, alias y `global`), namespaces block y
+file-scoped, clases, structs, records, interfaces, enums, delegates, métodos, constructores,
+herencia, llamadas y doc comments XML. Los `using` locales se resuelven contra un índice de
+namespaces construido con todos los archivos parseados y generan una arista por cada archivo
+del namespace; BCL/third-party quedan externos. Los alias a tipos no se resuelven como
+namespaces.
+
+El adapter de Java extrae `package`, imports (normal, `static` y wildcard), clases,
+interfaces, enums, records, anotaciones, métodos, constructores, herencia/implementación,
+llamadas y Javadoc. Los imports locales se resuelven contra el índice de packages: se prueba
+el path completo y se va quitando el último segmento hasta encontrar un package conocido;
+cada archivo de ese package genera una arista. `extends`/`implements` se distinguen por
+sintaxis y por el tipo del padre local.
+
+El adapter de C extrae `#include`, structs, typedefs, enums, prototipos de funciones,
+definiciones, llamadas y comentarios de documentación. Los includes con comillas se resuelven
+contra el directorio del archivo, el root y `include/` (en ese orden); los includes con
+ángulos quedan externos. Los prototipos y las definiciones se extraen como funciones; las
+funciones `static` no se marcan como exportadas.
+
+El adapter de C++ extrae `#include`, namespaces, clases, structs, unions, enums, templates,
+métodos, constructores, destructores, herencia, llamadas y comentarios. Los métodos respetan
+la sección de acceso (`public`/`private`/`protected`) cuando están en la clase; las
+definiciones out-of-line (`App::run`) se atribuyen a la clase. Los headers se resuelven con la
+misma búsqueda que C. `.h` queda asignado a C; C++ usa `.hpp`/`.hh`/`.hxx` para headers.
+
+El adapter de PHP extrae namespaces, `use` (normal, alias, `function`, `const` y grupos),
+clases, interfaces, traits, enums, métodos, constructores, herencia/implementación, llamadas y
+docblocks. Los `use` se resuelven contra el índice de namespaces probando el nombre completo y
+quitando segmentos hasta encontrar un namespace conocido; cada archivo de ese namespace genera
+una arista. Las traits se publican como `class` con firma `trait X`; el `use` de traits dentro
+de una clase no genera arista.
+
+El adapter de Ruby extrae `require`/`require_relative`, clases, módulos, mixins
+(`include`/`extend`/`prepend`), métodos, constructores, herencia, llamadas y comentarios.
+`require_relative` se resuelve contra el directorio del archivo (con `.rb` opcional); `require`
+queda externo. Los módulos se publican como `class` con firma `module X`; los mixins se
+modelan como `inherits`/`implements`. La visibilidad `private`/`protected` se respeta para los
+métodos.
+
+El adapter de Swift extrae `import`, protocolos, clases, structs, enums, extensions,
+typealiases, funciones, métodos, inicializadores, deinitializadores, herencia/conformancia,
+llamadas y doc comments. Los `import` de Swift se cuentan como externos (no hay resolución de
+módulos SwiftPM). Los protocolos se publican como `interface`; clases/structs/actors como
+`class`; enums como `enum`. Las extensiones aportan métodos al tipo pero no crean un símbolo
+nuevo.
+
+El adapter de Kotlin extrae `package`, imports (normal, alias y wildcard), clases,
+interfaces, objects, enums, data/sealed classes, typealiases, funciones, métodos,
+constructores secundarios, companion objects, herencia y llamadas. Los imports se resuelven
+contra el índice de packages probando el nombre completo y quitando segmentos hasta encontrar
+un package conocido; cada archivo de ese package genera una arista. Los `object` se publican
+como `class` con firma `object X`.
+
+`dead-code.json` reporta candidatos a archivos huérfanos (sin imports entrantes) con
+exclusiones de entrypoints, tests, config y scripts. No elimina código ni detecta símbolos
+huérfanos.
+
+`doc-coverage.json` mide símbolos con `summary` sobre el total, por archivo y agregado.
+`summary` es opcional en `symbols.json` y `graph.json`; se extrae del comentario inmediatamente
+anterior a la declaración.
 
 `communities.json` agrupa archivos por modularidad sobre el grafo de imports. `cohesion` es la
 cantidad de aristas internas dividida por las aristas incidentes a la comunidad (0 a 1). Los

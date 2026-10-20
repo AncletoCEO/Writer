@@ -13,6 +13,7 @@ export function buildSymbolsJson(graph) {
       name: node.name,
       kind: node.symbolKind,
       exported: node.exported,
+      summary: node.summary ?? null,
       line: node.line,
       endLine: node.endLine,
       signature: node.signature

@@ -195,7 +195,7 @@ export class LexerError extends Error {
   }
 }
 
-export function tokenize(source, { jsx = false } = {}) {
+function tokenizeInternal(source, { jsx = false } = {}) {
   let pos = 0
   let line = 1
   let column = 1
@@ -240,6 +240,33 @@ export function tokenize(source, { jsx = false } = {}) {
     if (!eof()) advance(2)
   }
 
+  function makeComment(type, start, startLine) {
+    const raw = source.slice(start, pos)
+    let lines
+
+    if (type === 'line') {
+      const text = raw.slice(2).trim()
+      lines = text ? [text] : []
+    } else {
+      const body = raw.startsWith('/*')
+        ? raw.slice(2, raw.endsWith('*/') ? -2 : undefined)
+        : raw
+      lines = body
+        .split('\n')
+        .map((lineText) => lineText.replace(/^\s*\*\s?/, '').trim())
+        .filter(Boolean)
+    }
+
+    return {
+      type,
+      start,
+      end: pos,
+      line: startLine,
+      endLine: line,
+      lines
+    }
+  }
+
   function skipTrivia() {
     while (!eof()) {
       const char = peek()
@@ -248,11 +275,17 @@ export function tokenize(source, { jsx = false } = {}) {
         continue
       }
       if (char === '/' && peek(1) === '/') {
+        const start = pos
+        const startLine = line
         skipLineComment()
+        comments.push(makeComment('line', start, startLine))
         continue
       }
       if (char === '/' && peek(1) === '*') {
+        const start = pos
+        const startLine = line
         skipBlockComment()
+        comments.push(makeComment('block', start, startLine))
         continue
       }
       break
@@ -593,6 +626,7 @@ export function tokenize(source, { jsx = false } = {}) {
   }
 
   const tokens = []
+  const comments = []
   let prev = null
 
   while (true) {
@@ -638,5 +672,13 @@ export function tokenize(source, { jsx = false } = {}) {
     column
   })
 
-  return tokens
+  return { tokens, comments }
+}
+
+export function tokenize(source, options) {
+  return tokenizeInternal(source, options).tokens
+}
+
+export function tokenizeWithComments(source, options) {
+  return tokenizeInternal(source, options)
 }

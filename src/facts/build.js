@@ -2,8 +2,11 @@
 // Derived from ReadMenator readmenator/_exporter.py (commit dac48f868722620f0d01dac0d33102c5a514c03c),
 // modified 2026-10-19 by AncletoCEO.
 
+import { buildDeadCodeFact } from './dead-code.js'
+import { buildDocCoverageFact } from './doc-coverage.js'
 import { buildExternalsFact } from './externals.js'
 import { buildSkippedFact } from './skipped.js'
+import { buildUnsupportedFact } from './unsupported.js'
 import { buildUnresolvedFact } from './unresolved.js'
 
 function json(value) {
@@ -14,7 +17,7 @@ function escapeCell(value) {
   return String(value).replace(/\|/g, '\\|')
 }
 
-export function renderInventory(graph) {
+export function renderInventory(graph, unsupportedFact = null) {
   const files = graph.nodes.filter((node) => node.kind === 'file')
   const lines = [
     '# Inventory',
@@ -31,10 +34,34 @@ export function renderInventory(graph) {
     )
   }
 
+  if (unsupportedFact?.unsupported?.length > 0) {
+    lines.push('', '## Lenguajes no soportados', '', 'Estos archivos no fueron analizados:', '')
+    for (const entry of unsupportedFact.unsupported) {
+      lines.push(`- ${entry.language} (${entry.extension}): ${entry.count} archivo(s)`)
+    }
+  }
+
   return `${lines.join('\n')}\n`
 }
 
-export function buildFacts({ graph, metrics, scanResult, externals, unresolved }) {
+export function buildFacts({
+  graph,
+  metrics,
+  scanResult,
+  externals,
+  unresolved,
+  unsupportedFact = null,
+  orphans = null,
+  docCoverage = null,
+  config = {}
+}) {
+  const unsupported =
+    unsupportedFact ??
+    buildUnsupportedFact(scanResult.unsupported ?? [], {
+      maxFilesPerLanguage: config?.unsupported?.maxFilesPerLanguage
+    })
+  const coverage = docCoverage ?? buildDocCoverageFact(graph)
+
   return {
     'facts/cycles.json': json({
       schemaVersion: 1,
@@ -58,6 +85,8 @@ export function buildFacts({ graph, metrics, scanResult, externals, unresolved }
       schemaVersion: 1,
       bridges: metrics.bridges ?? []
     }),
+    'facts/dead-code.json': json(buildDeadCodeFact(orphans)),
+    'facts/doc-coverage.json': json(coverage),
     'facts/hotspots.json': json({
       schemaVersion: 1,
       hotspots: metrics.hotspots
@@ -66,7 +95,8 @@ export function buildFacts({ graph, metrics, scanResult, externals, unresolved }
       schemaVersion: 1,
       seeds: metrics.blastRadius
     }),
-    'facts/inventory.md': renderInventory(graph),
+    'facts/inventory.md': renderInventory(graph, unsupported),
+    'facts/unsupported.json': json(unsupported),
     'facts/unresolved.json': json(buildUnresolvedFact(unresolved)),
     'facts/externals.json': json(buildExternalsFact(externals)),
     'facts/skipped.json': json(buildSkippedFact(scanResult.skipped))

@@ -205,3 +205,44 @@ test('architectura incluye UML', () => {
 
   assert.match(documents['agent/ARCHITECTURE.md'], /classDiagram/)
 })
+
+test('documentos incluyen summaries y cobertura', () => {
+  const path = 'src/a.js'
+  const graph = {
+    stats: { files: 1, symbols: 1, edges: 0 },
+    nodes: [
+      fileNode(path),
+      {
+        id: `sym:${path}#run@1`,
+        kind: 'symbol',
+        path,
+        name: 'run',
+        symbolKind: 'function',
+        exported: true,
+        summary: 'Runs the app.',
+        line: 1,
+        endLine: 2,
+        signature: 'run(x)'
+      }
+    ],
+    edges: []
+  }
+  const documents = renderDocuments({
+    graph,
+    metrics: metrics(),
+    projectRules: { available: false, rules: [] },
+    unresolved: [],
+    docCoverage: {
+      schemaVersion: 1,
+      files: [{ path, documented: 1, total: 1, ratio: 1 }],
+      totals: { documented: 1, total: 1, ratio: 1 }
+    },
+    config: { docs: { enabled: true, minCoverage: 0.5 } }
+  })
+
+  assert.ok(documents['agent/API.md'])
+  assert.match(documents['agent/API.md'], /Runs the app\./)
+  assert.match(documents['agent/SYMBOLS.md'], /Runs the app\./)
+  assert.match(documents['agent/INDEX.md'], /Runs the app\./)
+  assert.match(documents['agent/GOTCHAS.md'], /Cobertura de documentación/)
+})

@@ -61,6 +61,7 @@ test('symbols.json agrupa por archivo', () => {
         name: 'run',
         kind: 'function',
         exported: true,
+        summary: null,
         line: 1,
         endLine: 2,
         signature: 'run(x)'
@@ -73,7 +74,10 @@ test('facts JSON e inventory', () => {
   const facts = buildFacts({
     graph: graph(),
     metrics: metrics(),
-    scanResult: { skipped: [{ path: 'big.js', reason: 'too-large' }] },
+    scanResult: {
+      skipped: [{ path: 'big.js', reason: 'too-large' }],
+      unsupported: [{ path: 'src/a.py', extension: '.py', language: 'python' }]
+    },
     externals: [{ specifier: 'lodash', path: 'src/a.js' }],
     unresolved: [{ path: 'src/a.js', specifier: './x', kind: 'static', line: 1, reason: 'not-found' }]
   })
@@ -83,19 +87,26 @@ test('facts JSON e inventory', () => {
     'facts/bridges.json',
     'facts/communities.json',
     'facts/cycles.json',
+    'facts/dead-code.json',
+    'facts/doc-coverage.json',
     'facts/externals.json',
     'facts/god-nodes.json',
     'facts/hotspots.json',
     'facts/inventory.md',
     'facts/layers.json',
     'facts/skipped.json',
-    'facts/unresolved.json'
+    'facts/unresolved.json',
+    'facts/unsupported.json'
   ])
 
   assert.equal(JSON.parse(facts['facts/cycles.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/communities.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/god-nodes.json']).schemaVersion, 1)
   assert.equal(JSON.parse(facts['facts/bridges.json']).schemaVersion, 1)
+  assert.equal(JSON.parse(facts['facts/dead-code.json']).schemaVersion, 1)
+  assert.equal(JSON.parse(facts['facts/doc-coverage.json']).schemaVersion, 1)
+  assert.equal(JSON.parse(facts['facts/unsupported.json']).schemaVersion, 1)
+  assert.equal(JSON.parse(facts['facts/unsupported.json']).totals.files, 1)
   assert.equal(JSON.parse(facts['facts/externals.json']).externals[0].specifier, 'lodash')
   assert.equal(JSON.parse(facts['facts/skipped.json']).skipped[0].reason, 'too-large')
   assert.match(facts['facts/inventory.md'], /src\/a\.js/)

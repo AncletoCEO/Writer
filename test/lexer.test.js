@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { tokenize } from '../src/parsers/lexer.js'
+import { tokenize, tokenizeWithComments } from '../src/parsers/lexer.js'
 
 test('comentarios, strings y posiciones', () => {
   const tokens = tokenize('// comentario\nconst x = "a\\n" /* bloque */\n  y')
@@ -79,4 +79,18 @@ test('un generic arrow no se confunde con JSX', () => {
 
   assert.equal(jsx.length, 0)
   assert.ok(tokens.some((token) => token.type === 'punctuator' && token.value === '=>'))
+})
+
+test('expone comentarios para summaries', () => {
+  const { tokens, comments } = tokenizeWithComments(
+    '// line\n/**\n * Block summary.\n * @param x\n */\nexport function a() {}\n'
+  )
+
+  assert.ok(tokens.length > 0)
+  assert.equal(comments.length, 2)
+  assert.equal(comments[0].type, 'line')
+  assert.deepEqual(comments[0].lines, ['line'])
+  assert.equal(comments[1].type, 'block')
+  assert.ok(comments[1].lines.includes('Block summary.'))
+  assert.equal(tokenize('const a = 1').at(-1).type, 'eof')
 })

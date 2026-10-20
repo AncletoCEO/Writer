@@ -153,9 +153,20 @@ export function resolveImports({ file, parseResult, resolve }) {
   const unresolved = []
 
   for (const entry of parseResult.imports) {
-    const result = resolve(entry.specifier, file.absPath)
+    const result = resolve(entry.specifier, file.absPath, entry)
     if (result.type === 'resolved') {
-      resolved.push({ ...entry, target: result.target })
+      const targets = Array.isArray(result.targets) ? result.targets : [result.target]
+      const unique = [...new Set(targets)].sort()
+      if (unique.length === 0) {
+        unresolved.push({
+          path: file.path,
+          specifier: entry.specifier,
+          kind: entry.kind,
+          line: entry.line,
+          reason: 'not-found'
+        })
+      }
+      for (const target of unique) resolved.push({ ...entry, target })
     } else if (result.type === 'external') {
       external.push({ ...entry, path: file.path })
     } else {

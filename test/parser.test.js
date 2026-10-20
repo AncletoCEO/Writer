@@ -188,3 +188,38 @@ const req = require(path)
     ['dynamic:non-literal', 'require:non-literal']
   )
 })
+
+test('summaries desde comentarios', () => {
+  const source = `
+/**
+ * Runs the app.
+ * @param x input
+ */
+export function run(x) { return x }
+
+// Loads data.
+export const load = () => 1
+
+/**
+ * Separated.
+ */
+
+export function separated() { return 1 }
+
+export function undocumented() { return 1 }
+
+class App {
+  /** Does work. */
+  work() { return 1 }
+}
+`
+
+  const result = parseJavaScript({ path: 'src/a.js', lang: 'js', source })
+  const byName = Object.fromEntries(result.symbols.map((symbol) => [symbol.name, symbol]))
+
+  assert.equal(byName.run.summary, 'Runs the app.')
+  assert.equal(byName.load.summary, 'Loads data.')
+  assert.equal(byName.separated.summary, undefined)
+  assert.equal(byName.undocumented.summary, undefined)
+  assert.equal(byName.work.summary, 'Does work.')
+})

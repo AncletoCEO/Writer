@@ -75,12 +75,15 @@ test('build completo publica el contrato y queda fresco', (t) => {
   const result = runBuild({ rootAbs: dir, config })
 
   for (const rel of [
+    'README.md',
     'manifest.json',
     'graph.json',
     'symbols.json',
     'facts/cycles.json',
     'facts/bridges.json',
     'facts/communities.json',
+    'facts/dead-code.json',
+    'facts/doc-coverage.json',
     'facts/god-nodes.json',
     'facts/layers.json',
     'facts/hotspots.json',
@@ -89,7 +92,9 @@ test('build completo publica el contrato y queda fresco', (t) => {
     'facts/unresolved.json',
     'facts/externals.json',
     'facts/skipped.json',
+    'facts/unsupported.json',
     'agent/INDEX.md',
+    'agent/API.md',
     'agent/SYMBOLS.md',
     'agent/GOTCHAS.md',
     'agent/ARCHITECTURE.md'

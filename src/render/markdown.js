@@ -8,54 +8,9 @@ import {
   renderImportGraph,
   renderLayerGraph
 } from './mermaid.js'
+import { renderApi } from './api.js'
+import { paginate } from './paginate.js'
 import { renderUml } from './uml.js'
-
-const PAGE_LIMIT = 500
-
-function chunkLines(lines, size) {
-  const chunks = []
-  let current = []
-  let inFence = false
-
-  for (const line of lines) {
-    if (line.startsWith('```')) inFence = !inFence
-    current.push(line)
-    if (current.length >= size && !inFence) {
-      chunks.push(current)
-      current = []
-    }
-  }
-
-  if (current.length > 0) chunks.push(current)
-  if (chunks.length === 0) chunks.push([])
-  return chunks
-}
-
-function paginate(baseName, title, bodyLines) {
-  const chunks = chunkLines(bodyLines, PAGE_LIMIT - 6)
-  const pages = {}
-
-  chunks.forEach((chunk, index) => {
-    const page = index + 1
-    const name = page === 1 ? `${baseName}.md` : `${baseName}_p${page}.md`
-    const lines = [`# ${title}${page > 1 ? ` (página ${page})` : ''}`, '']
-
-    if (page > 1) {
-      const previous = page === 2 ? `${baseName}.md` : `${baseName}_p${page - 1}.md`
-      lines.push(`[← Página anterior](./${previous})`, '')
-    }
-
-    lines.push(...chunk)
-
-    if (page < chunks.length) {
-      lines.push('', `[Página siguiente →](./${baseName}_p${page + 1}.md)`)
-    }
-
-    pages[name] = `${lines.join('\n')}\n`
-  })
-
-  return pages
-}
 
 function stripFile(id) {
   return String(id).replace(/^file:/, '')
@@ -83,9 +38,22 @@ export function renderIndex(graph, godNodes = []) {
     body.push('')
   }
 
+  const symbolsByFile = new Map()
+  for (const symbol of graph.nodes) {
+    if (symbol.kind !== 'symbol') continue
+    if (!symbolsByFile.has(symbol.path)) symbolsByFile.set(symbol.path, [])
+    symbolsByFile.get(symbol.path).push(symbol)
+  }
+
   for (const file of graph.nodes.filter((node) => node.kind === 'file')) {
+    const symbols = symbolsByFile.get(file.path) ?? []
+    const purpose = (
+      symbols.find((symbol) => symbol.exported && symbol.summary) ??
+      symbols.find((symbol) => symbol.summary)
+    )?.summary
     body.push(
-      `- \`${file.path}\` — ${file.layer} · ${file.symbolCount} símbolos · used by ${file.fanIn}`
+      `- \`${file.path}\` — ${file.layer} · ${file.symbolCount} símbolos · used by ${file.fanIn}` +
+        (purpose ? ` — ${purpose}` : '')
     )
   }
 
@@ -106,8 +74,9 @@ export function renderSymbols(graph) {
     body.push(`## ${path}`, '')
     for (const symbol of symbols.sort((a, b) => Number(b.exported) - Number(a.exported) || a.line - b.line)) {
       const exported = symbol.exported ? ' · export' : ''
+      const summary = symbol.summary ? ` — ${symbol.summary}` : ''
       body.push(
-        `- \`${symbol.name}\` (${symbol.symbolKind}, línea ${symbol.line})${exported} — ${symbol.signature ?? ''}`
+        `- \`${symbol.name}\` (${symbol.symbolKind}, línea ${symbol.line})${exported} — ${symbol.signature ?? ''}${summary}`
       )
     }
     body.push('')
@@ -116,7 +85,15 @@ export function renderSymbols(graph) {
   return paginate('SYMBOLS', 'Symbols', body)
 }
 
-export function renderGotchas({ metrics, projectRules = null, unresolved = [] }) {
+export function renderGotchas({
+  metrics,
+  projectRules = null,
+  unresolved = [],
+  unsupported = null,
+  orphans = null,
+  docCoverage = null,
+  config = {}
+}) {
   const body = []
 
   body.push('## Blast radius', '')
@@ -199,6 +176,46 @@ export function renderGotchas({ metrics, projectRules = null, unresolved = [] })
     body.push(
       `- \`${entry.path}\`${entry.specifier ? ` → \`${entry.specifier}\`` : ''} — ${entry.reason}`
     )
+  }
+  body.push('')
+
+  body.push('## Archivos huérfanos', '')
+  const orphanFiles = orphans?.orphanFiles ?? []
+  if (orphanFiles.length === 0) {
+    body.push('- Sin archivos huérfanos.')
+  } else {
+    for (const orphan of orphanFiles.slice(0, 20)) {
+      body.push(`- \`${orphan.path}\` — ${orphan.confidence}`)
+    }
+  }
+  body.push('')
+
+  if (config?.docs?.enabled !== false) {
+    body.push('## Cobertura de documentación', '')
+    if (!docCoverage || docCoverage.totals.total === 0) {
+      body.push('- Sin símbolos para medir cobertura.')
+    } else {
+      const threshold = config?.docs?.minCoverage ?? 0.5
+      body.push(
+        `- Total: ${docCoverage.totals.documented}/${docCoverage.totals.total} ` +
+          `(${(docCoverage.totals.ratio * 100).toFixed(1)}%)`
+      )
+      for (const file of docCoverage.files.filter((entry) => entry.ratio < threshold).slice(0, 10)) {
+        body.push(`- \`${file.path}\`: ${file.documented}/${file.total}`)
+      }
+    }
+    body.push('')
+  }
+
+  body.push('## Lenguajes no soportados', '')
+  const unsupportedEntries = unsupported?.unsupported ?? []
+  if (unsupportedEntries.length === 0) {
+    body.push('- Sin archivos de lenguajes no soportados.')
+  } else {
+    body.push('Estos archivos no fueron analizados:', '')
+    for (const entry of unsupportedEntries) {
+      body.push(`- ${entry.language} (${entry.extension}): ${entry.count} archivo(s)`)
+    }
   }
   body.push('')
 
@@ -290,12 +307,16 @@ export function renderDocuments({
   metrics,
   projectRules = null,
   unresolved = [],
+  unsupported = null,
+  orphans = null,
+  docCoverage = null,
   config = {}
 }) {
   const documents = {
     ...renderIndex(graph, metrics.godNodes ?? []),
     ...renderSymbols(graph),
-    ...renderGotchas({ metrics, projectRules, unresolved }),
+    ...renderApi(graph, { enabled: config?.apiDocs?.enabled !== false }),
+    ...renderGotchas({ metrics, projectRules, unresolved, unsupported, orphans, docCoverage, config }),
     ...renderArchitecture({ graph, metrics, config })
   }
 

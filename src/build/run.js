@@ -4,8 +4,11 @@ import { readFileSync } from 'node:fs'
 import { analyzeRepository } from './analyze.js'
 import { readProjectRules } from '../memory/read-only.js'
 import { renderDocuments } from '../render/markdown.js'
+import { renderOutputReadme } from '../render/output-readme.js'
 import { buildFacts } from '../facts/build.js'
 import { buildSymbolsJson } from '../facts/symbols.js'
+import { buildDocCoverageFact } from '../facts/doc-coverage.js'
+import { buildUnsupportedFact } from '../facts/unsupported.js'
 import { buildManifest, computeFingerprint, outputEntry } from '../contract/manifest.js'
 import { publishPackage } from '../contract/writer.js'
 
@@ -18,15 +21,36 @@ function json(value) {
 export function runBuild({ rootAbs, config, now = () => new Date().toISOString() }) {
   const startedAt = Date.now()
 
-  const { scanResult, gitInfo, graph, externals, unresolved, metrics } = analyzeRepository({
-    rootAbs,
-    config
-  })
+  const { scanResult, gitInfo, graph, externals, unresolved, metrics, orphans } =
+    analyzeRepository({ rootAbs, config })
 
   const projectRules = readProjectRules(rootAbs, config.memory)
+  const unsupportedFact = buildUnsupportedFact(scanResult.unsupported ?? [], {
+    maxFilesPerLanguage: config.unsupported?.maxFilesPerLanguage
+  })
+  const docCoverage = buildDocCoverageFact(graph)
 
-  const facts = buildFacts({ graph, metrics, scanResult, externals, unresolved })
-  const documents = renderDocuments({ graph, metrics, projectRules, unresolved, config })
+  const facts = buildFacts({
+    graph,
+    metrics,
+    scanResult,
+    externals,
+    unresolved,
+    unsupportedFact,
+    orphans,
+    docCoverage,
+    config
+  })
+  const documents = renderDocuments({
+    graph,
+    metrics,
+    projectRules,
+    unresolved,
+    unsupported: unsupportedFact,
+    orphans,
+    docCoverage,
+    config
+  })
 
   const outputs = {
     'graph.json': json(graph),
@@ -35,10 +59,17 @@ export function runBuild({ rootAbs, config, now = () => new Date().toISOString()
     ...documents
   }
 
+  if (config.outputReadme?.enabled !== false) {
+    const paths = [...Object.keys(outputs), 'manifest.json', 'README.md'].sort()
+    outputs['README.md'] = renderOutputReadme({ paths })
+  }
+
   const stats = {
     ...graph.stats,
     unresolved: unresolved.length,
-    skipped: scanResult.skipped.length
+    skipped: scanResult.skipped.length,
+    unsupported: scanResult.unsupported.length,
+    orphanFiles: orphans.orphanFiles.length
   }
 
   const manifest = buildManifest({
