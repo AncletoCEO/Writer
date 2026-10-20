@@ -4,6 +4,7 @@
 import { readFileSync } from 'node:fs'
 import { runBuild } from '../build/run.js'
 import { CONFIG_FILE, loadConfig } from '../config/load.js'
+import { runHuman } from '../human/report.js'
 import { checkPackage } from '../contract/check.js'
 import { runDoctor } from './commands/doctor.js'
 import { runInit } from './commands/init.js'
@@ -36,6 +37,9 @@ function usage() {
   console.log('  impact <archivo...> [--root <dir>]    Dependientes directos y transitivos')
   console.log('         [--depth N] [--build] [--json]')
   console.log('  lint [--root <dir>] [--json]          Evalúa reglas de arquitectura')
+  console.log('  human [--root <dir>] [--out <dir>]    Genera outputDir/human/ (vista humana)')
+  console.log('         [--top N] [--max-classes N] [--max-nodes N]')
+  console.log('         [--max-communities N] [--json]')
   console.log('  doctor [--root <dir>] [--json]        Diagnostica el entorno')
   console.log('')
   console.log('Opciones: --help, --version')
@@ -71,6 +75,15 @@ function parseFlags(rawArgs, spec) {
   }
 
   return flags
+}
+
+function positiveInt(value, name, fallback) {
+  if (value === undefined) return fallback
+  const number = Number(value)
+  if (!Number.isInteger(number) || number <= 0) {
+    throw new CliError(`${name} debe ser un entero positivo`)
+  }
+  return number
 }
 
 function printDoctor(report) {
@@ -178,6 +191,49 @@ function main() {
         console.log(`ancleto-writer: ${result.findings.length} hallazgo(s)`)
       }
       process.exit(result.exitCode)
+    }
+
+    if (command === 'human') {
+      const flags = parseFlags(rest, {
+        '--root': { key: 'root', value: true },
+        '--out': { key: 'outputDir', value: true },
+        '--top': { key: 'top', value: true },
+        '--max-classes': { key: 'maxClasses', value: true },
+        '--max-nodes': { key: 'maxNodes', value: true },
+        '--max-communities': { key: 'maxCommunities', value: true },
+        '--json': { key: 'json' }
+      })
+      const config = loadConfig({
+        cwd: process.cwd(),
+        cli: { root: flags.root, outputDir: flags.outputDir }
+      })
+      const result = runHuman({
+        outputDirAbs: config.outputDirAbs,
+        top: positiveInt(flags.top, '--top'),
+        maxClasses: positiveInt(flags.maxClasses, '--max-classes'),
+        maxNodes: positiveInt(flags.maxNodes, '--max-nodes'),
+        maxCommunities: positiveInt(flags.maxCommunities, '--max-communities')
+      })
+      const humanDir = `${config.outputDir}/human`
+
+      if (flags.json) {
+        console.log(
+          JSON.stringify({
+            status: 'human',
+            outputDir: config.outputDir,
+            humanDir,
+            files: result.files,
+            limits: result.limits,
+            totals: result.data.totals
+          })
+        )
+      } else {
+        console.log(
+          `ancleto-writer: generado ${humanDir} ` +
+            `(${result.files.length} archivos, top ${result.limits.top})`
+        )
+      }
+      process.exit(0)
     }
 
     if (command === 'build') {

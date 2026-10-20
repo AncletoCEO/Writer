@@ -23,6 +23,7 @@ consumir como contexto, sin LLM y sin gastar tokens.
 - [Instalación](#instalación)
 - [Language pack](#language-pack)
 - [Uso rápido](#uso-rápido)
+- [Vista humana](#vista-humana)
 - [Ejemplo de salida](#ejemplo-de-salida)
 - [Contrato de artefactos](#contrato-de-artefactos)
 - [Integración con `@ancleto/spec`](#integración-con-ancletospec)
@@ -167,12 +168,50 @@ ancleto-writer doctor
 | `ancleto-writer check [--root <dir>] [--json]` | Verifica frescura y compatibilidad sin escribir |
 | `ancleto-writer lint [--root <dir>] [--json]` | Evalúa reglas de arquitectura: ciclos, capas, imports no resueltos y blast radius |
 | `ancleto-writer impact <archivo...> [--root <dir>] [--depth N] [--build] [--json]` | Dependientes directos y transitivos de uno o más archivos |
+| `ancleto-writer human [--root <dir>] [--out <dir>] [--top N] [--max-classes N] [--max-nodes N] [--max-communities N] [--json]` | Genera una vista humana compacta desde el paquete ya construido |
 | `ancleto-writer doctor [--root <dir>] [--json]` | Diagnostica Node, git, permisos, memoria y configuración |
 | `ancleto-writer --help` | Uso y aviso legal |
 | `ancleto-writer --version` | Versión, copyright y licencia |
 
 Códigos de salida: `0` OK, `1` uso/config, `2` análisis/publicación, `3` stale,
 `4` esquema incompatible, `5` violaciones de `lint`.
+
+## Vista humana
+
+Los artefactos de `agent/` están pensados para agentes y pueden ser enormes en repos grandes.
+Para una lectura humana hay una proyección compacta y opcional:
+
+```bash
+ancleto-writer build
+ancleto-writer human
+```
+
+Genera, dentro de `outputDir`:
+
+```text
+.ancleto/writer/human/
+├── OVERVIEW.md       # resumen, lenguajes, god nodes, hotspots, ciclos, huérfanos
+├── ARCHITECTURE.md   # capas, comunidades, UML acotado, imports y ciclos
+└── data.json         # los mismos datos curados, deterministas
+```
+
+Características:
+
+- **Derivada:** lee `graph.json` y `facts/*`; no reescanea ni reparsea.
+- **Acotada:** `--top` (default 20), `--max-classes` (20), `--max-nodes` (30) y
+  `--max-communities` (6) evitan documentos gigantes.
+- **Determinista:** dos ejecuciones sobre el mismo paquete producen los mismos bytes.
+- **Fuera del manifest:** `human/` es una salida humana opcional; el contrato de agentes y
+  `schemaVersion: 1` no cambian.
+- **Sin dependencias nuevas:** Markdown/Mermaid y JSON, sin HTML/3D ni red.
+
+Ejemplos:
+
+```bash
+ancleto-writer human --top 30
+ancleto-writer human --max-classes 10 --max-nodes 20
+ancleto-writer human --json
+```
 
 ## Ejemplo de salida
 
@@ -273,6 +312,9 @@ El contrato completo —layout, esquemas, frescura, fallback y ejemplo de consum
 `php`, `ruby`, `swift` y `kotlin`. El `schemaVersion` sigue en `1`: un consumidor que no conoce
 un `lang` nuevo puede ignorarlo sin romper el contrato. Sin pack, `.py`, `.go`, etc. aparecen en
 `facts/unsupported.json` y no generan nodos.
+
+`human/` es una salida derivada y opcional. No aparece en `manifest.outputs` ni en el
+fingerprint; un consumidor de agentes puede ignorarla. Se regenera con `ancleto-writer human`.
 
 ## Integración con `@ancleto/spec`
 
@@ -452,7 +494,7 @@ nuevo pueden ignorarlo.
 ```bash
 npm install
 npm run build     # valida sintaxis de todos los .js
-npm test          # 193 tests
+npm test          # 198 tests
 npm run lint
 npm pack --dry-run
 ```
@@ -465,6 +507,7 @@ src/
 ├── config/     # glob, defaults y precedencia
 ├── scan/       # walk seguro, hash y git read-only
 ├── languages/  # carga opcional del language pack
+├── human/      # proyección humana (OVERVIEW, ARCHITECTURE, data.json)
 ├── parsers/    # lexer y parser JS/TS/JSX/TSX
 ├── resolve/    # imports, JSONC y tsconfig
 ├── graph/      # nodos y aristas
