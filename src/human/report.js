@@ -9,6 +9,7 @@ import {
   renderLayerGraph
 } from '../render/mermaid.js'
 import { renderUml } from '../render/uml.js'
+import { renderHumanHtml } from './html.js'
 
 export const HUMAN_DEFAULTS = {
   top: 20,
@@ -624,7 +625,8 @@ export function runHuman({ outputDirAbs, ...options } = {}) {
   const files = {
     'OVERVIEW.md': buildOverview(model, limits),
     'ARCHITECTURE.md': buildArchitecture(model, limits),
-    'data.json': `${JSON.stringify(buildData(model, limits), null, 2)}\n`
+    'data.json': `${JSON.stringify(buildData(model, limits), null, 2)}\n`,
+    'index.html': renderHumanHtml(model, limits)
   }
 
   const humanDir = join(outputDirAbs, 'human')

@@ -312,6 +312,7 @@ nodos de archivo en `graph.json` incluyen el campo `community` con el id de la c
 
 ```text
 human/
+├── index.html
 ├── OVERVIEW.md
 ├── ARCHITECTURE.md
 └── data.json
@@ -323,6 +324,7 @@ human/
 - Los consumidores de agentes pueden ignorarla.
 - Los límites (`--top`, `--max-classes`, `--max-nodes`, `--max-communities`) controlan el
   tamaño de tablas y diagramas.
+- `index.html` es autocontenido: CSS inline y SVG inline, sin JS externo, CDN ni red.
 - `data.json` usa rutas relativas y no incluye timestamps.
 
 ## Frescura

@@ -203,7 +203,9 @@ Características:
 - **Determinista:** dos ejecuciones sobre el mismo paquete producen los mismos bytes.
 - **Fuera del manifest:** `human/` es una salida humana opcional; el contrato de agentes y
   `schemaVersion: 1` no cambian.
-- **Sin dependencias nuevas:** Markdown/Mermaid y JSON, sin HTML/3D ni red.
+- **Sin dependencias nuevas:** HTML/CSS/SVG inline, Markdown/Mermaid y JSON. Sin frameworks, JS externo, CDN ni red.
+- **Offline:** `index.html` se abre directo en el navegador y los diagramas ya están renderizados como SVG.
+- **Seguro:** todo path/nombre del repo se escapa antes de entrar al HTML/SVG.
 
 Ejemplos:
 
@@ -313,8 +315,9 @@ El contrato completo —layout, esquemas, frescura, fallback y ejemplo de consum
 un `lang` nuevo puede ignorarlo sin romper el contrato. Sin pack, `.py`, `.go`, etc. aparecen en
 `facts/unsupported.json` y no generan nodos.
 
-`human/` es una salida derivada y opcional. No aparece en `manifest.outputs` ni en el
-fingerprint; un consumidor de agentes puede ignorarla. Se regenera con `ancleto-writer human`.
+`human/` es una salida derivada y opcional (`index.html`, Markdown y JSON). No aparece en
+`manifest.outputs` ni en el fingerprint; un consumidor de agentes puede ignorarla. Se regenera
+con `ancleto-writer human`.
 
 ## Integración con `@ancleto/spec`
 
@@ -494,7 +497,7 @@ nuevo pueden ignorarlo.
 ```bash
 npm install
 npm run build     # valida sintaxis de todos los .js
-npm test          # 198 tests
+npm test          # 199 tests
 npm run lint
 npm pack --dry-run
 ```
@@ -507,7 +510,7 @@ src/
 ├── config/     # glob, defaults y precedencia
 ├── scan/       # walk seguro, hash y git read-only
 ├── languages/  # carga opcional del language pack
-├── human/      # proyección humana (OVERVIEW, ARCHITECTURE, data.json)
+├── human/      # proyección humana (HTML/SVG, OVERVIEW, ARCHITECTURE, data.json)
 ├── parsers/    # lexer y parser JS/TS/JSX/TSX
 ├── resolve/    # imports, JSONC y tsconfig
 ├── graph/      # nodos y aristas
