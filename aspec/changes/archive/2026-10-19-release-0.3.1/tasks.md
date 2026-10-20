@@ -11,15 +11,15 @@
 
 ## Fase 2 — Verificación
 
-- [ ] `npm test`, `npm run lint`, `npm run build`.
-- [ ] `npm pack --dry-run` y `npm publish --dry-run`.
-- [ ] Smoke core `0.3.1` + pack `0.1.0`.
-- [ ] `ancleto specs check`.
+- [x] `npm test`, `npm run lint`, `npm run build`.
+- [x] `npm pack --dry-run` y `npm publish --dry-run`.
+- [x] Smoke core `0.3.1` + pack `0.1.0`.
+- [x] `ancleto specs check`.
 
 ## Fase 3 — Publicación
 
-- [ ] Commit de docs/release.
-- [ ] Tag `v0.3.1` y push.
-- [ ] Workflow publica core `0.3.1` y omite pack `0.1.0`.
-- [ ] Verificar `npm view` y README en npm.
-- [ ] Archivar `release-0.3.0`, `release-0.3.1` y cerrar #48.
+- [x] Commit de docs/release.
+- [x] Tag `v0.3.1` y push.
+- [x] Workflow publica core `0.3.1` y omite pack `0.1.0`.
+- [x] Verificar `npm view` y README en npm.
+- [x] Archivar `release-0.3.0`, `release-0.3.1` y cerrar #48.

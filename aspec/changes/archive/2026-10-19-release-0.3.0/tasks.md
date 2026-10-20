@@ -42,6 +42,6 @@
 
 - [x] Sincronizar delta specs a `aspec/specs/`.
 - [x] Actualizar issue #48 y memoria.
-- [ ] Archivar el change de release.
-- [ ] Acción externa: tag `v0.3.0`, push y publicación npm/GitHub.
-- [ ] Verificar fichas npm y `npx @ancleto/writer@0.3.0 --version`.
+- [x] Archivar el change de release.
+- [x] Acción externa: tag `v0.3.0`, push y publicación npm/GitHub.
+- [x] Verificar fichas npm y `npx @ancleto/writer@0.3.0 --version`.
